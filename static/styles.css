@@ -1,0 +1,30 @@
+#lyrics-content {
+  height: 75vh;
+  overflow : scroll
+}
+
+#player {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+#iframe-container {
+  padding-left : 0;
+  padding-right : 0;
+}
+
+#video-details {
+  margin-left: 0;
+  margin-right: 0; 
+}
+
+
+.fas.fa-heart {
+  color: red;
+}
+
+.far.fa-heart,
+.fas.fa-heart
+ {
+  font-size: x-large;
+}

@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="row">
+    <div class="col-7" id="iframe-container">
+      <div class ="col-12" id="player" data-videoId = '{{video_details.id}}'>
+        <!-- video player will be inserted here by YT iframe API -->
+      </div>
+      <div class="row" id="video-details">
+        <div class="col border">
+          <div class="row pt-4">
+            <div class="col-10 pl-4">
+              <p><span class="font-weight-bold mr-2">Video Title:</span>{{video_details.title}}</p>
+              <p><span class="font-weight-bold mr-2">Artist:</span>{{video_details.artist}}</p>
+              <p><span class="font-weight-bold mr-2">Song:</span>{{video_details.song}}</p>
+              {% if video_details.fav %}
+                <p><span class="font-weight-bold mr-2">Notes:</span>{{video_details.notes}}</p>
+              {% endif %}
+
+            </div>
+            <div id="favorites" "class="col-2 d-flex justify-content-center" >
+              {% if video_details.fav %}
+                <p><i class="fas fa-heart"></i></p>
+              {% else %}
+                <p><i class="far fa-heart"></i></p>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Button trigger modal -->
+          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+            Launch demo modal
+      </button>
+    </div>
+
+
+    <div class= "col-5" id="lyrics">
+      <h1>Lyrics</h1>
+      <form class="form-inline" id="lyrics-search-form">
+        <div class="input-group input-group-sm">
+          <label class="sr-only" for="artist">Artist</label>
+          <input type="text" class="form-control mb-2 mr-sm-2" id="artist" placeholder="Artist Name" name="artist">
+        </div>
+        <label class="sr-only" for="song">Song Title</label>
+        <div class="input-group input-group-sm mb-2 mr-sm-2">
+          <input type="text" class="form-control" id="song" placeholder="Song Title" name="song">
+        </div>
+        <button type="submit" class="btn btn-primary btn-sm mb-2"><i class="fas fa-search"></i></button>
+      </form>
+
+      <div id='lyrics-content'>
+        {% if lyrics %}
+          {{lyrics | safe}} 
+        {% else %}
+          <div class="lyrics-search-results">
+            No Lyrics found...Try refining your search criteria with lyrics search form above. 
+          </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+      <!-- <button id="prior-video-btn">Back</button>
+      <button id="pause-video-btn">Pause</button>
+      <button id="stop-video-btn">Stop</button>
+      <button id="play-video-btn">Play</button>
+      <button id="next-video-btn">Forward</button> -->
+    <!-- </div> -->
+  <!-- </div> -->
+
+<!-- ********************  MODAL WINDOW *************************************** -->
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        ...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- -------------------------------------Form Modal -------------------------------------------------- -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-group">
+            <label for="recipient-name" class="col-form-label">Recipient:</label>
+            <input type="text" class="form-control" id="recipient-name">
+          </div>
+          <div class="form-group">
+            <label for="message-text" class="col-form-label">Message:</label>
+            <textarea class="form-control" id="message-text"></textarea>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Send message</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- --------------------------------------------------------------------------------------- -->
+
+<!-- ********************  MODAL WINDOW *************************************** -->
+
+
+
+  <script type="text/javascript" src="{{ url_for('static', filename='viewVideo.js') }}"></script>
+
+{% endblock %}
+
+

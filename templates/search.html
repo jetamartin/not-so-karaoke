@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+<section class="jumbotron text-center">
+<div class="container">
+  <h1>Video Search</h1>
+  <div class="row justify-content-center">
+    <form method="POST">
+      {{form.hidden_tag()}}
+      {% for field in form.errors %}
+      <div class="alert alert-danger">{{ field }}:
+        <ul>
+          {% for error in form.errors[field] %}
+          <li>{{ error }}</li>
+          {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+      {% for field in form if field.widget.input_type != 'hidden' %}
+  
+      <div class="form-group row">
+        {{field.label(class="col-sm-2 col-form-label")}}
+        <div class="col-sm-10">
+          {{field(class="form-control")}}
+        </div>
+      </div>
+    
+      {% endfor %}
+      <button class="btn btn-primary">Search</button>
+    </form>
+  </div>
+  
+</div>
+</section>
+
+
+{% if videos %}
+<div class="container">
+  <div class="row">
+    {% for video in videos %}
+    <div class="col-md-4">
+      <div class="card w-100" data-id="{{ video.id }}" data-video.title = "{{video.title}}">
+        <img src="{{ video.thumbnail }}" height="225" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
+        <div class="card-body">
+          <p class="card-text">{{ video.title | safe }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <a href="/video/{{ video.id }}" class="btn btn-sm btn-outline-secondary">View</a>
+            </div>
+            <small class="text-muted"> mins</small>
+          </div>
+        </div>
+      </div> 
+    </div>
+    {% endfor %}
+  </div>
+</div>  
+
+
+
+
+<div>
+  <ul>
+
+    {% for video in videos %}
+  
+      <li><span>{{video.id}}</span>---<span>{{video.title | safe}}</span></li>
+  
+  
+    {% endfor %}
+  </ul>
+
+</div>
+
+{% endif %}
+
+{% endblock %}
