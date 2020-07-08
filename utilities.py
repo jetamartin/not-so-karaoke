@@ -32,7 +32,9 @@ def split(word):
     return [char for char in word] 
 
 class Video: 
-  def __init__(self, id, title, thumbnail, artist, song):
+  # def __init__(self, id, title, thumbnail, artist, song):
+  def __init__(self, id, title, thumbnail):
+
     self.id = id
     self.title = title
     self.thumbnail = thumbnail

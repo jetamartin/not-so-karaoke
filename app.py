@@ -141,13 +141,15 @@ def viewVideo(video_id):
 
   video_params = {
     'key'          : YOUTUBE_API_KEY,
-    'part'         : 'contentDetails, snippet, statistics, status', 
+    # 'part'         : {'contentDetails', 'snippet', 'statistics', 'status'}, 
+    'part'         : 'snippet',
     'maxResults'   : 15, 
     'id'           : video_id, 
     'type'         : 'video'
   }
-
-  vid_req = requests.get(YT_VIDEO_DETAIL_URL, params = video_params)
+  
+  vid_req = requests.get(YT_VIDEO_DETAIL_URL, params = video_params) 
+  # import pdb; pdb.set_trace()
   vid_results = vid_req.json()['items']
 
 
@@ -231,6 +233,8 @@ def viewVideo(video_id):
   
   video_details = Video_Detail(vid_id, vid_title, vid_thumbnail, vid_artist, vid_song, vid_notes, vid_fav)
 
+  session['videoDetails'] = pickle.dumps(video_details)
+
 
   return render_template('/view-video.html', video_details = video_details, lyrics = lyrics)
 
@@ -243,4 +247,21 @@ def getMoreLyrics():
   return jsonify(lyrics)
 
 
+@app.route('/favorites', methods=['POST'])
+def addUpdateFavorites():
+  import pdb; pdb.set_trace()
+  title = request.json['title']
+  artist = request.json['artist']
+  song = request.json['song']
+  notes = request.json['notes']
+
+  # return jsonify({status: 'success', message: "Favorite successfully added to favorites list"})
+  return jsonify("Favorite successfully added to favorites list")
+
+  # @app.route('/favorites/<int:id>', methods=['DELETE'])
+  @app.route('/favorites/del', methods=['POST'])
+  def deleteFavorite():
+    import pdb; pdb.set_trace()
+
+    return jsonify("Favorite Deleted")
 

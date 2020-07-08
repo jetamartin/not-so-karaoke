@@ -10,11 +10,11 @@
         <div class="col border">
           <div class="row pt-4">
             <div class="col-10 pl-4">
-              <p><span class="font-weight-bold mr-2">Video Title:</span>{{video_details.title}}</p>
-              <p><span class="font-weight-bold mr-2">Artist:</span>{{video_details.artist}}</p>
-              <p><span class="font-weight-bold mr-2">Song:</span>{{video_details.song}}</p>
+              <p> Video Title:<span id = "video-detail-title" class="font-weight-bold ml-2 mr-2">{{video_details.title}}</span></p>
+              <p>Artist:<span id = "video-detail-artist" class="font-weight-bold ml-2 mr-2">{{video_details.artist}}</span></p>
+              <p >Song:<span id = "video-detail-song" class="font-weight-bold ml-2 mr-2">{{video_details.song}}</span></p>
               {% if video_details.fav %}
-                <p><span class="font-weight-bold mr-2">Notes:</span>{{video_details.notes}}</p>
+                <p >Notes:<span id = "video-detail-notes" class="font-weight-bold ml-2 mr-2">{{video_details.notes}}</span></p>
               {% endif %}
 
             </div>
@@ -70,7 +70,7 @@
 
 <!-- ********************  MODAL WINDOW *************************************** -->
 <!-- Modal -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="fav-delete-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -84,36 +84,44 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
+        <button id="video-detail-delete-fav" type="button" class="btn btn-primary">Delete Fav</button>
       </div>
     </div>
   </div>
 </div>
 <!-- -------------------------------------Form Modal -------------------------------------------------- -->
-<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="fav-save-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Edit/Save to Favorites</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form>
+        <form id="video-detail-fav-form">
           <div class="form-group">
-            <label for="recipient-name" class="col-form-label">Recipient:</label>
-            <input type="text" class="form-control" id="recipient-name">
+            <label for="video-title" class="col-form-label">Video Title:</label>
+            <input type="text" class="form-control" id="input-video-title">
           </div>
           <div class="form-group">
-            <label for="message-text" class="col-form-label">Message:</label>
-            <textarea class="form-control" id="message-text"></textarea>
+            <label for="artist-name" class="col-form-label">Artist:</label>
+            <input type="text" class="form-control" id="input-artist-name">
+          </div>
+          <div class="form-group">
+            <label for="song-title" class="col-form-label">Song:</label>
+            <input type="text" class="form-control" id="input-song-title">
+          </div>
+          <div class="form-group">
+            <label for="note-area" class="col-form-label">Notes:</label>
+            <textarea class="form-control" id="input-video-notes"></textarea>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Send message</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="video-detail-fav-submit" type="submit" class="btn btn-primary">Save</button>
       </div>
     </div>
   </div>

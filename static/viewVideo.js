@@ -12,7 +12,8 @@
       const playerDiv = document.getElementById("player")
       const lyricsSearch = document.getElementById("lyrics-search-form")
       const favorites = document.getElementById("favorites")
-      
+      const vidDetailFavSubmit = document.getElementById("video-detail-fav-submit")
+      const vidDetailDelFav = document.getElementById("video-detail-delete-fav")
 
 
       // nextVideoBtn.addEventListener("click", playNextVideo1);
@@ -192,24 +193,46 @@
 
 
       favorites.addEventListener('click', function (evt) {
+        // Values in Video Detail card
+        videoDetailTitle = $("#video-detail-title").text()
+        videoDetailArtist = $("#video-detail-artist").text()
+        videoDetailSong =  $("#video-detail-song").text()
+        videoDetailNotes =  $("#video-detail-notes").text()
+
+        // Input fields of Favorite Video Save Modal form
+        inputVideoTitle = $('#input-video-title')
+        inputArtistName = $('#input-artist-name')
+        inputSongTitle = $('#input-song-title')
+        inputVideoNotes = $('#input-video-notes')
+
+
         console.log('Favorites was clicked')
-        if ( $('i').hasClass('far') ) {   // Not currenty a favorite
-
-          console.log("Has far-fa-heart - outline heart ")
+        if ( event.target.className == 'far fa-heart' ) {   // Not currenty a favorite - Make it a favorite
+          console.log("Heart clicked was outline")
           // Make it a favorite 
+          // Generate modal for to save favorite
+          $('#fav-save-modal').modal()
+          inputVideoTitle.val(videoDetailTitle)
+          inputArtistName.val(videoDetailArtist)
+          inputSongTitle.val(videoDetailSong)
+          inputVideoNotes.val(videoDetailNotes)
+         
 
+          console.log("Form is filled in")
+
+          
           // Send a message ajax to server to save favorite in the database
           // if successful then 
           //  - generate a success message 
           //  - toggle heart to solid
           
         } else {  
-          console.log("Has fas-fa-heart - solid heart ")
+          console.log("Heart clicked was solid heart")
 
           // Already a favorite...make it a non-favorite
 
           // Generate a modal window to confirm delete
-          $('#exampleModal').modal()
+          $("#fav-delete-modal").modal()
           // if user confirms un-favoriting then 
           //  - send an ajax message to server requesting deletion
           //  - if response indicates success then toggle class else generate error message
@@ -217,25 +240,56 @@
 
         }
 
-        $('i').toggleClass('far fa-heart fas fa-heart')
-
-
-
-
-
-        // if (event.target.className == "far fa-heart") {
-        //   console.log('Clicked Heart outline')
-        //   favorites.className = "fas fa-heart";
-        //   // favorites.classList.remove('far');
-        //   // favorites.classList.add('fas');
-        // } else {  // Heart clicked was a solid heart
-        //   console.log("Clicked Solid heart")
-        //   favorites.className = "far fa-heart";
-
-        //   // favorites.classList.remove('fas');
-        //   // favorites.classList.add('far');
-        // }
-
         
       });
-    // }); 
+
+      vidDetailFavSubmit.addEventListener('click', addUpdateFavorites)
+
+      async function addUpdateFavorites(evt) {
+        console.log("Send detailed video info to server to add to favorites")
+        const favSaveModal = $("#fav-save-modal")
+
+        evt.preventDefault()
+        // const lyricsSearch = $("#lyrics-search-form")
+        videoDetailTitle = $("#video-detail-title").text()
+        videoDetailArtist = $("#video-detail-artist").text()
+        videoDetailSong =  $("#video-detail-song").text()
+        videoDetailNotes =  $("#video-detail-notes").text()
+        params = {title: videoDetailTitle, artist: videoDetailArtist,  song: videoDetailSong, notes: videoDetailNotes}
+
+        try {
+          const res = await axios.post('http://localHost:5000/favorites', params)    
+          if (res.data) {
+            console.log("Favorite was added")
+            // $("#lyrics-content").html(res.data) 
+            $('i').toggleClass('far fa-heart fas fa-heart')
+            favSaveModal.modal('hide')
+          }
+        } catch(err) {
+          console.log("Error message")
+        }
+      }
+
+      vidDetailDelFav.addEventListener('click', delFavorites)      
+
+      async function delFavorites(evt) {
+        const url = 'http://localHost:5000/favorites/del'
+        const favDelModal = $("fav-delete-modal")
+        console.log("Function delFavorites")
+        const id = 1  
+        params = {id : 1}     
+        try {
+          // const res = await axios.delete(`http://localHost:5000/favorites/${id}`) 
+          // const res = await axios.delete(url, { crossdomain: true })   
+          const res = await axios.post(url, params)    
+
+          if (res.data) {
+            console.log("Favorite was deleted")
+            $('i').toggleClass('far fa-heart fas fa-heart')
+            favDelModal.modal('hide')
+          }
+        } catch(err) {
+          console.log("Error message")
+        }
+      }
+     // }); 
