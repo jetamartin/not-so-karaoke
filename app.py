@@ -14,7 +14,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from forms import SearchForm
 
 
-from models import db, connect_db
+from models import db, connect_db, User, Favorite
 
 CURR_USER_KEY = "curr_user"
 YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY')
@@ -249,7 +249,7 @@ def getMoreLyrics():
 
 @app.route('/favorites', methods=['POST'])
 def addUpdateFavorites():
-  import pdb; pdb.set_trace()
+  # import pdb; pdb.set_trace()
   title = request.json['title']
   artist = request.json['artist']
   song = request.json['song']
@@ -258,10 +258,9 @@ def addUpdateFavorites():
   # return jsonify({status: 'success', message: "Favorite successfully added to favorites list"})
   return jsonify("Favorite successfully added to favorites list")
 
-  # @app.route('/favorites/<int:id>', methods=['DELETE'])
-  @app.route('/favorites/del', methods=['POST'])
-  def deleteFavorite():
-    import pdb; pdb.set_trace()
+@app.route('/favorites/<id>', methods=['DELETE'])
+def deleteFavorite(id):
+  # import pdb; pdb.set_trace()
 
-    return jsonify("Favorite Deleted")
+  return jsonify("Favorite Deleted")
 

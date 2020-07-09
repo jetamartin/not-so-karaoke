@@ -239,7 +239,6 @@
           // else close modal window
 
         }
-
         
       });
 
@@ -255,14 +254,16 @@
         videoDetailArtist = $("#video-detail-artist").text()
         videoDetailSong =  $("#video-detail-song").text()
         videoDetailNotes =  $("#video-detail-notes").text()
+
         params = {title: videoDetailTitle, artist: videoDetailArtist,  song: videoDetailSong, notes: videoDetailNotes}
 
         try {
-          const res = await axios.post('http://localHost:5000/favorites', params)    
+          const res = await axios.post('/favorites', params)    
           if (res.data) {
             console.log("Favorite was added")
-            // $("#lyrics-content").html(res.data) 
-            $('i').toggleClass('far fa-heart fas fa-heart')
+            $('#favorites i').toggleClass('far fa-heart fas fa-heart')
+            // Show the notes
+            $("#video-detail-notes-section").toggleClass('hide')
             favSaveModal.modal('hide')
           }
         } catch(err) {
@@ -273,19 +274,17 @@
       vidDetailDelFav.addEventListener('click', delFavorites)      
 
       async function delFavorites(evt) {
-        const url = 'http://localHost:5000/favorites/del'
-        const favDelModal = $("fav-delete-modal")
+
+        const favDelModal = $("#fav-delete-modal")
         console.log("Function delFavorites")
         const id = 1  
-        params = {id : 1}     
         try {
-          // const res = await axios.delete(`http://localHost:5000/favorites/${id}`) 
-          // const res = await axios.delete(url, { crossdomain: true })   
-          const res = await axios.post(url, params)    
-
+          const res = await axios.delete(`/favorites/${id}`) 
           if (res.data) {
             console.log("Favorite was deleted")
-            $('i').toggleClass('far fa-heart fas fa-heart')
+            $('#favorites i').toggleClass('far fa-heart fas fa-heart')
+            // Hide the notes section
+            $("#video-detail-notes-section").toggleClass('hide')
             favDelModal.modal('hide')
           }
         } catch(err) {

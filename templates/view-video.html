@@ -14,7 +14,7 @@
               <p>Artist:<span id = "video-detail-artist" class="font-weight-bold ml-2 mr-2">{{video_details.artist}}</span></p>
               <p >Song:<span id = "video-detail-song" class="font-weight-bold ml-2 mr-2">{{video_details.song}}</span></p>
               {% if video_details.fav %}
-                <p >Notes:<span id = "video-detail-notes" class="font-weight-bold ml-2 mr-2">{{video_details.notes}}</span></p>
+                <p id="video-detail-notes-section" >Notes:<span id = "video-detail-notes" class="font-weight-bold ml-2 mr-2">{{video_details.notes}}</span></p>
               {% endif %}
 
             </div>
@@ -28,10 +28,7 @@
           </div>
         </div>
       </div>
-      <!-- Button trigger modal -->
-          <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
-            Launch demo modal
-      </button>
+
     </div>
 
 
@@ -74,17 +71,19 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Delete from Favorites list</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        ...
+        <p class="font-weight-bold text-center text-danger">Warning!</p>
+        <p >This will delete this video and associated notes you may have added from your favorites list. </p>
+        <p class="text-center">Do you want to proceed?</p>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button id="video-detail-delete-fav" type="button" class="btn btn-primary">Delete Fav</button>
+        <button type="button" class="btn btn-secondary d-flex justify-content-start" data-dismiss="modal">Close</button>
+        <button id="video-detail-delete-fav" type="button" class="btn btn-danger">Delete</button>
       </div>
     </div>
   </div>
