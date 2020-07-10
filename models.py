@@ -21,16 +21,25 @@ class User(db.Model):
 
     __tablename__ = 'users'
 
+    def __repr__(self):
+        u = self
+        return f"<User id= {u.id} username= {u.username} email= {u.email}>"
+
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     email = db.Column(db.Text, nullable=False, unique=True)
     username = db.Column(db.String(40), nullable=False, unique=True )
     image_url = db.Column( db.Text, default="/static/images/default-pic.png")
 
+    favorites = db.relationship('Favorite')
 
 class Favorite(db.Model):
     """ Stores info about a users Favorite Video"""
 
     __tablename__ = 'favorites'
+
+    def __repr__(self):
+        f = self
+        return f"<Favorite id= {f.id} user_id= {f.user_id} video_id= {f.video_id} video_title= {f.video_title} artist_name= {f.artist_name} song_title= {f.song_title} notes= {f.notes}>"
 
     id = db.Column(
         db.Integer,
@@ -43,7 +52,6 @@ class Favorite(db.Model):
         db.ForeignKey('users.id'),
         nullable=False
     )
-
 
     video_id = db.Column(
         db.String(20),
@@ -66,4 +74,4 @@ class Favorite(db.Model):
         db.String(250)
     )
 
-
+    user = db.relationship('User')

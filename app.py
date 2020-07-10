@@ -48,6 +48,9 @@ def index():
     artist = form.artist.data
     song = form.song.data
 
+      ######## Note will need to replace this line once user SignIn is implementened..at login the user_id will be added to session
+    session['user_id'] = 1;
+
     session['artist'] = artist.strip()
     # if user included song then save that in session
     if (song.strip()):
@@ -94,6 +97,8 @@ def index():
       videos.append(video)
 
     session['videos'] = pickle.dumps(videos)
+
+
    
      # print(video_ids)
     # # print(video_titles)
@@ -219,6 +224,7 @@ def viewVideo(video_id):
   # vid_fav = False
   # ^^^^^^^^^^^^^^ Uncomment above
 
+ 
 # *************Delete Lines below ***********************
   vid_id = "OMD8hBsA-RI"
   vid_title = "Journey - Faithfully (Official Video)"
@@ -226,12 +232,17 @@ def viewVideo(video_id):
   vid_artist = final_artist_and_song_title['artist']
   vid_song = final_artist_and_song_title['song']
   vid_notes = ""
-  vid_fav = True
+  favResult = Favorite.query.filter_by(video_id=vid_id, user_id=session['user_id']).first()
+  import pdb; pdb.set_trace()
+  if favResult:
+    fav_id = favResult.id
+  else: 
+    fav_id = None;
 # *************Delete Lines above ***********************
 
   
   
-  video_details = Video_Detail(vid_id, vid_title, vid_thumbnail, vid_artist, vid_song, vid_notes, vid_fav)
+  video_details = Video_Detail(vid_id, vid_title, vid_thumbnail, vid_artist, vid_song, vid_notes, fav_id)
 
   session['videoDetails'] = pickle.dumps(video_details)
 
@@ -249,18 +260,29 @@ def getMoreLyrics():
 
 @app.route('/favorites', methods=['POST'])
 def addUpdateFavorites():
-  # import pdb; pdb.set_trace()
+
+  userId = 1
+  videoId = request.json['id']
   title = request.json['title']
   artist = request.json['artist']
   song = request.json['song']
   notes = request.json['notes']
 
-  # return jsonify({status: 'success', message: "Favorite successfully added to favorites list"})
-  return jsonify("Favorite successfully added to favorites list")
+  addFav = Favorite(user_id = userId, video_id = videoId, video_title = title, artist_name = artist, song_title = song, notes = notes)
+  db.session.add(addFav)
+  db.session.commit()
 
-@app.route('/favorites/<id>', methods=['DELETE'])
+  import pdb; pdb.set_trace()
+  # return jsonify({status: 'success', message: "Favorite successfully added to favorites list"})
+  return jsonify(addFav.id)
+
+@app.route('/favorites/<int:id>', methods=['DELETE'])
 def deleteFavorite(id):
-  # import pdb; pdb.set_trace()
+  import pdb; pdb.set_trace()
+  fav = Favorite.query.get(id)
+
+  db.session.delete(fav)
+  db.session.commit()
 
   return jsonify("Favorite Deleted")
 

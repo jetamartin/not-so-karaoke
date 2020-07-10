@@ -41,14 +41,14 @@ class Video:
  
 
 class Video_Detail:
-  def __init__(self, id, title, thumbnail, artist, song, notes, fav):
+  def __init__(self, id, title, thumbnail, artist, song, notes, fav_id):
     self.id = id
     self.title = title
     self.thumbnail = thumbnail
     self.artist = artist
     self.song = song
     self.notes = notes
-    self.fav = fav
+    self.fav_id = fav_id
   
 
  
