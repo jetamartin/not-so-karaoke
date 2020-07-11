@@ -33,23 +33,37 @@ def split(word):
 
 class Video: 
   # def __init__(self, id, title, thumbnail, artist, song):
-  def __init__(self, id, title, thumbnail):
+  def __init__(self, id, title, thumbnail, fav_id):
 
     self.id = id
     self.title = title
     self.thumbnail = thumbnail
+    self.fav_id = fav_id
  
 
 class Video_Detail:
-  def __init__(self, id, title, thumbnail, artist, song, notes, fav_id):
-    self.id = id
+  def __init__(self, video_id, title, thumbnail, artist, song, notes, fav_id, user_id):
+    self.id = video_id
     self.title = title
     self.thumbnail = thumbnail
     self.artist = artist
     self.song = song
     self.notes = notes
     self.fav_id = fav_id
-  
+    self.user_id = user_id
+
+  def serialize(self):
+    return {
+      'video_id': self.id,
+      'video_title': self.title,
+      'thumbnail': self.thumbnail,
+      'artist_name':self.artist,
+      'song_title': self.song,
+      'video_notes':self.notes,
+      'fav_id': self.fav_id,
+      'user_id': self.user_id
+    }
+
 
  
 # Use heuristics to extract artist and song title from video title

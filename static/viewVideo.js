@@ -250,19 +250,24 @@
 
         evt.preventDefault()
         // const lyricsSearch = $("#lyrics-search-form")
-        videoId = $("iframe").data('videoid')
-        videoDetailTitle = $("#video-detail-title").text()
-        videoDetailArtist = $("#video-detail-artist").text()
-        videoDetailSong =  $("#video-detail-song").text()
-        videoDetailNotes =  $("#video-detail-notes").text()
+        const videoId = $("iframe").data('videoid')
+        const inputVideoTitle = $("#input-video-title").val()
+        const inputArtistName = $("#input-artist-name").val()
+        const inputSongTitle =  $("#input-song-title").val()
+        const inputVideoNotes =  $("#input-video-notes").val()
 
-        params = {id: videoId, title: videoDetailTitle, artist: videoDetailArtist,  song: videoDetailSong, notes: videoDetailNotes}
+        params = {id: videoId, title: inputVideoTitle, artist: inputArtistName,  song: inputSongTitle, notes: inputVideoNotes}
 
         try {
           const res = await axios.post('/favorites', params)    
           if (res.data) {
-            // $("#favorites").attr("data-fav_id", res.data)
-            $("#favorites").data('fav_id', res.data)
+            // $("#favorites").data('fav_id', res.data)
+            $("#favorites").data('fav_id', res.data.fav_id)
+            $('#video-detail-title').text(res.data.video_title)
+            $("#video-detail-artist").text(res.data.artist_name)
+            $("#video-detail-song").text(res.data.song_title)
+            $("#video-detail-notes").text(res.data.video_notes)
+
             console.log("Favorite was added")
             $('#favorites i').toggleClass('far fa-heart fas fa-heart')
             // Show the notes
@@ -291,7 +296,7 @@
             console.log("Favorite was deleted")
             $('#favorites i').toggleClass('far fa-heart fas fa-heart')
             $("#favorites").data("fav_id", "")
-            $("#favorites").removeAttr("data-fav_id")
+            // $("#favorites").removeAttr("data-fav_id")
             // Hide the notes section
             $("#video-detail-notes-section").toggleClass('hide')
             favDelModal.modal('hide')

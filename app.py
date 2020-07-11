@@ -91,9 +91,19 @@ def index():
     
     for result in results: 
       video_id = result['id']['videoId']
+
+      # Check to see if video is in favorites for current user...if so then set fav_id 
+      favResult = Favorite.query.filter_by(video_id=video_id, user_id=session['user_id']).first()
+      if favResult:
+        fav_id = favResult.id
+      else: 
+        fav_id = None;
+
+      print('Video id: ', video_id, ' fav_id: ', fav_id)
+
       video_title = result['snippet']['title']
       video_thumbnail = result['snippet']['thumbnails']['default']['url']
-      video = Video(video_id, video_title, video_thumbnail)
+      video = Video(video_id, video_title, video_thumbnail, fav_id )
       videos.append(video)
 
     session['videos'] = pickle.dumps(videos)
@@ -242,7 +252,7 @@ def viewVideo(video_id):
 
   
   
-  video_details = Video_Detail(vid_id, vid_title, vid_thumbnail, vid_artist, vid_song, vid_notes, fav_id)
+  video_details = Video_Detail(vid_id, vid_title, vid_thumbnail, vid_artist, vid_song, vid_notes, fav_id, session['user_id'])
 
   session['videoDetails'] = pickle.dumps(video_details)
 
@@ -260,21 +270,27 @@ def getMoreLyrics():
 
 @app.route('/favorites', methods=['POST'])
 def addUpdateFavorites():
-
-  userId = 1
+  # import pdb; pdb.set_trace()
+  userId = session['user_id']
   videoId = request.json['id']
   title = request.json['title']
   artist = request.json['artist']
   song = request.json['song']
   notes = request.json['notes']
+  thumbnail = ""
 
   addFav = Favorite(user_id = userId, video_id = videoId, video_title = title, artist_name = artist, song_title = song, notes = notes)
   db.session.add(addFav)
   db.session.commit()
+  import pdb; pdb.set_trace()
+
+  # Convert Database Ojbect to Python Object so it can be serialized 
+  videoObj = Video_Detail(addFav.video_id, addFav.video_title, thumbnail, addFav.artist_name, addFav.song_title, addFav.notes, addFav.id, addFav.user_id )
 
   import pdb; pdb.set_trace()
   # return jsonify({status: 'success', message: "Favorite successfully added to favorites list"})
-  return jsonify(addFav.id)
+  # return jsonify(video = [vid.serialize() for vid in videoObj])
+  return jsonify(videoObj.serialize())
 
 @app.route('/favorites/<int:id>', methods=['DELETE'])
 def deleteFavorite(id):
