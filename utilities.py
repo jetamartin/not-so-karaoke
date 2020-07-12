@@ -3,6 +3,16 @@ import re
 import urllib.request  
 from bs4 import BeautifulSoup
 
+from flask import session
+from flask_sqlalchemy import SQLAlchemy
+from models import db, connect_db, User, Favorite
+
+# For parsing coverting characters in video titles (e.g. &39 to ')
+import html.parser as htmlparser
+
+from constants import * 
+import requests
+
 def get_lyrics(artist,song_title):
   artist = artist.lower()
   song_title = song_title.lower()
@@ -175,3 +185,133 @@ def separate_artist_song (title, artist_input):
     no_delimeter_separation(title, artist_input)
 
   return artist_song
+
+def get_video_info(result, search_type):
+  """ Extract key video info from json data """
+  # Parser is required to remove special characters (e.g., &#39)
+  parser = htmlparser.HTMLParser()
+  # import pdb; pdb.set_trace()
+  video_title = parser.unescape(result['snippet']['title'])
+  video_thumbnail = result['snippet']['thumbnails']['default']['url']
+  if (search_type == 'video_search'):
+    video_id = result['id']['videoId']
+  else: # 'video_detail'
+    video_id = result['id']
+  return {
+    'video_id' : video_id,
+    'video_title' : video_title,
+    'video_thumbnail' : video_thumbnail,
+  }
+
+def build_video_object(json_video_info, search_type):
+  """ Builds a video object from JSON search results and whether favorite exist for this user"""
+  # import pdb; pdb.set_trace()
+  # Extract video info from 
+  video_info = get_video_info(json_video_info, search_type)
+
+  # Check to see if video is in current user's favorites list...if so then return fav_id else return None
+  fav_id = isFavoriteVideo(video_info['video_id'])
+
+  # Create a video object for each video returned from the search..this will be used in the view template to display results
+  video = Video(video_info['video_id'], video_info['video_title'], video_info['video_thumbnail'], fav_id )
+
+  return video
+
+  
+
+def process_video_search_results (searchResults, search_type):
+  """ Translate YT JSON video search results into a list of Video objects. Returns a list of resulting Video Objects  """
+  videos = []
+  for result in searchResults: 
+    # import pdb; pdb.set_trace()
+    # Build video object for each video returned in json
+    video = build_video_object(result, search_type)
+
+    
+    # Add video to list of video objects 
+    videos.append(video)
+
+  return videos
+
+
+  
+
+def isFavoriteVideo(video_id):
+  """ Check database to see if video is in user's favorites list. Return id of favorite if found or return None """
+
+  favResult = Favorite.query.filter_by(video_id=video_id, user_id = session['user_id']).first()
+  if favResult:
+    fav_id = favResult.id
+  else: 
+    fav_id = None;
+  return fav_id
+
+
+def get_detailed_video_data(video_id):
+  # Currently I'm making a second call to YT Search to get video details..so session videos aren't really being used.
+  video_params = {
+    'key'          : YOUTUBE_API_KEY,
+    # 'part'         : {'contentDetails', 'snippet', 'statistics', 'status'}, 
+    'part'         : 'snippet',
+    'maxResults'   : 15, 
+    'id'           : video_id, 
+    'type'         : 'video'
+  }
+
+  # ENHANCEMENT NEEDED:  Need to check if there are results and if not need to display an appropriate message and return.
+  # Get results of YT Video Detail search.   
+  search_results = requests.get(YT_VIDEO_DETAIL_URL, params = video_params) 
+  video_json_info = search_results.json()['items']
+
+  return video_json_info[0]
+
+def get_artist_and_song(artist_input, song_input, title):
+  # Extract artist and song title from video title
+  artist_song_title = extract_artist_song_from_video_title(title, artist_input, song_input)
+  # # import pdb; pdb.set_trace()
+
+  # # Determine final "version" of Artist and Song title to use in Lyrics search. Version could be values from
+  # # search form or from video title selected for view or a combination of both
+  final_artist_and_song_title = pick_final_artist_and_song_title(artist_song_title, artist_input, song_input)
+
+  return final_artist_and_song_title
+
+
+def create_detail_video_object(video, artist_and_song_title):
+  # create video detail object 
+ 
+  vid_id = video.id
+  vid_title = video.title
+  vid_thumbnail = video.thumbnail
+  vid_artist = artist_and_song_title['artist']
+  vid_song = artist_and_song_title['song']
+
+  favResult = Favorite.query.filter_by(video_id=vid_id, user_id=session['user_id']).first()
+  if favResult:
+    fav_id = favResult.id
+    vid_notes = favResult.notes
+  else: 
+    fav_id = None;
+    vid_notes = None;
+
+  video_details = Video_Detail(vid_id, vid_title, vid_thumbnail, vid_artist, vid_song, vid_notes, fav_id, session['user_id'])
+  return video_details
+
+
+def search_for_matching_videos(artist, song):
+  videos = []
+  search_params = {
+    'key'          : YOUTUBE_API_KEY,
+    'q'            : f" {artist} + {song}", 
+    'part'         : 'snippet',
+    'maxResults'   : 15, 
+    'type'         : 'video'
+  }
+  results = ''
+  req = requests.get(YT_VIDEO_SEARCH_URL, params = search_params)
+
+
+  #  Get results from YT Video search 
+  search_results = req.json()['items']
+
+  return search_results

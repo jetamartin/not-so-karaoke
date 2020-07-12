@@ -1,8 +1,7 @@
 // $(document).ready(function () {
       
       console.log("I'm in viewVideo.js file")
-      videos = ['Z1RJmh_OqeA', 'EnJKHVEzHFw', '3mwFC4SHY-Y', 'mqhxxeeTbu0', 'OZ3K4fK9cAQ', 'asmvv8w8JY0', 'MwZwr5Tvyxo', 'zRwy8gtgJ1A']
-      // videos = ['Z1RJmh_OqeA', 'EnJKHVEzHFw']
+
       var vidNum = 0;
       const nextVideoBtn = document.getElementById("next-video-btn")
       const priorVideoBtn = document.getElementById("prior-video-btn")

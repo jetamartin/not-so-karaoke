@@ -12,14 +12,9 @@ import requests
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from forms import SearchForm
-
-
+from constants import *
 from models import db, connect_db, User, Favorite
 
-CURR_USER_KEY = "curr_user"
-YOUTUBE_API_KEY = os.environ.get('YOUTUBE_API_KEY')
-YT_VIDEO_SEARCH_URL = 'https://www.googleapis.com/youtube/v3/search'
-YT_VIDEO_DETAIL_URL = 'https://www.googleapis.com/youtube/v3/videos'
 
 app = Flask(__name__)
 
@@ -44,103 +39,36 @@ def index():
   form = SearchForm()
   if form.validate_on_submit():
 
-    # import pdb; pdb.set_trace()
-    artist = form.artist.data
-    song = form.song.data
+    # Get values entered on Video Search screen
+    artist = form.artist.data.strip()
+    song = form.song.data.strip()
 
-      ######## Note will need to replace this line once user SignIn is implementened..at login the user_id will be added to session
+    ######## Note will need to replace this line once user SignIn is implementened..at login the user_id will be added to session
     session['user_id'] = 1;
 
-    session['artist'] = artist.strip()
+    # Save search values as Session variables
+    session['artist'] = artist
     # if user included song then save that in session
     if (song.strip()):
-      session['song'] = song.strip()
+      session['song'] = song
 
     # Each time a new search is initiated remove prior search results from session
     if 'videos' in session: 
       session.pop('videos')
 
-    videos = []
-    search_params = {
-      'key'          : YOUTUBE_API_KEY,
-      'q'            : f" {artist} + {song}", 
-      'part'         : 'snippet',
-      'maxResults'   : 15, 
-      'type'         : 'video'
-    }
-    results = ''
-    req = requests.get(YT_VIDEO_SEARCH_URL, params = search_params)
+    # ENHANCEMENT NEEDED:  Need to check if there are results and if not need to display an appropriate message and return.
+    search_results = search_for_matching_videos(artist, song)
 
-    results = req.json()['items']
-
-    # print(results[5]['snippet']['title'])
-    # print(results[8])
-    # print(results)
-    # import pdb; pdb.set_trace()
-
- 
-    video_ids = []
-    video_titles = []
-
-    # parser = htmlparser.HTMLParser()
-    # for result in results: 
-    #   video_ids.append(result['id']['videoId'])
-    #   video_titles.append(result['snippet']['title'])
-
-    # parser = htmlparser.HTMLParser()
+    # REFACTOR CODE - Turn save video results in Video Object code below into a separate function
+    # Save the YT video search results (video_id, title, thumbnail) and check to see if video is a current favor
     
-    for result in results: 
-      video_id = result['id']['videoId']
+    video_search_results = process_video_search_results (search_results, 'video_search')
 
-      # Check to see if video is in favorites for current user...if so then set fav_id 
-      favResult = Favorite.query.filter_by(video_id=video_id, user_id=session['user_id']).first()
-      if favResult:
-        fav_id = favResult.id
-      else: 
-        fav_id = None;
-
-      print('Video id: ', video_id, ' fav_id: ', fav_id)
-
-      video_title = result['snippet']['title']
-      video_thumbnail = result['snippet']['thumbnails']['default']['url']
-      video = Video(video_id, video_title, video_thumbnail, fav_id )
-      videos.append(video)
-
-    session['videos'] = pickle.dumps(videos)
-
-
+    # My custom Video object is not serializable so pickle dump is used to serialize session variable before saving
+    session['videos'] = pickle.dumps(video_search_results)
    
-     # print(video_ids)
-    # # print(video_titles)
 
-    # parser = htmlparser.HTMLParser()
-    # for video in videos:
-    #   print(video.id)
-    #   # print(parser.unescape(video.title))
-
-    # video_params = {
-    #   'key'          : YOUTUBE_API_KEY,
-    #   'part'         : 'contentDetails, snippet, statistics, status', 
-    #   'maxResults'   : 15, 
-    #   # 'id'           : ','.join(video_ids), 
-    #   'id'           : 'OMD8hBsA-RI', 
-    #   'type'         : 'video'
-    # }
-      
-    # vid_req = requests.get(video_url, params = video_params)
-    # vid_results = vid_req.json()['items']
-
-    # print(vid_req.text)
-    # print(vid_results)
-
-
-    # mins = int(parse_duration(vid_results[0]['contentDetails']['duration']).total_seconds()//60)
-    # views = vid_results[0]['statistics']['viewCount']
-
-    # # import pdb; pdb.set_trace()
-
-      
-    return render_template('/search.html', form=form, videos = videos)
+    return render_template('/search.html', form=form, videos = video_search_results)
   else:
 
     return render_template("/search.html", form=form)
@@ -150,112 +78,31 @@ def index():
 
 @app.route('/video/<video_id>')
 def viewVideo(video_id):
+  # Pickle 'loads' method is used to 'un-serialize' video search results saved in session variable.
   videos = pickle.loads(session['videos'])
-  title =''
-  vid = ''  
-
-  video_params = {
-    'key'          : YOUTUBE_API_KEY,
-    # 'part'         : {'contentDetails', 'snippet', 'statistics', 'status'}, 
-    'part'         : 'snippet',
-    'maxResults'   : 15, 
-    'id'           : video_id, 
-    'type'         : 'video'
-  }
   
-  vid_req = requests.get(YT_VIDEO_DETAIL_URL, params = video_params) 
-  # import pdb; pdb.set_trace()
-  vid_results = vid_req.json()['items']
+  # Call YT Video Detail API to retrieve JSON Data
+  search_results = get_detailed_video_data(video_id)
 
+  # ENHANCEMENT NEEDED:  Need to check if there are results and if not need to display an appropriate message and return.
+  # Extract the detailed video information from the JSON Data returned from the YT API call 
+  video = build_video_object(search_results, 'video_detail')
 
-  print(title)
-
-  # import pdb; pdb.set_trace()
-  # Search through list of video objects to locate video object with matching video id
-
-  # ^^^^^^^^^^^^^^ Uncomment below
-  # for video in videos:
-  #   if video.id == video_id:
-  #     vid = video
-  #     break
-  # ^^^^^^^^^^^^^^ Uncomment above
-
-    
-  # import pdb; pdb.set_trace()
-  # Use parser to convert HTML representations of special characters to normal characters (e.g., &#39 is an apostrophe character) 
-  # For example:  title for Journey's "Don't Stop Believin'"" would read "Don&#39;t Stop Believin&#39"
-  parser = htmlparser.HTMLParser()
-
-  # ^^^^^^^^^^^^^^ Uncomment below
-  # title = parser.unescape(vid.title)
-  # ^^^^^^^^^^^^^^ Uncomment above
-
-  # *************Delete Line below ***********************
-  title =  "Journey - Faithfully (Official Video)"
-  # ************************************
-  
   # Get artist and Song entered on search form
+  artist_input = session.get('artist', None)
+  song_input = session.get('song', None)
 
-  # ^^^^^^^^^^^^^^ Uncomment below
-  # artist_input = session.get('artist', None)
-  # song_input = session.get('song', None)
-  # ^^^^^^^^^^^^^^ Uncomment above
-  # *************Delete Line below ***********************
-  artist_input = 'Journey'
-  song_input = None
-  # ************************************
+  # Use search inputs plus heuristics to derive artist and song title (remember song_title is not required search input)
+  artist_and_song_title = get_artist_and_song(artist_input, song_input, video.title)
 
+  # Retrieve the lyrics
+  lyrics = get_lyrics(artist_and_song_title['artist'], artist_and_song_title['song'] )
 
+  # Build a detail video object to simplify passing data into view
+  video_details = create_detail_video_object(video, artist_and_song_title)
 
-  # import pdb; pdb.set_trace()
-  # Extract artist and song title from video title
-  artist_song_title = extract_artist_song_from_video_title(title, artist_input, song_input)
-  # import pdb; pdb.set_trace()
-
-  # Determine final "version" of Artist and Song title to use in Lyrics search. Version could be values from
-  # search form or from video title selected for view or a combination of both
-  final_artist_and_song_title = pick_final_artist_and_song_title(artist_song_title, artist_input, song_input)
-
-  # import pdb; pdb.set_trace()
-
-  #  Get lyrics 
-  lyrics = get_lyrics(final_artist_and_song_title['artist'], final_artist_and_song_title['song'])
-
-
-# ^^^^^^^^^^^^^^ Uncomment below
-
-  # create video detail object  
-  # vid_id = video_id
-  # vid_title = vid_results[0]['snippet']['title']
-  # vid_thumbnail = vid_results[0]['snippet']['thumbnails']['default']['url']
-  # vid_artist = final_artist_and_song_title['artist']
-  # vid_song = final_artist_and_song_title['song']
-  # vid_notes = ""
-  # vid_fav = False
-  # ^^^^^^^^^^^^^^ Uncomment above
-
- 
-# *************Delete Lines below ***********************
-  vid_id = "OMD8hBsA-RI"
-  vid_title = "Journey - Faithfully (Official Video)"
-  vid_thumbnail = ""
-  vid_artist = final_artist_and_song_title['artist']
-  vid_song = final_artist_and_song_title['song']
-  vid_notes = ""
-  favResult = Favorite.query.filter_by(video_id=vid_id, user_id=session['user_id']).first()
-  import pdb; pdb.set_trace()
-  if favResult:
-    fav_id = favResult.id
-  else: 
-    fav_id = None;
-# *************Delete Lines above ***********************
-
-  
-  
-  video_details = Video_Detail(vid_id, vid_title, vid_thumbnail, vid_artist, vid_song, vid_notes, fav_id, session['user_id'])
-
+  # Don't think I need to save this in session variable
   session['videoDetails'] = pickle.dumps(video_details)
-
 
   return render_template('/view-video.html', video_details = video_details, lyrics = lyrics)
 
@@ -282,19 +129,19 @@ def addUpdateFavorites():
   addFav = Favorite(user_id = userId, video_id = videoId, video_title = title, artist_name = artist, song_title = song, notes = notes)
   db.session.add(addFav)
   db.session.commit()
-  import pdb; pdb.set_trace()
+  # import pdb; pdb.set_trace()
 
   # Convert Database Ojbect to Python Object so it can be serialized 
   videoObj = Video_Detail(addFav.video_id, addFav.video_title, thumbnail, addFav.artist_name, addFav.song_title, addFav.notes, addFav.id, addFav.user_id )
 
-  import pdb; pdb.set_trace()
+  # import pdb; pdb.set_trace()
   # return jsonify({status: 'success', message: "Favorite successfully added to favorites list"})
   # return jsonify(video = [vid.serialize() for vid in videoObj])
   return jsonify(videoObj.serialize())
 
 @app.route('/favorites/<int:id>', methods=['DELETE'])
 def deleteFavorite(id):
-  import pdb; pdb.set_trace()
+  # import pdb; pdb.set_trace()
   fav = Favorite.query.get(id)
 
   db.session.delete(fav)
