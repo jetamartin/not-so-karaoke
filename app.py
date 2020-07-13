@@ -73,8 +73,6 @@ def index():
 
     return render_template("/search.html", form=form)
 
-# @app.route('/video/')
-# def viewVideo():
 
 @app.route('/video/<video_id>')
 def viewVideo(video_id):
@@ -117,7 +115,6 @@ def getMoreLyrics():
 
 @app.route('/favorites', methods=['POST'])
 def addUpdateFavorites():
-  # import pdb; pdb.set_trace()
   userId = session['user_id']
   videoId = request.json['id']
   title = request.json['title']
@@ -129,8 +126,7 @@ def addUpdateFavorites():
   addFav = Favorite(user_id = userId, video_id = videoId, video_title = title, artist_name = artist, song_title = song, notes = notes)
   db.session.add(addFav)
   db.session.commit()
-  # import pdb; pdb.set_trace()
-
+  
   # Convert Database Ojbect to Python Object so it can be serialized 
   videoObj = Video_Detail(addFav.video_id, addFav.video_title, thumbnail, addFav.artist_name, addFav.song_title, addFav.notes, addFav.id, addFav.user_id )
 

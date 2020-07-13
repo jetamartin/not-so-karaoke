@@ -14,6 +14,7 @@ from constants import *
 import requests
 
 def get_lyrics(artist,song_title):
+  """ Scrapes the lyric data from azlyrics website """
   artist = artist.lower()
   song_title = song_title.lower()
   # remove all except alphanumeric characters from artist and song_title
@@ -39,9 +40,11 @@ def get_lyrics(artist,song_title):
 
 
 def split(word): 
-    return [char for char in word] 
+  """ Takes a string and breaks it into array containing each of the letters of the string """
+  return [char for char in word] 
 
 class Video: 
+  """ Creates an object with core video content """
   # def __init__(self, id, title, thumbnail, artist, song):
   def __init__(self, id, title, thumbnail, fav_id):
 
@@ -52,6 +55,7 @@ class Video:
  
 
 class Video_Detail:
+  """ Creates and object with all the data needed on the Video Detail screen """
   def __init__(self, video_id, title, thumbnail, artist, song, notes, fav_id, user_id):
     self.id = video_id
     self.title = title
@@ -63,6 +67,7 @@ class Video_Detail:
     self.user_id = user_id
 
   def serialize(self):
+    """ Serializes the data in the Video_Detail object so it can be sent as JSON data """
     return {
       'video_id': self.id,
       'video_title': self.title,
@@ -188,7 +193,8 @@ def separate_artist_song (title, artist_input):
 
 def get_video_info(result, search_type):
   """ Extract key video info from json data """
-  # Parser is required to remove special characters (e.g., &#39)
+
+  # Parser is required to remove special characters (e.g., &#39) that are present in titles
   parser = htmlparser.HTMLParser()
   # import pdb; pdb.set_trace()
   video_title = parser.unescape(result['snippet']['title'])
@@ -248,6 +254,7 @@ def isFavoriteVideo(video_id):
 
 
 def get_detailed_video_data(video_id):
+  """ Call YT API to retrieve detailed video information """
   # Currently I'm making a second call to YT Search to get video details..so session videos aren't really being used.
   video_params = {
     'key'          : YOUTUBE_API_KEY,
@@ -266,19 +273,21 @@ def get_detailed_video_data(video_id):
   return video_json_info[0]
 
 def get_artist_and_song(artist_input, song_input, title):
+  """ Uses video title, search inputs and heuristics to get Artist name and song title
+      The heuristics account for the fact that the user isn't required to enter song title
+      as a search parameter and the user may not fill in the full artist name """
   # Extract artist and song title from video title
   artist_song_title = extract_artist_song_from_video_title(title, artist_input, song_input)
-  # # import pdb; pdb.set_trace()
 
-  # # Determine final "version" of Artist and Song title to use in Lyrics search. Version could be values from
-  # # search form or from video title selected for view or a combination of both
+  # Determine final "version" of Artist and Song title to use in Lyrics search. Version could be values from
+  # search form or from video title selected for view or a combination of both
   final_artist_and_song_title = pick_final_artist_and_song_title(artist_song_title, artist_input, song_input)
 
   return final_artist_and_song_title
 
 
 def create_detail_video_object(video, artist_and_song_title):
-  # create video detail object 
+  """ Builds a detailed video object inclusive of notes if present """ 
  
   vid_id = video.id
   vid_title = video.title
@@ -299,6 +308,8 @@ def create_detail_video_object(video, artist_and_song_title):
 
 
 def search_for_matching_videos(artist, song):
+  """ Calls YT API to find matching videos based on user search criteria """
+
   videos = []
   search_params = {
     'key'          : YOUTUBE_API_KEY,

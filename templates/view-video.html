@@ -17,6 +17,9 @@
                 <p id="video-detail-notes-section" >Notes:
                   <span id = "video-detail-notes" class="font-weight-bold ml-2 mr-2">{{video_details.notes}}</span>
                 </p>
+              {% else %}
+                <p id="video-detail-notes-section" class="hide" >Notes:
+                <span id = "video-detail-notes" class="font-weight-bold ml-2 mr-2 hide">{{video_details.notes}}</span>
               {% endif %}
             </div>
             <div id="favorites" class="col-2 d-flex justify-content-center" {% if video_details.fav_id %} data-fav_id={{video_details.fav_id}} {% endif %} >

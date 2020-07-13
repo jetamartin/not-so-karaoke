@@ -59,15 +59,15 @@ class Favorite(db.Model):
     )
 
     video_title = db.Column(
-        db.String(50)
+        db.String(100)
     )
 
     artist_name = db.Column(
-        db.String(50)
+        db.String(100)
     )
 
     song_title = db.Column(
-        db.String(50)
+        db.String(100)
     )
 
     notes = db.Column(

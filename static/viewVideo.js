@@ -191,65 +191,55 @@
       lyricsSearch.addEventListener("submit", requestMoreLyrics);
 
 
-      favorites.addEventListener('click', function (evt) {
-        // Values in Video Detail card
-        videoDetailTitle = $("#video-detail-title").text()
-        videoDetailArtist = $("#video-detail-artist").text()
-        videoDetailSong =  $("#video-detail-song").text()
-        videoDetailNotes =  $("#video-detail-notes").text()
+      favorites.addEventListener('click', launchFavoritesModal);
+      
+      function launchFavoriteModal (evt) {
+        // Determines which favorite's modal window to launch (add-favorite or remove-favorite) and launches it. 
+        // Scenario 1: A heart outline (far fa-heart) denotes that the current video is not currently a favorite but the user 
+        // wants to make it a fav;
+        // Scenario 2: A solid red heart (fas fa-heart) indicates the video is already a favorite and clicking on it means the user wants
+        // to remove it as one of their favorite;
 
-        // Input fields of Favorite Video Save Modal form
-        inputVideoTitle = $('#input-video-title')
-        inputArtistName = $('#input-artist-name')
-        inputSongTitle = $('#input-song-title')
-        inputVideoNotes = $('#input-video-notes')
+        // Scenario 1:  Current video is not a favorite
+        if ( event.target.className == 'far fa-heart' ) { 
+          // Get the values from the video detail card to populate the 'Add to favorites' modal form.
+          videoDetailTitle = $("#video-detail-title").text()
+          videoDetailArtist = $("#video-detail-artist").text()
+          videoDetailSong =  $("#video-detail-song").text()
+          videoDetailNotes =  $("#video-detail-notes").text()
 
+          // Get handle for input fields on the favorite modal
+          inputVideoTitle = $('#input-video-title')
+          inputArtistName = $('#input-artist-name')
+          inputSongTitle = $('#input-song-title')
+          inputVideoNotes = $('#input-video-notes')
 
-        console.log('Favorites was clicked')
-        if ( event.target.className == 'far fa-heart' ) {   // Not currenty a favorite - Make it a favorite
-          console.log("Heart clicked was outline")
-          // Make it a favorite 
-          // Generate modal for to save favorite
-          $('#fav-save-modal').modal()
+          // Now populate the Add-to-Favorites modal with the data from the video detail card
           inputVideoTitle.val(videoDetailTitle)
           inputArtistName.val(videoDetailArtist)
           inputSongTitle.val(videoDetailSong)
-          inputVideoNotes.val(videoDetailNotes)
-         
+          inputVideoNotes.val("") 
 
-          console.log("Form is filled in")
-
+          // Display the populated Add Favorite modal screen
+          $('#fav-save-modal').modal()
           
-          // Send a message ajax to server to save favorite in the database
-          // if successful then 
-          //  - generate a success message 
-          //  - toggle heart to solid
-          
-        } else {  
-          console.log("Heart clicked was solid heart")
+        } else {  // Current video is already a fav and user wants to remove it as a favorite video
 
-          // Already a favorite...make it a non-favorite
-
-          // Generate a modal window to confirm delete
+          // Display Remove Favorites modal window
           $("#fav-delete-modal").modal()
-          // if user confirms un-favoriting then 
-          //  - send an ajax message to server requesting deletion
-          //  - if response indicates success then toggle class else generate error message
-          // else close modal window
-
         }
-        
-      });
+      }
 
-      vidDetailFavSubmit.addEventListener('click', addUpdateFavorites)
+      vidDetailFavSubmit.addEventListener('click', sendFavDataToServer)
 
-      async function addUpdateFavorites(evt) {
+      async function sendFavDataToServer(evt) {
+        // Sends fav data on "Add Fav Form" to the server (via AJAX) so server can add this fav to the Database
         console.log("Send detailed video info to server to add to favorites")
         const favSaveModal = $("#fav-save-modal")
-
         evt.preventDefault()
-        // const lyricsSearch = $("#lyrics-search-form")
-        const videoId = $("iframe").data('videoid')
+
+        // Collect data on the Add-Fav-Modal form 
+        const videoId = $("iframe").data('videoid') 
         const inputVideoTitle = $("#input-video-title").val()
         const inputArtistName = $("#input-artist-name").val()
         const inputSongTitle =  $("#input-song-title").val()
@@ -258,19 +248,25 @@
         params = {id: videoId, title: inputVideoTitle, artist: inputArtistName,  song: inputSongTitle, notes: inputVideoNotes}
 
         try {
+          // Send fav data to the server   
           const res = await axios.post('/favorites', params)    
-          if (res.data) {
-            // $("#favorites").data('fav_id', res.data)
-            $("#favorites").data('fav_id', res.data.fav_id)
+          if (res.data) {  // Server was able to save data 
+
+            // Save the DB id of the newly created favorite in the html
+            $("#favorites").data('fav_id', res.data.fav_id) 
+
+            // Update all fields on the Add Modal Form to reflect actual data saved in DB. Note: this is prob not needed. 
             $('#video-detail-title').text(res.data.video_title)
             $("#video-detail-artist").text(res.data.artist_name)
             $("#video-detail-song").text(res.data.song_title)
             $("#video-detail-notes").text(res.data.video_notes)
 
-            console.log("Favorite was added")
+            // Toggle the favorites icon from the heart outlie to a solid red heart to indicate it's a favorite.
             $('#favorites i').toggleClass('far fa-heart fas fa-heart')
-            // Show the notes
+
+            // Now that current video is a favorite show the notes field. 
             $("#video-detail-notes-section").toggleClass('hide')
+            $("#video-detail-notes").toggleClass('hide')
             favSaveModal.modal('hide')
           }
         } catch(err) {
@@ -281,9 +277,11 @@
       vidDetailDelFav.addEventListener('click', delFavorites)      
 
       async function delFavorites(evt) {
+        // If user clicks on the delete button in "Remove Fav" modal it will send a delete request to the server 
 
         const favDelModal = $("#fav-delete-modal")
         console.log("Function delFavorites")
+
         // Get the videoId from the details page
         videoId = $("iframe").data('videoid')
         userId = $("iframe").data('user_id')
@@ -298,6 +296,7 @@
             // $("#favorites").removeAttr("data-fav_id")
             // Hide the notes section
             $("#video-detail-notes-section").toggleClass('hide')
+            $("#video-detail-notes").toggleClass('hide')
             favDelModal.modal('hide')
           }
         } catch(err) {
