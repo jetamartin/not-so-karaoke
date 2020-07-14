@@ -281,14 +281,23 @@ const delFav = $('#del-fav')
       }
 
       async function saveOrEditFavorite(evt) {
+
+        // Retrieve key data from HTLM 
+        const videoId = $("iframe").data('videoid')
+
+        let fav_id = $("#favorites").data('fav_id')
+        if (!fav_id) {
+          fav_id = ""
+        }
+
         // Collect data on the Add-Fav-Modal form 
-        const videoId = $("iframe").data('videoid') 
         const inputVideoTitle = $("#input-video-title").val()
         const inputArtistName = $("#input-artist-name").val()
         const inputSongTitle =  $("#input-song-title").val()
         const inputVideoNotes =  $("#input-video-notes").val()
 
-        params = {id: videoId, title: inputVideoTitle, artist: inputArtistName,  song: inputSongTitle, notes: inputVideoNotes}
+
+        params = {favId: fav_id,  id: videoId, title: inputVideoTitle, artist: inputArtistName,  song: inputSongTitle, notes: inputVideoNotes}
 
         try {
           // Send fav data to the server   
