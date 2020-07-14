@@ -28,6 +28,8 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
+
+app.config.update(SESSION_COOKIE_SAMESITE='Lax')
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
@@ -122,6 +124,10 @@ def addUpdateFavorites():
   song = request.json['song']
   notes = request.json['notes']
   thumbnail = ""
+
+  # Update session variables with data enetered on Favorit screen
+  session['artist'] = request.json['artist']
+  session['song'] = request.json['song']
 
   addFav = Favorite(user_id = userId, video_id = videoId, video_title = title, artist_name = artist, song_title = song, notes = notes)
   db.session.add(addFav)

@@ -32,3 +32,50 @@
 .hide {
   display: none
 }
+
+#del-fav-warning {
+  color: red
+}
+
+/* div.custom-control-right {
+  padding-right: 24px;
+  padding-left: 0;
+  margin-left: -2rem;
+  margin-right: 0;
+  margin-top: 35%;
+  color: red
+}
+div.custom-control-right .custom-control-label::after{
+  right: -2.2rem;
+  left: auto;
+}
+div.custom-control-right .custom-control-label::before {
+  right: -2.35rem;
+  left: auto;
+}
+
+.custom-control-label::before {
+  width: 1.25rem;
+  height: 1.25rem;
+  border-color: red;
+}
+
+input[type='checkbox']:checked {
+  color: red;
+}
+
+.custom-control-label::after {
+  top: .35rem;
+  background: no repeat 80%/80% 80%;
+}
+
+.custom-checkbox .custom-control-input:checked ~ 
+.custom-control-label::after {
+  background-color: red
+}
+
+.custom-control-input:checked ~
+.custom-control-label::before {
+  border-color: red;
+  background-color: red;
+} */
