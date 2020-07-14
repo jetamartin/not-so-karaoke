@@ -54,6 +54,7 @@ def index():
     # if (song.strip()):
     session['song'] = song
 
+    # **** No need to store or manipulate videos returned from search in a sessin variable
     # Each time a new search is initiated remove prior search results from session
     if 'videos' in session: 
       session.pop('videos')
@@ -66,8 +67,9 @@ def index():
     
     video_search_results = process_video_search_results (search_results, 'video_search')
 
+    # ***** No need store search results in session variable if I make another call to YT API in /video/id route
     # My custom Video object is not serializable so pickle dump is used to serialize session variable before saving
-    session['videos'] = pickle.dumps(video_search_results)
+    # session['videos'] = pickle.dumps(video_search_results)
    
 
     return render_template('/search.html', form=form, videos = video_search_results)
@@ -78,8 +80,10 @@ def index():
 
 @app.route('/video/<video_id>')
 def viewVideo(video_id):
+
+    # ***** No need store search results in session variable if I make another call to YT API below
   # Pickle 'loads' method is used to 'un-serialize' video search results saved in session variable.
-  videos = pickle.loads(session['videos'])
+  # videos = pickle.loads(session['videos'])
   
   # Call YT Video Detail API to retrieve JSON Data
   search_results = get_detailed_video_data(video_id)
