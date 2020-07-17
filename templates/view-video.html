@@ -6,7 +6,7 @@
       <div class ="col-12" id="player" data-videoId = '{{video_details.id}}' data-user_id= "{{ session['user_id'] }}">
         <!-- video player will be inserted here by YT iframe API -->
       </div>
-      <div class="row" id="video-details" data-video = '{{video_details.id}}' data-user_id= {{ session['user_id'] }} >
+      <div class="row" id="video-details" data-video = '{{video_details.id}}' data-user_id= "{{ session['user_id'] }}" data-thumbnail = "{{video_details.thumbnail}}" >
         <div class="col border">
           <div class="row pt-4">
             <div class="col-10 pl-4">

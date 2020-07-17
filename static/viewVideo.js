@@ -13,6 +13,7 @@ const vidDetailFavSubmit = document.getElementById("video-detail-fav-submit")
 const vidDetailDelFav = document.getElementById("video-detail-delete-fav")
 const favSaveModal = $("#fav-save-modal")
 const delFav = $('#del-fav')
+const delFavWarning = $('#del-fav-warning')
 
 
 
@@ -214,15 +215,20 @@ const delFav = $('#del-fav')
       // });
       lyricsSearch.addEventListener("submit", requestMoreLyrics);
 
-
       favorites.addEventListener('click', launchFavoritesModal);
       
       function launchFavoritesModal (evt) {
-        // Determines which favorite's modal window to launch (add-favorite or remove-favorite) and launches it. 
-        // Scenario 1: A heart outline (far fa-heart) denotes that the current video is not currently a favorite but the user 
-        // wants to make it a fav;
-        // Scenario 2: A solid red heart (fas fa-heart) indicates the video is already a favorite and clicking on it means the user wants
-        // to remove it as one of their favorite;
+        // Launches the Modal window
+
+        // Make sure the delete option is unchecked & the warning message is hidden when 
+        // the user opens the Favorite model. This is needed to address scenrio  where user 
+        // clicks the deletes checkbox, cancels the modal and then re-opens modal window 
+        // option
+        if ((delFav).is(":checked")) { 
+          // uncheck the checkbox and toggle the warning message
+          delFav.prop('checked', false);
+          delFavWarning.toggleClass('hide') 
+        }
 
         // Get the values from the video detail card to populate the 'Add to favorites' modal form.
         videoDetailTitle = $("#video-detail-title").text()
@@ -284,6 +290,7 @@ const delFav = $('#del-fav')
 
         // Retrieve key data from HTLM 
         const videoId = $("iframe").data('videoid')
+        const video_thumbnail = $('#video-details').data('thumbnail')
 
         let fav_id = $("#favorites").data('fav_id')
         if (!fav_id) {
@@ -297,7 +304,13 @@ const delFav = $('#del-fav')
         const inputVideoNotes =  $("#input-video-notes").val()
 
 
-        params = {favId: fav_id,  id: videoId, title: inputVideoTitle, artist: inputArtistName,  song: inputSongTitle, notes: inputVideoNotes}
+        params = {favId: fav_id,
+                  id: videoId, 
+                  thumbnail: video_thumbnail,
+                  title: inputVideoTitle,
+                  artist: inputArtistName,  
+                  song: inputSongTitle, 
+                  notes: inputVideoNotes, }
 
         try {
           // Send fav data to the server   

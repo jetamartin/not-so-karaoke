@@ -56,10 +56,10 @@ class Video:
 
 class Video_Detail:
   """ Creates and object with all the data needed on the Video Detail screen """
-  def __init__(self, video_id, title, thumbnail, artist, song, notes, fav_id, user_id):
+  def __init__(self, video_id, thumbnail, title, artist, song, notes, fav_id, user_id):
     self.id = video_id
-    self.title = title
     self.thumbnail = thumbnail
+    self.title = title
     self.artist = artist
     self.song = song
     self.notes = notes
@@ -70,8 +70,8 @@ class Video_Detail:
     """ Serializes the data in the Video_Detail object so it can be sent as JSON data """
     return {
       'video_id': self.id,
-      'video_title': self.title,
       'thumbnail': self.thumbnail,
+      'video_title': self.title,
       'artist_name':self.artist,
       'song_title': self.song,
       'video_notes':self.notes,
@@ -199,6 +199,9 @@ def get_video_info(result, search_type):
   # import pdb; pdb.set_trace()
   video_title = parser.unescape(result['snippet']['title'])
   video_thumbnail = result['snippet']['thumbnails']['default']['url']
+
+  # import pdb; pdb.set_trace()
+  
   if (search_type == 'video_search'):
     video_id = result['id']['videoId']
   else: # 'video_detail'
@@ -244,10 +247,12 @@ def process_video_search_results (searchResults, search_type):
 
 def isFavoriteVideo(video_id):
   """ Check database to see if video is in user's favorites list. Return id of favorite if found or return None """
-
+  # import pdb; pdb.set_trace()
   favResult = Favorite.query.filter_by(video_id=video_id, user_id = session['user_id']).first()
   if favResult:
     fav_id = favResult.id
+    print(f'================================> video_id: {video_id} fav_id = {fav_id}' )
+
   else: 
     fav_id = None;
   return fav_id
@@ -303,7 +308,7 @@ def create_detail_video_object(video, artist_and_song_title):
     fav_id = None;
     vid_notes = None;
 
-  video_details = Video_Detail(vid_id, vid_title, vid_thumbnail, vid_artist, vid_song, vid_notes, fav_id, session['user_id'])
+  video_details = Video_Detail(vid_id, vid_thumbnail, vid_title,  vid_artist, vid_song, vid_notes, fav_id, session['user_id'])
   return video_details
 
 

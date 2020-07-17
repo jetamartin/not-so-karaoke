@@ -29,7 +29,6 @@ class User(db.Model):
     email = db.Column(db.Text, nullable=False, unique=True)
     username = db.Column(db.String(40), nullable=False, unique=True )
     image_url = db.Column( db.Text, default="/static/images/default-pic.png")
-
     favorites = db.relationship('Favorite')
 
 class Favorite(db.Model):
@@ -39,7 +38,7 @@ class Favorite(db.Model):
 
     def __repr__(self):
         f = self
-        return f"<Favorite id= {f.id} user_id= {f.user_id} video_id= {f.video_id} video_title= {f.video_title} artist_name= {f.artist_name} song_title= {f.song_title} notes= {f.notes}>"
+        return f"<Favorite id= {f.id} user_id= {f.user_id} thumbnail = {f.thumbnail} video_id= {f.video_id} video_title= {f.video_title} artist_name= {f.artist_name} song_title= {f.song_title} notes= {f.notes}>"
 
     id = db.Column(
         db.Integer,
@@ -53,13 +52,19 @@ class Favorite(db.Model):
         nullable=False
     )
 
+    thumbnail = db.Column(
+        db.String(50),
+        nullable=False
+    )
+
     video_id = db.Column(
         db.String(20),
         nullable=False
     )
 
     video_title = db.Column(
-        db.String(100)
+        db.String(100),
+        nullable=False
     )
 
     artist_name = db.Column(

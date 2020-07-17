@@ -91,7 +91,6 @@ def viewVideo(video_id):
   # ENHANCEMENT NEEDED:  Need to check if there are results and if not need to display an appropriate message and return.
   # Extract the detailed video information from the JSON Data returned from the YT API call 
   video = build_video_object(search_results, 'video_detail')
-
   # Get artist and Song entered on search form
   artist_input = session.get('artist', None)
   song_input = session.get('song', None)
@@ -119,55 +118,68 @@ def getMoreLyrics():
   return jsonify(lyrics)
 
 
-@app.route('/favorites', methods=['POST'])
+@app.route('/favorites', methods=['GET', 'POST'])
 def addUpdateFavorites():
-  favId = request.json['favId']
-  userId = session['user_id']
-  videoId = request.json['id']
-  title = request.json['title']
-  artist = request.json['artist']
-  song = request.json['song']
-  notes = request.json['notes']
-  thumbnail = ""
 
-  import pdb; pdb.set_trace()
-
-  # Favorite already exist so need to update record (vs create a new favorite)
-  if (favId):
-    fav = Favorite.query.filter_by(video_id=videoId, user_id = session['user_id']).first()
-
-    fav.video_title = title
-    fav.artist_name = artist
-    fav.song_title = song
-    fav.notes = notes
-    db.session.commit()
-
-  else: # no favorite existed so we need to add fav to databse
-
-    fav = Favorite(user_id = userId, video_id = videoId, video_title = title, artist_name = artist, song_title = song, notes = notes)
-    db.session.add(fav)
-    db.session.commit()
+  if request.method == 'GET':
+ 
+    favorites = Favorite.query.filter_by(user_id = session['user_id']).all()
 
 
-  # Update session variables with data enetered on Favorit screen
-  session['artist'] = request.json['artist']
-  session['song'] = request.json['song']
-  
-  # Convert Database Ojbect to Python Object so it can be serialized 
-  videoObj = Video_Detail(fav.video_id, fav.video_title, thumbnail, fav.artist_name, fav.song_title, fav.notes, fav.id, fav.user_id)
+    # import pdb; pdb.set_trace()
 
-  # import pdb; pdb.set_trace()
-  # return jsonify({status: 'success', message: "Favorite successfully added to favorites list"})
-  # return jsonify(video = [vid.serialize() for vid in videoObj])
-  return jsonify(videoObj.serialize())
+    return render_template("/favorites.html", favorites = favorites)
+
+  else: # A user is adding or editing a Favorite
+
+    favId = request.json['favId']
+    userId = session['user_id']
+    videoId = request.json['id']
+    title = request.json['title']
+    artist = request.json['artist']
+    song = request.json['song']
+    notes = request.json['notes']
+    vid_thumbnail = request.json['thumbnail']
+
+    # import pdb; pdb.set_trace()
+
+    # Favorite already exist so need to update record (vs create a new favorite)
+    if (favId):
+      fav = Favorite.query.filter_by(video_id=videoId, user_id = session['user_id']).first()
+
+      fav.video_title = title
+      fav.artist_name = artist
+      fav.song_title = song
+      fav.notes = notes
+      db.session.commit()
+
+    else: # no favorite existed so we need to add fav to databse
+
+      fav = Favorite(user_id = userId, thumbnail = vid_thumbnail, video_id = videoId, video_title = title, artist_name = artist, song_title = song, notes = notes)
+      db.session.add(fav)
+      db.session.commit()
+
+
+    # Update session variables with data enetered on Favorit screen
+    session['artist'] = request.json['artist']
+    session['song'] = request.json['song']
+    
+    # Convert Database Ojbect to Python Object so it can be serialized 
+    videoObj = Video_Detail(fav.video_id, fav.thumbnail, fav.video_title,  fav.artist_name, fav.song_title, fav.notes, fav.id, fav.user_id)
+
+    # import pdb; pdb.set_trace()
+    # return jsonify({status: 'success', message: "Favorite successfully added to favorites list"})
+    # return jsonify(video = [vid.serialize() for vid in videoObj])
+    return jsonify(videoObj.serialize())
 
 @app.route('/favorites/<int:id>', methods=['DELETE'])
 def deleteFavorite(id):
-  # import pdb; pdb.set_trace()
-  fav = Favorite.query.get(id)
 
-  db.session.delete(fav)
-  db.session.commit()
+    # import pdb; pdb.set_trace()
+    fav = Favorite.query.get(id)
 
-  return jsonify("Favorite Deleted")
+    db.session.delete(fav)
+    db.session.commit()
+
+    return jsonify("Favorite Deleted")
 
