@@ -2,10 +2,11 @@
 
 from datetime import datetime
 
-# from flask_bcrypt import Bcrypt
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import exc
+from flask_bcrypt import Bcrypt
+bcrypt = Bcrypt()
 
-# bcrypt = Bcrypt()
 db = SQLAlchemy()
 
 
@@ -23,13 +24,38 @@ class User(db.Model):
 
     def __repr__(self):
         u = self
-        return f"<User id= {u.id} username= {u.username} email= {u.email}>"
+        return f"<User id= {u.id} username= {u.username} password= {u.password} email= {u.email}>"
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    username = db.Column(db.Text, nullable=False, unique=True)
     email = db.Column(db.Text, nullable=False, unique=True)
-    username = db.Column(db.String(40), nullable=False, unique=True )
+    password = db.Column(db.Text, nullable=False)
     image_url = db.Column( db.Text, default="/static/images/default-pic.png")
     favorites = db.relationship('Favorite')
+
+    @classmethod
+    def signup(cls, username, password, email):
+        """ Register user w/hashed password & return user. """
+
+        hashed = bcrypt.generate_password_hash(password)
+        #turn bytestring into normal (unicode utf8) string
+        hashed_utf8 = hashed.decode("utf8")
+
+        # return instance of user w/username and hashed password
+        return cls(username=username, password=hashed_utf8, email=email)
+
+    @classmethod
+    def authenticate(cls, username, password):
+        """ Validate that user exists and password is correct
+        Return user if valid, else return false"""
+        user = User.query.filter_by(username=username).first()
+        if user and bcrypt.check_password_hash(user.password, password):
+            # return user instance
+            return user
+        else:
+            return False
+
+
 
 class Favorite(db.Model):
     """ Stores info about a users Favorite Video"""

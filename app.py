@@ -5,13 +5,14 @@ from isodate import parse_duration
 import html.parser as htmlparser
 from utilities import *
 import pickle
+from sqlalchemy import exc
 
 
 import os
 import requests
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
-from forms import SearchForm
+from forms import SearchForm, SignupForm, LoginForm
 from constants import *
 from models import db, connect_db, User, Favorite
 
@@ -35,6 +36,63 @@ toolbar = DebugToolbarExtension(app)
 connect_db(app)
 print("*********** H E L L O *****************")
 # videos = []
+
+
+@app.route('/signup', methods=['GET', 'POST'])
+def signup():
+  """ Signup user: produce form and handle submission"""
+  form = SignupForm()
+
+  if form.validate_on_submit():
+    name = form.username.data
+    password = form.password.data 
+    email = form.email.data
+    
+    try:
+      user = User.signup(name, password, email) 
+      db.session.add(user) 
+      db.session.commit()
+    except exc.IntegrityError: 
+      print("Failure to create user...perhaps a duplicate user name")
+      form.username.errors = ["Bad name/password"]
+      flash("User account is already taken. If this is your account you'll need to login.")
+      return render_template("/signup.html", form=form)
+    else: 
+      session["user_id"] = user.id
+      flash("Welcome! Your new account has been created and you've been logged in!")
+      return redirect("/")
+
+  else:
+    return render_template("/signup.html", form=form)
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    """ Produce login form or handle login. """
+    form = LoginForm()
+
+    if form.validate_on_submit():
+      name = form.username.data    
+      password = form.password.data  
+
+      # authenticate will return a user or False
+      user = User.authenticate(name, password)
+
+      if user:
+        flash(f"Welcome back {user.username}! You're now logged in!")
+        session["user_id"] = user.id # keep logged in
+        return redirect("/")
+      else:
+        form.username.errors = ["Bad name/password"]
+
+    return render_template("login.html", form=form)
+
+@app.route("/logout")
+def logout():
+  """ Logs user out and redirects to homepage. """
+  session.pop("user_id")
+
+  return redirect("/")
+
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -183,3 +241,11 @@ def deleteFavorite(id):
 
     return jsonify("Favorite Deleted")
 
+
+# NOTE: This should be implemented as a POST route rather than GET route
+# In navigation bar either include a blank form to send post or implement with JS
+@app.route('/logout')
+def logout_user():
+  session.pop('user_id')
+  flash("So long for now..you've been logged out")
+  return redirect('/')
