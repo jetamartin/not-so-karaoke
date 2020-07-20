@@ -37,6 +37,10 @@ connect_db(app)
 print("*********** H E L L O *****************")
 # videos = []
 
+@app.route('/')
+def home():
+  return render_template("/index.html")
+
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
@@ -94,7 +98,7 @@ def logout():
   return redirect("/")
 
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/search', methods=['GET', 'POST'])
 def index():
   form = SearchForm()
   if form.validate_on_submit():
@@ -102,9 +106,6 @@ def index():
     # Get values entered on Video Search screen
     artist = form.artist.data.strip()
     song = form.song.data.strip()
-
-    ######## Note will need to replace this line once user SignIn is implementened..at login the user_id will be added to session
-    session['user_id'] = 1;
 
     # Save search values as Session variables
     session['artist'] = artist
@@ -178,11 +179,13 @@ def getMoreLyrics():
 
 @app.route('/favorites', methods=['GET', 'POST'])
 def addUpdateFavorites():
+  if ('user_id' not in session ): 
+    flash("This action is not allowed if you aren't logged in. Please login or signup to create an account")
+    return redirect ('/login')
 
   if request.method == 'GET':
  
     favorites = Favorite.query.filter_by(user_id = session['user_id']).all()
-
 
     # import pdb; pdb.set_trace()
 
@@ -232,14 +235,23 @@ def addUpdateFavorites():
 
 @app.route('/favorites/<int:id>', methods=['DELETE'])
 def deleteFavorite(id):
+  """ This method is called when the user clicks on the Fav icon and then clicks
+       the delete fav checkbox on the modal form. 
+       Favorites functionality will require user to be logged in but we still need to protect
+       against someone simply typing in a URL with an id.  """
 
-    # import pdb; pdb.set_trace()
-    fav = Favorite.query.get(id)
+  if 'user_id' not in session: 
+    flash("This action is not allowed if you aren't logged in. Please login or signup to create an account")
+    form = LoginForm()
+    return redirect ('/login.html', form=form)
+  # return render ('/login', form=form)
+  
+  fav = Favorite.query.get(id)
 
-    db.session.delete(fav)
-    db.session.commit()
+  db.session.delete(fav)
+  db.session.commit()
 
-    return jsonify("Favorite Deleted")
+  return jsonify("Favorite Deleted")
 
 
 # NOTE: This should be implemented as a POST route rather than GET route
@@ -248,4 +260,4 @@ def deleteFavorite(id):
 def logout_user():
   session.pop('user_id')
   flash("So long for now..you've been logged out")
-  return redirect('/')
+  return redirect('/search')

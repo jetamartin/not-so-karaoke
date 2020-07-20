@@ -218,8 +218,12 @@ def build_video_object(json_video_info, search_type):
   # Extract video info from 
   video_info = get_video_info(json_video_info, search_type)
 
+  # import pdb; pdb.set_trace() 
+
+  
   # Check to see if video is in current user's favorites list...if so then return fav_id else return None
   fav_id = isFavoriteVideo(video_info['video_id'])
+ 
 
   # Create a video object for each video returned from the search..this will be used in the view template to display results
   video = Video(video_info['video_id'], video_info['video_title'], video_info['video_thumbnail'], fav_id )
@@ -248,13 +252,12 @@ def process_video_search_results (searchResults, search_type):
 def isFavoriteVideo(video_id):
   """ Check database to see if video is in user's favorites list. Return id of favorite if found or return None """
   # import pdb; pdb.set_trace()
-  favResult = Favorite.query.filter_by(video_id=video_id, user_id = session['user_id']).first()
-  if favResult:
-    fav_id = favResult.id
-    print(f'================================> video_id: {video_id} fav_id = {fav_id}' )
-
-  else: 
-    fav_id = None;
+  fav_id = None;
+  if 'user_id' in session:
+    favResult = Favorite.query.filter_by(video_id=video_id, user_id = session['user_id']).first()
+    if favResult:
+      fav_id = favResult.id
+      print(f'================================> video_id: {video_id} fav_id = {fav_id}' )
   return fav_id
 
 
@@ -299,8 +302,9 @@ def create_detail_video_object(video, artist_and_song_title):
   vid_thumbnail = video.thumbnail
   vid_artist = artist_and_song_title['artist']
   vid_song = artist_and_song_title['song']
-
-  favResult = Favorite.query.filter_by(video_id=vid_id, user_id=session['user_id']).first()
+  favResult = None;
+  if ('user_id' in session): 
+    favResult = Favorite.query.filter_by(video_id=vid_id, user_id=session['user_id']).first()
   if favResult:
     fav_id = favResult.id
     vid_notes = favResult.notes
@@ -308,7 +312,7 @@ def create_detail_video_object(video, artist_and_song_title):
     fav_id = None;
     vid_notes = None;
 
-  video_details = Video_Detail(vid_id, vid_thumbnail, vid_title,  vid_artist, vid_song, vid_notes, fav_id, session['user_id'])
+  video_details = Video_Detail(vid_id, vid_thumbnail, vid_title,  vid_artist, vid_song, vid_notes, fav_id, session.get('user_id'))
   return video_details
 
 

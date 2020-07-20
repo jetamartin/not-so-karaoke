@@ -1,3 +1,7 @@
+.main-content {
+  margin-top: 6rem;
+}
+
 #lyrics-content {
   height: 75vh;
   overflow : scroll

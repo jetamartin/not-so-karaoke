@@ -220,47 +220,57 @@ const delFavWarning = $('#del-fav-warning')
       function launchFavoritesModal (evt) {
         // Launches the Modal window
 
-        // Make sure the delete option is unchecked & the warning message is hidden when 
-        // the user opens the Favorite model. This is needed to address scenrio  where user 
-        // clicks the deletes checkbox, cancels the modal and then re-opens modal window 
-        // option
-        if ((delFav).is(":checked")) { 
-          // uncheck the checkbox and toggle the warning message
-          delFav.prop('checked', false);
-          delFavWarning.toggleClass('hide') 
-        }
+        vidDetails = $("#video-details")
+        userId = vidDetails.data('user_id')
 
-        // Get the values from the video detail card to populate the 'Add to favorites' modal form.
-        videoDetailTitle = $("#video-detail-title").text()
-        videoDetailArtist = $("#video-detail-artist").text()
-        videoDetailSong =  $("#video-detail-song").text()
-        videoDetailNotes =  $("#video-detail-notes").text()
+        if (userId) {
+      
 
-        // Get handle for input fields on the favorite modal
-        inputVideoTitle = $('#input-video-title')
-        inputArtistName = $('#input-artist-name')
-        inputSongTitle = $('#input-song-title')
-        inputVideoNotes = $('#input-video-notes')
+          // Make sure the delete option is unchecked & the warning message is hidden when 
+          // the user opens the Favorite model. This is needed to address scenrio  where user 
+          // clicks the deletes checkbox, cancels the modal and then re-opens modal window 
+          // option
+          if ((delFav).is(":checked")) { 
+            // uncheck the checkbox and toggle the warning message
+            delFav.prop('checked', false);
+            delFavWarning.toggleClass('hide') 
+          }
 
-        // Now populate the Add-to-Favorites modal with the data from the video detail card
-        inputVideoTitle.val(videoDetailTitle)
-        inputArtistName.val(videoDetailArtist)
-        inputSongTitle.val(videoDetailSong)
-        inputVideoNotes.val(videoDetailNotes) 
+          // Get the values from the video detail card to populate the 'Add to favorites' modal form.
+          videoDetailTitle = $("#video-detail-title").text()
+          videoDetailArtist = $("#video-detail-artist").text()
+          videoDetailSong =  $("#video-detail-song").text()
+          videoDetailNotes =  $("#video-detail-notes").text()
 
-        // Display the populated Add Favorite modal screen
-        $('#fav-save-modal').modal()
+          // Get handle for input fields on the favorite modal
+          inputVideoTitle = $('#input-video-title')
+          inputArtistName = $('#input-artist-name')
+          inputSongTitle = $('#input-song-title')
+          inputVideoNotes = $('#input-video-notes')
 
-        // Scenario 1:  Current video is not a favorite
-        if ( event.target.className == 'far fa-heart' ) { 
-          inputVideoNotes.val("") 
-          // Hide the delete check box because this video isn't a favorite yet 
-          $('#fav-del-checkbox').addClass('hide')
-        
-        } else {  // Current video is already a fav and user wants to remove it as a favorite video
+          // Now populate the Add-to-Favorites modal with the data from the video detail card
+          inputVideoTitle.val(videoDetailTitle)
+          inputArtistName.val(videoDetailArtist)
+          inputSongTitle.val(videoDetailSong)
+          inputVideoNotes.val(videoDetailNotes) 
 
-          // Display the Delete checkbox by removing 'hide' class
-          $('#fav-del-checkbox').removeClass('hide')
+          // Display the populated Add Favorite modal screen
+          $('#fav-save-modal').modal()
+
+          // Scenario 1:  Current video is not a favorite
+          if ( event.target.className == 'far fa-heart' ) { 
+            inputVideoNotes.val("") 
+            // Hide the delete check box because this video isn't a favorite yet 
+            $('#fav-del-checkbox').addClass('hide')
+          
+          } else {  // Current video is already a fav and user wants to remove it as a favorite video
+
+            // Display the Delete checkbox by removing 'hide' class
+            $('#fav-del-checkbox').removeClass('hide')
+          }
+
+        } else {
+          // No user Id 
         }
       }
 
@@ -345,7 +355,7 @@ const delFavWarning = $('#del-fav-warning')
         }
       }
 
-      vidDetailDelFav.addEventListener('click', delFavorites)      
+      // vidDetailDelFav.addEventListener('click', delFavorites)      
 
       async function delFavorites(evt) {
         // If user clicks on the delete button in "Remove Fav" modal it will send a delete request to the server 
