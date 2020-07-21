@@ -209,23 +209,24 @@ const delFavWarning = $('#del-fav-warning')
         }
       }
 
-      // $("#favorites").click(function(){
-      //   console.log("Favorite was clicked")
-      //   $(this).find('i').toggleClass('far fa-heart fas fa-heart')
-      // });
       lyricsSearch.addEventListener("submit", requestMoreLyrics);
-
       favorites.addEventListener('click', launchFavoritesModal);
+
+      // Show tooltip if non-login user hovers over favorite icon.
+      $('[data-toggle="tooltip"]').tooltip({
+        title : "Login/Signup to mark video as a Favorite.",
+        placement : 'top'
+      });
       
       function launchFavoritesModal (evt) {
         // Launches the Modal window
-
+        
         vidDetails = $("#video-details")
         userId = vidDetails.data('user_id')
 
+        // Only show Fav modal if a user is logged in otherwise the modal will be disabled.
+        // if the fav modal is enabled it seems to automatically disable the tooltip which is the desired behavior 
         if (userId) {
-      
-
           // Make sure the delete option is unchecked & the warning message is hidden when 
           // the user opens the Favorite model. This is needed to address scenrio  where user 
           // clicks the deletes checkbox, cancels the modal and then re-opens modal window 
@@ -269,8 +270,6 @@ const delFavWarning = $('#del-fav-warning')
             $('#fav-del-checkbox').removeClass('hide')
           }
 
-        } else {
-          // No user Id 
         }
       }
 

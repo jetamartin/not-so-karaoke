@@ -1,8 +1,9 @@
 {% extends 'base.html' %}
 {% block content %}
 <section class="jumbotron text-center">
-<div class="container">
-  <h1>Video Search</h1>
+<div class="container-fluid">
+  <img class="lg-logo" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/>
+  <h1 class="text-white xlg-letter-spacing mb-5">Video Search</h1>
   <div class="row justify-content-center">
     <form method="POST">
       {{form.hidden_tag()}}
@@ -18,14 +19,14 @@
       {% for field in form if field.widget.input_type != 'hidden' %}
   
       <div class="form-group row">
-        {{field.label(class="col-sm-2 col-form-label")}}
+        {{field.label(class="col-sm-2 col-form-label text-white")}}
         <div class="col-sm-10">
           {{field(class="form-control")}}
         </div>
       </div>
     
       {% endfor %}
-      <button class="btn btn-primary">Search</button>
+      <button class="btn btn-outline-secondary text-white border-white lg-letter-spacing mt-2">Search</button>
     </form>
   </div>
   

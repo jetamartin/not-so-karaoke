@@ -1,4 +1,38 @@
+.container-fluid {
+  padding: 0;
+  margin: 0;
+}
+
+.jumbotron {
+  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTYhIqE1MVKzoICKO_JRms9B3BW-wc8aXsd_Q&usqp=CAU');
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.logo {
+  height: 48px;
+  width: 48px;
+}
+
+.lg-logo {
+  height: 100px;
+  width: 100px;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #493636;
+  border-color: white
+}
+
 .main-content {
+  margin-top: 2rem;
+}
+
+.view-top-margin {
+  margin-top: 4.5rem;
+}
+
+.page-top-margin {
   margin-top: 6rem;
 }
 
@@ -57,7 +91,13 @@
   padding: 0 3rem 3rem
 }
 
+.xlg-letter-spacing {
+  letter-spacing: .75rem;
+}
 
+.lg-letter-spacing {
+  letter-spacing: .5rem;
+}
 .med-letter-spacing{
   letter-spacing: .25rem;
 }

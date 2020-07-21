@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="mt-4">
-  <h3 class="text-center">Welcome to Not-So-Karaoke</h3>
+<div class="page-top-margin">
+  <h3 class="text-center">Welcome to Almost Karaoke</h3>
   <p class="lead text-center font-italic med-letter-spacing larger-font-size">Create an account to continue</p>
   <div class="row d-flex justify-content-center">
     <div class="col-6 form-container">
@@ -21,12 +21,12 @@
         </p>
         {% endfor %}
       
-        <button class="btn btn-info btn-lg btn-block mt-5 med-letter-spacing" type="submit">Create Account</button>
+        <button class="btn btn-danger btn-lg btn-block mt-5 med-letter-spacing" type="submit">Create Account</button>
       </form>
       <hr>
       <div class="mt-4 ml-5">
         <p>Existing User?</p>
-        <a class="btn btn-info" href="/login">Login</a>
+        <a class="btn btn-danger" href="/login">Login</a>
       </div>
     </div>
   </div>

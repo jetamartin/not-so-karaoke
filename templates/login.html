@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="mt-4">
-  <h1 class="text-center">Welcome Back</h1>
-  <p class="lead text-center font-italic med-letter-spacing larger-font-size">Login below</p>
+<div class="page-top-margin">
+  <!-- <h1 class="text-center">Welcome Back</h1> -->
+  <!-- <p class="lead text-center font-italic med-letter-spacing larger-font-size">Login below</p> -->
 
   <div class="row d-flex justify-content-center">
     <div class="col-6 form-container">
@@ -22,12 +22,12 @@
         </p>
         {% endfor %}
       
-        <button class="btn btn-info btn-lg btn-block mt-5 med-letter-spacing" type="submit">Login</button>
+        <button class="btn btn-danger btn-lg btn-block mt-5 med-letter-spacing" type="submit">Login</button>
       </form>
       <hr>
       <div class="mt-4 ml-5">
         <p>New User?</p>
-        <a class="btn btn-info" href="/signup">Create Account</a>
+        <a class="btn btn-danger" href="/signup">Create Account</a>
       </div>
 
     </div>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block content %}
-  <div class="row">
+  <div class="row page-top-margin">
     <div class="col-7" id="iframe-container">
       <div class ="col-12" id="player" data-videoId = '{{video_details.id}}' data-user_id= "{{ session['user_id'] }}">
         <!-- video player will be inserted here by YT iframe API -->
@@ -30,7 +30,11 @@
                 {% if video_details.fav_id %}
                   <p><i class="fas fa-heart"></i></p>
                 {% else %}
-                  <p><i class="far fa-heart"></i></p>
+                  <!-- <p><i class="far fa-heart"></i></p> -->
+                  <p><i class="far fa-heart" data-toggle="tooltip"></i></p>
+                  <!-- <p><a href="#" data-toggle="tooltip"><i class="far fa-heart"></i></a></p> -->
+
+                  <!-- <p><a href="#" data-toggle="tooltip" title="Login/Create account to favorite a video"><i class="far fa-heart"></i></a></p> -->
                 {% endif %}
               </div>
               <!-- <div class="custom-control custom-checkbox custom-control-right">
@@ -44,6 +48,14 @@
       </div>
 
     </div>
+
+    <!-- <div>
+      <ul class="list-inline">
+        <li class="list-inline-item">
+            <a href="#" data-toggle="tooltip" title="Default tooltip">Tooltip</a>
+        </li>
+      </ul>
+    </div> -->
 
 
     <div class= "col-5" id="lyrics">
