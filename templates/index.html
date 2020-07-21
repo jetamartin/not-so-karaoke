@@ -1,4 +1,25 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1 class="mt-5">Home Page</h1>
+<section class="jumbotron text-center">
+  <div class="container-fluid text-white">
+    <div>
+      <img class="lg-logo mr-5" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/>
+      <h1 class="inline-block text-white med-letter-spacing">Welcome to Almost Karaoke!</h1>
+      <img class="lg-logo ml-5" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/>
+
+      <h4 id="welcome-subtext" class="mb-5 font-weight-lighter">( YouTube Videos + Lyrics = F U N <sup>2</sup>  )</h4>
+
+      
+      <div class="welcome-border p-2 mb-5 mx-auto w-75 opaque-blk-bg">
+        <h4 class="mb-3 med-letter-spacing font-weight-lighter">Whether you want to:</h4>
+        <p class="med-letter-spacing font-italic"><i class="fas fa-headphones-alt mr-3"></i>Understand what that song is REALLY all about<i class="fas fa-headphones-alt ml-3"></i></p>
+        <p class="med-letter-spacing font-italic"><i class="fas fa-beer mr-3""></i>Host an Almost-Karaoke Party with your friends<i class="fas fa-cocktail ml-3"></i></p>
+        <p class="med-letter-spacing font-italic"><i class="fas fa-microphone-alt mr-3""></i>Enjoy secretly singing along with your favorite videos<i class="fas fa-microphone-alt  ml-3"></i></p>
+      </div>
+
+      <h4 class="inline-block">Click<a href="/search" class='ml-3 mr-3 pl-2 btn btn-outline-secondary text-white border-white lg-letter-spacing '>FUN<sup>2</sup></a>and let the fun begin!</h4>
+      <p class="med-letter-spacing font-weight-lighter">(PS. Create a free account and get bonus features (e.g., favorites, playlists, etc.))</p>
+ 
+    </div>
+  </section >
 {% endblock %}

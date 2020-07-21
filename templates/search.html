@@ -2,8 +2,10 @@
 {% block content %}
 <section class="jumbotron text-center">
 <div class="container-fluid">
-  <img class="lg-logo" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/>
-  <h1 class="text-white xlg-letter-spacing mb-5">Video Search</h1>
+  <img class="lg-logo mr-3" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/>
+  <h2 class="text-white xlg-letter-spacing mb-5 inline-block">Video Search</h2>
+  <img class="lg-logo mr-3" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/>
+
   <div class="row justify-content-center">
     <form method="POST">
       {{form.hidden_tag()}}

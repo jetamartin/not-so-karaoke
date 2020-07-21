@@ -3,10 +3,26 @@
   margin: 0;
 }
 
+.opaque-blk-bg {
+  background-color: black;
+  opacity: .6;
+}
+
+.welcome-border {
+  border: 1px solid transparent !important;
+  border-radius: 3rem;
+}
 .jumbotron {
   background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTYhIqE1MVKzoICKO_JRms9B3BW-wc8aXsd_Q&usqp=CAU');
   background-repeat: no-repeat;
   background-size: cover;
+  margin-top: 1.25rem;
+  margin-left: -5.1em;
+  margin-right: -5.1rem;
+}
+
+.inline-block {
+  display: inline-block;
 }
 
 .logo {
@@ -34,6 +50,11 @@
 
 .page-top-margin {
   margin-top: 6rem;
+}
+
+#welcome-subtext {
+  margin-top: -2rem;
+  letter-spacing: .25rem;
 }
 
 #lyrics-content {
@@ -98,7 +119,7 @@
 .lg-letter-spacing {
   letter-spacing: .5rem;
 }
-.med-letter-spacing{
+.med-letter-spacing {
   letter-spacing: .25rem;
 }
 

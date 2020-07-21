@@ -64,7 +64,7 @@ def signup():
     else: 
       session["user_id"] = user.id
       flash("Welcome! Your new account has been created and you've been logged in!")
-      return redirect("/")
+      return redirect("/search")
 
   else:
     return render_template("/signup.html", form=form)
@@ -84,7 +84,7 @@ def login():
       if user:
         flash(f"Welcome back {user.username}! You're now logged in!")
         session["user_id"] = user.id # keep logged in
-        return redirect("/")
+        return redirect("/search")
       else:
         form.username.errors = ["Bad name/password"]
 
@@ -95,7 +95,7 @@ def logout():
   """ Logs user out and redirects to homepage. """
   session.pop("user_id")
 
-  return redirect("/")
+  return redirect("/login.html")
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -261,3 +261,7 @@ def logout_user():
   session.pop('user_id')
   flash("So long for now..you've been logged out")
   return redirect('/search')
+
+@app.route('/about')
+def about_page():
+  return render_template("/about.html")
