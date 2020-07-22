@@ -22,10 +22,15 @@
       <div class="form-group row ">
         <!-- {{ '*' if field.flags.required }} -->
         {% if field.flags.required %}
-          {{ field.label(class="col-sm-3 col-form-label text-white", text='*' + field.label.text) }}
+          {{ field.label (class_="col-sm-3 col-form-label text-white required-white")}}
         {% else %}
-          {{ field.label(class="col-sm-3 col-form-label text-white") }}
+          {{ field.label (class_="col-sm-3 col-form-label text-white")}}
         {% endif %}
+        <!-- {%if field.flags.required %} -->
+          <!-- {{ field.label(class="col-sm-3 col-form-label text-white", text='*' + field.label.text) }} -->
+        <!-- {% else %} -->
+          <!-- {{ field.label(class="col-sm-3 col-form-label text-white") }} -->
+        <!-- {% endif %} -->
  
         <!-- {{field.label(class_="col-sm-2 col-form-label text-white")}} -->
         <div>

@@ -32,6 +32,7 @@
   margin-right: -5.1rem;
 }
 
+/* Alternative to regular jumbotron to experiment with */
 .jumbotron1 {
   min-height:100%;
   background:url(http://lorempixel.com/800/600/nature/2) rgba(255, 0, 150, 0.3);
@@ -147,6 +148,20 @@
   font-size: 1.5rem;
 }
 
+label.required::after { 
+  content: "*";
+  color: red;
+}
+
+label.required-white::after { 
+  content: "*";
+  color: white;
+}
+
+/* input:required {
+  content: "*";
+  color: red;
+} */
 
 /* div.custom-control-right {
   padding-right: 24px;
