@@ -12,14 +12,33 @@
   border: 1px solid transparent !important;
   border-radius: 3rem;
 }
-.jumbotron {
-  background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTYhIqE1MVKzoICKO_JRms9B3BW-wc8aXsd_Q&usqp=CAU');
+  /* background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTYhIqE1MVKzoICKO_JRms9B3BW-wc8aXsd_Q&usqp=CAU'); */
+
+/* .jumbotron {
+  background-image: url("/static/karaoke-bg.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   margin-top: 1.25rem;
   margin-left: -5.1em;
   margin-right: -5.1rem;
+} */
+
+.jumbotron {
+  min-height:100%;
+  background:linear-gradient(150deg, rgba(215,19, 19, 0.56), rgba(32, 18, 18, 0.95)), url("/static/karaoke-bg.jpg");
+  background-size:cover;
+  margin-top: 1.25rem;
+  margin-left: -5.1rem;
+  margin-right: -5.1rem;
 }
+
+.jumbotron1 {
+  min-height:100%;
+  background:url(http://lorempixel.com/800/600/nature/2) rgba(255, 0, 150, 0.3);
+  background-size:cover;
+  background-blend-mode: multiply;
+}
+
 
 .inline-block {
   display: inline-block;
