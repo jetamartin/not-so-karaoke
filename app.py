@@ -90,13 +90,6 @@ def login():
 
     return render_template("login.html", form=form)
 
-@app.route("/logout")
-def logout():
-  """ Logs user out and redirects to homepage. """
-  session.pop("user_id")
-
-  return redirect("/login.html")
-
 
 @app.route('/search', methods=['GET', 'POST'])
 def index():
@@ -243,7 +236,7 @@ def deleteFavorite(id):
   if 'user_id' not in session: 
     flash("This action is not allowed if you aren't logged in. Please login or signup to create an account")
     form = LoginForm()
-    return redirect ('/login.html', form=form)
+    return redirect ('/login')
   # return render ('/login', form=form)
   
   fav = Favorite.query.get(id)
@@ -260,7 +253,7 @@ def deleteFavorite(id):
 def logout_user():
   session.pop('user_id')
   flash("So long for now..you've been logged out")
-  return redirect('/search')
+  return redirect('/login')
 
 @app.route('/about')
 def about_page():

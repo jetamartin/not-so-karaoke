@@ -13,6 +13,7 @@
         {% for field in form 
           if field.widget.input_type != 'hidden' %} 
         <p class="input-group-sm">
+          {{ '*' if field.flags.required }}
           {{ field.label (class_='med-letter-spacing')}}
           {{ field(class_="form-control") }}
       
@@ -21,6 +22,7 @@
           {% endfor %}
         </p>
         {% endfor %}
+        <p>( * ) = required fields</p>
       
         <button class="btn btn-danger btn-lg btn-block mt-5 med-letter-spacing" type="submit">Login</button>
       </form>
