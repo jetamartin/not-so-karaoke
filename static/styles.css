@@ -148,11 +148,13 @@
   font-size: 1.5rem;
 }
 
+/* Adding red asterick after field label for required input  fields */
 label.required::after { 
   content: "*";
   color: red;
 }
 
+/* Adding white asterick after field label for required input fields */
 label.required-white::after { 
   content: "*";
   color: white;

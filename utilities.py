@@ -27,7 +27,7 @@ def get_lyrics(artist,song_title):
   try:
       content = urllib.request.urlopen(url).read()
       soup = BeautifulSoup(content, 'html.parser')
-      lyrics = str(soup)
+      lyrics = str(soup.encode("utf-8"))
       # lyrics lies between up_partition and down_partition
       up_partition = '<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->'
       down_partition = '<!-- MxM banner -->'
@@ -83,8 +83,7 @@ class Video_Detail:
  
 # Use heuristics to extract artist and song title from video title
 def extract_artist_song_from_video_title(title, artist_input, song_input):
-  """ Extract the artist name and song title out of Video title """  
-
+  """ Extract the artist name and song title out of Video title """ 
   artist_song = []
 
   # Separate artist and song title from video title and return them in list (artist_song) 
@@ -151,7 +150,7 @@ def extract_cleanse_song_title(artist_song):
 
   # Extraneous info is typically appended after the 'true' video title so when this extraneous info
   #  is detected all subsequent text in title is removed
-    if song_letters[0].isalpha():
+    if song_letters[0].isalpha() or song_letters[0].isnumeric():
       song_title = song_title + f"{song_word} " 
     else:
       break  # ignore all text once extraneous/non-alpha text is first encountered in title
@@ -164,16 +163,20 @@ def extract_cleanse_artist(artist_song):
   """ Extract clean artist name and return it """
   return artist_song[0].strip()
 
-def no_delimeter_separation(artist_input):
+def no_delimeter_separation(title, artist_input):
   """ Separate Artist and Song from Video title if no delimeter present in video title """
+  artist_song = []
   start_index = title.lower().find(artist_input.lower())
   end_index = start_index + len(artist_input.lower()) #Find ending position of artist name in title
   if (start_index != -1 ):  # Artist name is found in Video Title
-    artist_song.append(title[:end_index])  # Add everything up to and including the artist name in artist_song[0]
-    artist_song.append(title[end_index:])  # Add everything after the artist name to artist_song[1]
+    artist_song.append(title[start_index:end_index])  # Add everything up to and including the artist name in artist_song[0]
+    artist_song.append(title[:start_index])  # Add everything after the artist name to artist_song[1]
+    artist_song
   else:  # if Artist name was not found in the title  
     artist_song.append(artist_input)
     artist_song.append(title)
+  artist_song
+  # import pdb; pdb.set_trace()
   return artist_song
 
 
@@ -183,12 +186,13 @@ def separate_artist_song (title, artist_input):
     Returns a list containing separated artist and song title  """
 
   if '-' in title:
-      artist_song = title.split('-')
+    artist_song = title.split('-')
   elif ':' in title:
-      artist_song = title.split(':')
+    artist_song = title.split(':')
+  elif '|' in title:
+    artist_song = title.split('|')
   else: # No 'standard' delimiteer used in Video title to delineate song  to separate Artist from Song Title so use Artist name to separate Artist and Song title
-    no_delimeter_separation(title, artist_input)
-
+    artist_song = no_delimeter_separation(title, artist_input)
   return artist_song
 
 def get_video_info(result, search_type):
@@ -268,7 +272,7 @@ def get_detailed_video_data(video_id):
     'key'          : YOUTUBE_API_KEY,
     # 'part'         : {'contentDetails', 'snippet', 'statistics', 'status'}, 
     'part'         : 'snippet',
-    'maxResults'   : 15, 
+    'maxResults'   : 9, 
     'id'           : video_id, 
     'type'         : 'video'
   }
@@ -309,12 +313,34 @@ def create_detail_video_object(video, artist_and_song_title):
     fav_id = favResult.id
     vid_notes = favResult.notes
   else: 
-    fav_id = None;
-    vid_notes = None;
+    fav_id = "";
+    vid_notes = "";
 
   video_details = Video_Detail(vid_id, vid_thumbnail, vid_title,  vid_artist, vid_song, vid_notes, fav_id, session.get('user_id'))
   return video_details
 
+def build_list_of_video_objects(video_search_results):
+  """ Builds a list of detailed video objects """ 
+  video_details_objects_list = []
+    # Get artist and Song entered on search form
+  artist_input = session.get('artist', None)
+  song_input = session.get('song', None)
+
+  for video in video_search_results:
+    # import pdb; pdb.set_trace()
+    # Use search inputs plus heuristics to derive artist and song title (remember song_title is not required search input)
+    artist_and_song_title = get_artist_and_song(artist_input, song_input, video.title)
+
+    # import pdb; pdb.set_trace()
+    # print("************************************************")
+    # print('artist= ', (artist_and_song_title).encode("utf-8"))
+    # print('song title= ', (artist_and_song_title[1]).encode("utf-8"))
+    print("*************************************************")
+
+    video_details_object = create_detail_video_object(video, artist_and_song_title)
+
+    video_details_objects_list.append(video_details_object)
+  return video_details_objects_list
 
 def search_for_matching_videos(artist, song):
   """ Calls YT API to find matching videos based on user search criteria """
@@ -324,14 +350,15 @@ def search_for_matching_videos(artist, song):
     'key'          : YOUTUBE_API_KEY,
     'q'            : f" {artist} + {song}", 
     'part'         : 'snippet',
-    'maxResults'   : 15, 
+    'maxResults'   : 9, 
     'type'         : 'video'
   }
   results = ''
   req = requests.get(YT_VIDEO_SEARCH_URL, params = search_params)
 
-
+  # ***** NEED TO ADD CHECK TO MAKE SURE RESULTS WERE RETURNED AND IF NOT AN ERROR MESSAGE NEEDS TO BE RETURNED TO USER
   #  Get results from YT Video search 
   search_results = req.json()['items']
+
 
   return search_results

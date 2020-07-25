@@ -119,12 +119,30 @@ def index():
     
     video_search_results = process_video_search_results (search_results, 'video_search')
 
+    # ----------------------NEW STUFF ADDED --------------------------------------------------------
+    # Get artist and Song entered on search form
+    artist_input = session.get('artist', None)
+    song_input = session.get('song', None)
+
+
+    # For each video in video_search_results build a list of video_detail_objects 
+    video_detail_objects_list = build_list_of_video_objects(video_search_results)
+    # import pdb; pdb.set_trace()
+    # TBD: 
+    #  - Change render stateme below to pass video_detail_objects_list 
+    #  - Change search template to use this new object
+    
+    # -----------------------------------------------------------------------------
+
+
     # ***** No need store search results in session variable if I make another call to YT API in /video/id route
     # My custom Video object is not serializable so pickle dump is used to serialize session variable before saving
     # session['videos'] = pickle.dumps(video_search_results)
    
 
-    return render_template('/search.html', form=form, videos = video_search_results)
+    # return render_template('/search.html', form=form, videos = video_search_results)
+    return render_template('/search.html', form=form, videos = video_detail_objects_list)
+
   else:
 
     return render_template("/search.html", form=form)
@@ -143,6 +161,9 @@ def viewVideo(video_id):
   # ENHANCEMENT NEEDED:  Need to check if there are results and if not need to display an appropriate message and return.
   # Extract the detailed video information from the JSON Data returned from the YT API call 
   video = build_video_object(search_results, 'video_detail')
+
+  # import pdb; pdb.set_trace()
+
   # Get artist and Song entered on search form
   artist_input = session.get('artist', None)
   song_input = session.get('song', None)

@@ -47,20 +47,28 @@
 </section>
 
 
-{% if videos %}
-<div class="container">
+
+<div  id="vid-cards" class="container" >
+  {% if videos %}
   <div class="row">
     {% for video in videos %}
     <div class="col-md-4">
-      <div class="card w-100" data-id="{{ video.id }}" data-video.title = "{{video.title}}">
+      <div id={{video.id}} class="card w-100 video-card"  data-video.title ="{{video.title}}" data-videoid="{{video.id}}">
         <img src="{{ video.thumbnail }}" height="225" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
-        <div class="card-body">
-          <p class="card-text">{{ video.title | safe }}</p>
+        <div class="card-body video-details" data-videoid={{video.id}}>
+          <p class="card-text video-detail-title">{{ video.title | safe }}</p>
+          <p class="card-text">Artist:<span class="video-detail-artist ml-3">{{ video.artist }}</span></p> 
+          <p class="card-text">Song:<span class="video-detail-song ml-3">{{ video.song }}</span></p>
+          {% if video.fav_id %}
+            <p class="card-text video-detail-notes-section">Notes:<span class="video-detail-notes ml-3">{{ video.notes }}</span> </p>
+          {% else %}
+            <p class="card-text video-detail-notes-section hide">Notes:<span class="video-detail-notes ml-3">{{ video.notes }}</span> </p>
+          {% endif %}
           <div class="d-flex justify-content-between align-items-center">
             <div class="btn-group">
               <a href="/video/{{ video.id }}" class="btn btn-sm btn-outline-secondary">View</a>
             </div>
-            <div id="favorites" class="col-2 d-flex justify-content-center" {% if video.fav_id %} data-fav_id={{video.fav_id}} {% endif %} >
+            <div class="favorites" class="col-2 d-flex justify-content-center" {% if video.fav_id %} data-fav_id={{video.fav_id}} {% endif %} >
               {% if video.fav_id %}
                 <p class="pt-3"><i class="fas fa-heart"></i></p>
               {% else %}
@@ -75,22 +83,54 @@
   </div>
 </div>  
 
-
-
-
-<!-- <div>
-  <ul>
-
-    {% for video in videos %}
-  
-      <li><span>{{video.id}}</span>---<span>{{video.title | safe}}</span></li>
-  
-  
-    {% endfor %}
-  </ul>
-
-</div> -->
-
 {% endif %}
+<!-- -------------------------------------Form Modal -------------------------------------------------- -->
+<div class="modal fade" id="fav-save-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit/Save to Favorites</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="video-detail-fav-form">
+          <div class="form-group">
+            <label for="video-title" class="col-form-label">Video Title:</label>
+            <input name="video-title" type="text" class="form-control" id="input-video-title">
+          </div>
+          <div class="form-group">
+            <label for="artist-name" class="col-form-label">Artist:</label>
+            <input name="artist-name" type="text" class="form-control" id="input-artist-name">
+          </div>
+          <div class="form-group">
+            <label for="song-title" class="col-form-label">Song:</label>
+            <input name="song-title" type="text" class="form-control" id="input-song-title">
+          </div>
+          <div class="form-group">
+            <label for="note-area" class="col-form-label">Notes:</label>
+            <textarea name="note-area" class="form-control" id="input-video-notes"></textarea>
+          </div>
+
+          <div id="fav-del-checkbox" class="custom-control custom-checkbox custom-control-right">          
+            <input type="checkbox" class="custom-control-input" id="del-fav" name='del-fav'>
+            <label class="custom-control-label" for="del-fav">Delete</label>
+            <div id="del-fav-warning" class="hide">
+              <span>WARNING! This will delete this video from your favorites list along with any associated comments. <br> Click 'Save' to proceed or 'Cancel' to exit.</span>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+        <button id="video-detail-fav-submit" type="submit" class="btn btn-primary" data-fav_id="" data-videoid="">Save</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<script type="text/javascript" src="{{ url_for('static', filename='searchFav.js') }}"></script>
 
 {% endblock %}
