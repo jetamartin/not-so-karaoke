@@ -1,4 +1,4 @@
-""" Forms for Not-So_Karoke App """
+""" Forms for Almost_Karoke App """
 
 from wtforms import StringField, PasswordField, SubmitField
 from wtforms.validators import InputRequired, Length, NumberRange, Optional, Email, EqualTo

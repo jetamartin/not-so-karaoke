@@ -12,6 +12,8 @@ import html.parser as htmlparser
 
 from constants import * 
 import requests
+from requests.exceptions import HTTPError
+from flask import flash
 
 def get_lyrics(artist,song_title):
   """ Scrapes the lyric data from azlyrics website """
@@ -55,7 +57,7 @@ class Video:
  
 
 class Video_Detail:
-  """ Creates and object with all the data needed on the Video Detail screen """
+  """ Creates and object with all the data needed for various views """
   def __init__(self, video_id, thumbnail, title, artist, song, notes, fav_id, user_id):
     self.id = video_id
     self.thumbnail = thumbnail
@@ -102,11 +104,10 @@ def extract_artist_song_from_video_title(title, artist_input, song_input):
 def pick_final_artist_and_song_title(artist_song_title, artist_input, song_input):
   """ Picks the final version of artist name and song title to be used for lyrics search
       Note: Current algorithm gives priority to artist/song from video title vs relying solely on user search input because:
-      - User may not enter the entire name of the band (e.g., cranberries vs The Cranberries)
+      - User may not enter the entire name of the band (e.g., "cranberries" vs "The Cranberries")
       - User may not enter a song title at all if they want to see all videos from a particular artist
-      - User may not know the exact name of a song and the video title is more likely to be correct. 
-      
-        """
+      - User may not know the exact name of a song and the video title is more likely to contain the correct title
+  """
 
   song = ""
   artist = ""
@@ -250,9 +251,6 @@ def process_video_search_results (searchResults, search_type):
 
   return videos
 
-
-  
-
 def isFavoriteVideo(video_id):
   """ Check database to see if video is in user's favorites list. Return id of favorite if found or return None """
   # import pdb; pdb.set_trace()
@@ -261,8 +259,7 @@ def isFavoriteVideo(video_id):
     favResult = Favorite.query.filter_by(video_id=video_id, user_id = session['user_id']).first()
     if favResult:
       fav_id = favResult.id
-      print(f'================================> video_id: {video_id} fav_id = {fav_id}' )
-  return fav_id
+    return fav_id
 
 
 def get_detailed_video_data(video_id):
@@ -276,13 +273,9 @@ def get_detailed_video_data(video_id):
     'id'           : video_id, 
     'type'         : 'video'
   }
+  search_results = yt_api_call(YT_VIDEO_DETAIL_URL, video_params)
+  return search_results
 
-  # ENHANCEMENT NEEDED:  Need to check if there are results and if not need to display an appropriate message and return.
-  # Get results of YT Video Detail search.   
-  search_results = requests.get(YT_VIDEO_DETAIL_URL, params = video_params) 
-  video_json_info = search_results.json()['items']
-
-  return video_json_info[0]
 
 def get_artist_and_song(artist_input, song_input, title):
   """ Uses video title, search inputs and heuristics to get Artist name and song title
@@ -331,12 +324,6 @@ def build_list_of_video_objects(video_search_results):
     # Use search inputs plus heuristics to derive artist and song title (remember song_title is not required search input)
     artist_and_song_title = get_artist_and_song(artist_input, song_input, video.title)
 
-    # import pdb; pdb.set_trace()
-    # print("************************************************")
-    # print('artist= ', (artist_and_song_title).encode("utf-8"))
-    # print('song title= ', (artist_and_song_title[1]).encode("utf-8"))
-    print("*************************************************")
-
     video_details_object = create_detail_video_object(video, artist_and_song_title)
 
     video_details_objects_list.append(video_details_object)
@@ -354,11 +341,39 @@ def search_for_matching_videos(artist, song):
     'type'         : 'video'
   }
   results = ''
-  req = requests.get(YT_VIDEO_SEARCH_URL, params = search_params)
-
-  # ***** NEED TO ADD CHECK TO MAKE SURE RESULTS WERE RETURNED AND IF NOT AN ERROR MESSAGE NEEDS TO BE RETURNED TO USER
-  #  Get results from YT Video search 
-  search_results = req.json()['items']
-
-
+  search_results = yt_api_call(YT_VIDEO_SEARCH_URL, search_params)
   return search_results
+
+
+
+def yt_api_call(yt_api, search_params):
+  """ Calls appropriate API (Search or Detail) and handles any associated exceptions"""
+  try:
+     #  Issue request to YouTube SEARCH API to find matching videos
+    req = requests.get(yt_api, params = search_params)
+    req.raise_for_status()
+  except requests.exceptions.HTTPError as http_err:
+    print (f"Http Error: {http_err}")
+    flash(f"Http Error: {http_err}")
+    search_results = { 'status': 'error', 'msg': 'http_err', 'results': http_err }
+  except requests.exceptions.ConnectionError as connect_err:
+    print (f"Error Connecting: {connect_err}")
+    flash(f"Connection Error: Unable to establish network connection. Check your network connection. ")
+    search_results = { 'status': 'error', 'msg': 'connect_err', 'results': connect_err }
+  except requests.exceptions.Timeout as timeout_err:
+    print (f"Timeout Error: {timeout_err}")
+    flash(f"Timeout Error: {timeout_err}")
+    search_results = { 'status': 'error', 'msg': 'timeout_err', 'results': timeout_err }
+  except requests.exceptions.RequestException as general_err:
+    print (f"General Error: {general_err}")
+    flash(f"General Error: {general_err}")
+    search_results = { 'status': 'error', 'msg': 'timeout_err', 'results': general_err }
+  else:
+    if yt_api == YT_VIDEO_SEARCH_URL:
+      #  Get results from YT Video search 
+      search_results = { 'status': 'success', 'msg': 'ok', 'results': req.json()['items'] }
+    else:  # YT_VIDEO_DETAIL_URL
+      search_results = { 'status': 'success', 'msg': 'ok', 'results': req.json()['items'][0] }
+  finally:
+    return search_results
+  

@@ -109,40 +109,33 @@ def index():
 
     # **** No need to store or manipulate videos returned from search in a sessin variable
     # Each time a new search is initiated remove prior search results from session
-    if 'videos' in session: 
-      session.pop('videos')
+    # if 'videos' in session: 
+    #   session.pop('videos')
 
-    # ENHANCEMENT NEEDED:  Need to check if there are results and if not need to display an appropriate message and return.
     search_results = search_for_matching_videos(artist, song)
 
-    # REFACTOR CODE - Turn save video results in Video Object code below into a separate function
-    # Save the YT video search results (video_id, title, thumbnail) and check to see if video is a current favor
-    
-    video_search_results = process_video_search_results (search_results, 'video_search')
-
-    # ----------------------NEW STUFF ADDED --------------------------------------------------------
-    # Get artist and Song entered on search form
-    artist_input = session.get('artist', None)
-    song_input = session.get('song', None)
-
-
-    # For each video in video_search_results build a list of video_detail_objects 
-    video_detail_objects_list = build_list_of_video_objects(video_search_results)
-    # import pdb; pdb.set_trace()
-    # TBD: 
-    #  - Change render stateme below to pass video_detail_objects_list 
-    #  - Change search template to use this new object
-    
-    # -----------------------------------------------------------------------------
+     # Check to see if error encountered while making API call
+    if search_results['status'] == 'error':
+      return redirect('/search')
+    else: # YT API returned success status code
+      json_results = search_results['results']
+      # if api request was successful but no videos found matching search criteria then notify user
+      if len(json_results) == 0:
+        flash('Sorry no videos matching your search criteria were found...check your search criteria and try another search')
+        return redirect('/search')
 
 
-    # ***** No need store search results in session variable if I make another call to YT API in /video/id route
-    # My custom Video object is not serializable so pickle dump is used to serialize session variable before saving
-    # session['videos'] = pickle.dumps(video_search_results)
-   
+      # Save the YT video search results (video_id, title, thumbnail) and check to see if video is a current favor
+      video_search_results = process_video_search_results (json_results, 'video_search')
 
-    # return render_template('/search.html', form=form, videos = video_search_results)
-    return render_template('/search.html', form=form, videos = video_detail_objects_list)
+      # Get artist and Song entered on search form
+      artist_input = session.get('artist', None)
+      song_input = session.get('song', None)
+
+      # For each video in video_search_results build a list of video_detail_objects 
+      video_detail_objects_list = build_list_of_video_objects(video_search_results)
+
+      return render_template('/search.html', form=form, videos = video_detail_objects_list)
 
   else:
 
@@ -158,12 +151,19 @@ def viewVideo(video_id):
   
   # Call YT Video Detail API to retrieve JSON Data
   search_results = get_detailed_video_data(video_id)
+ 
+  if (search_results['status'] == 'error'):
+    return redirect('/search')
+  else: # YT API returned success status code
+    json_results = search_results['results']
+    # if api request was successful but no videos found matching search criteria then notify user
+    if len(json_results) == 0:
+      flash('Sorry no videos matching your search criteria were found...check your search criteria and try another search')
+      return redirect('/search')
 
   # ENHANCEMENT NEEDED:  Need to check if there are results and if not need to display an appropriate message and return.
   # Extract the detailed video information from the JSON Data returned from the YT API call 
-  video = build_video_object(search_results, 'video_detail')
-
-  # import pdb; pdb.set_trace()
+  video = build_video_object(search_results['results'], 'video_detail')
 
   # Get artist and Song entered on search form
   artist_input = session.get('artist', None)
