@@ -223,9 +223,7 @@ def build_video_object(json_video_info, search_type):
   # Extract video info from 
   video_info = get_video_info(json_video_info, search_type)
 
-  # import pdb; pdb.set_trace() 
 
-  
   # Check to see if video is in current user's favorites list...if so then return fav_id else return None
   fav_id = isFavoriteVideo(video_info['video_id'])
  
@@ -241,10 +239,9 @@ def process_video_search_results (searchResults, search_type):
   """ Translate YT JSON video search results into a list of Video objects. Returns a list of resulting Video Objects  """
   videos = []
   for result in searchResults: 
-    # import pdb; pdb.set_trace()
+  
     # Build video object for each video returned in json
     video = build_video_object(result, search_type)
-
     
     # Add video to list of video objects 
     videos.append(video)
