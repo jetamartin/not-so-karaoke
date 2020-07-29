@@ -1,5 +1,6 @@
 $(document).ready(function () {
 
+  // Key constants/references (e.g., html fields for modal form)
   const allVidCards = $("#vid-cards")
   const favModal = $('#fav-save-modal')
   const favModalSubmitBtn = $('#video-detail-fav-submit')
@@ -13,7 +14,14 @@ $(document).ready(function () {
   const inputSongTitle = $('#input-song-title')
   const inputVideoNotes = $('#input-video-notes')
 
-
+/***********************************************************************************************
+ * Function:  processFavCardClicked
+ * ---------------------------------------------------------------------------------------------
+ * Called anytime a user clicks in the search video results area
+ * - If the user clicked on the fav icon in any of the cards it launches the function to launch
+ *   the fav modal otherwise the click is ignored
+ *
+*/
   function processFavCardClickEvent(evt) {
     // Only lauch the Fav Modal if user has clicked on the Fav heart icon..otherwise ignore the click
     console.log("In processFavCardClick function")
@@ -21,7 +29,17 @@ $(document).ready(function () {
       launchFavoritesModal(evt)
     }
   }
-     
+
+  /***********************************************************************************************
+ * Function:  lauchFavoritesModal
+ * ---------------------------------------------------------------------------------------------
+ * Called anytime a user clicks on the fav icon on a video card in the search results
+ * - Reinitialize the Delete warning (hide it) if it was clicked on the prior save
+ * - Populate the modal form fields from the video card that was clicked
+ * - Save the fav-id and the video_id as a data element on the modal Save button so that the 
+ *   modal window can be linked back to the select video card
+ * - Finally display the filled in modal window
+*/
   function launchFavoritesModal (evt) {
    // Called when the user clicks the Fav icon
    // Fills in form fields based on which Fav video card was clicked
@@ -60,7 +78,13 @@ $(document).ready(function () {
     favModal.modal()
   }
   
-  
+ /***********************************************************************************************
+ * Function:  processFavModalSubmit()
+ * ---------------------------------------------------------------------------------------------
+ * Called when the user clicks "Save" button on the modal form
+ * - Checks to see if the user clicked the "delete" checkbox and if so calls function to delete fav
+ * - Otherwise it calls the function to save the user fav edits
+*/
   async function processFavModalSubmit(evt) {
   // Called when the user clicks the "Save" button on the Fav Modal
   // Determines if the delete checkbox is checked and takes approriate action
@@ -74,28 +98,45 @@ $(document).ready(function () {
       editFavorite(evt)
     } 
   }
-  
-  async function editFavorite(evt) {
+
+
+ /***********************************************************************************************
+ * Function:  editFavorite() - Send ajax request to server to create/edit a favorite
+ * ---------------------------------------------------------------------------------------------
+ * Called when the user clicks "Save" button on the modal form without checking the delete checkbox
+ * 
+ * - Retrieves fav data entered by user and/or from video card 
+ * - Once the data is collected an Ajax call is made to the server to save the data in the Fav DB table
+ * - If the fav is saved successfully then:
+ * --- the video card is updated 
+ * --- the fav-id is saved in the video cards html
+ * --- if a new fav has been created then the fav icon is changed to a solid red heart
+ * --- and the notes section is displayed
+ * --- finally hide the modal
+ * - TBD - Error handling if save fails for some reason
+ */
+   async function editFavorite(evt) {
     // Allows user to make video a favorite or edit info in an existing favorite (e.g., add/change notes)
   
-    // Retrieve key data from HTLM 
+    // Get key data from modal save button to connect this save to video card
     const fav_id = favModalSubmitBtn.data('fav_id')
     const videoId = favModalSubmitBtn.data('videoid')
     const card =  $('#'+ videoId)
+
+    // Now retrieve references to key fields of the video card
     const title = card.find(".video-detail-title")
     const artist = card.find(".video-detail-artist")
     const song = card.find(".video-detail-song")
     const notes = card.find(".video-detail-notes")
-  
     const video_thumbnail = card.find("img").attr('src')
-    // const videoId = card.find(".video-details").data('videoid')
 
+    // Get the values present on the fav modal form
     const inputVideoTitleVal = inputVideoTitle.val()
     const inputArtistNameVal = inputArtistName.val()
     const inputSongTitleVal =  inputSongTitle.val()
     const inputVideoNotesVal = inputVideoNotes.val()
   
-  
+    // Include key values to update the fav table in DB
     params = {favId: fav_id,
               id: videoId, 
               thumbnail: video_thumbnail,
@@ -105,7 +146,7 @@ $(document).ready(function () {
               notes: inputVideoNotesVal, }
   
     try {
-      // Send fav data to the server   
+      // Send fav data to the server so this fav can be added or updated  
       const res = await axios.post('/favorites', params)    
       if (res.data) {  // Server was able to save data 
   
@@ -118,16 +159,16 @@ $(document).ready(function () {
         
         // If the video wasn't a favorite before then change icon to show it is a favorite 
         if (favIcon.hasClass("far fa-heart")) {
+
           // Save the DB id of the newly created favorite in the html
           card.find('.favorites').data('fav_id', res.data.fav_id)
 
-          // Toggle the favorites icon from the heart outlie to a solid red heart to indicate it's a favorite.
+          // Toggle the favorites icon from the heart outline to a solid red heart to indicate it's a favorite.
           favIcon.toggleClass('far fa-heart fas fa-heart')
 
           // Show the notes sections
           card.find('.video-detail-notes-section').toggleClass('hide')
-          // $("#video-detail-notes").toggleClass('hide')
-  
+            
         }
         favModal.modal('hide')
       }
@@ -137,13 +178,24 @@ $(document).ready(function () {
     }
   }
   
-    
+  /***********************************************************************************************
+ * Function:  delFavorites() - Send ajax request to remove the video from the favorites list
+ * ---------------------------------------------------------------------------------------------
+ * Called when the user clicks "Save" button on the modal form AND has checked the delete checkbox
+ *
+ * - For the video that was originally clicked send a request to the server to remove this 
+ * video from the favorites list:
+ * --- remove the fav-id from the card and remove the fav-id from the modal's save button data attribute
+ * --- toggle the favIcon from a solid red heart icon  (favorite) to a heart outline
+ * --- clear out the notes section and hide the notes 
+ * --- clear out the modal form fields 
+ * --- make sure that the delete checkbox is reset
+ * --- finally hide the modal
+ * - TBD - Error handling if save fails for some reason
+ */
   async function delFavorites(evt) {
     // If user clicks on the delete button in "Remove Fav" modal it will send a delete request to the server 
   
-    // const favDelModal = $("#fav-delete-modal")
-    console.log("Function delFavorites")
-
     const fav_id = favModalSubmitBtn.data('fav_id')
     videoId = $(evt.target).data('videoid')
     const card =  $('#'+videoId)
@@ -184,10 +236,14 @@ $(document).ready(function () {
       }
     } catch(err) {
       console.log("Error message")
+      // TBD improve error handline
     }
   }
 
-  // ****************** Event listeners ************************* 
+  /****************************************************************************************
+   * Event listeners
+   * ---------------------------------------------------------------------------------------
+   */
   vidDetailFavSubmit.on('click', processFavModalSubmit)
   allVidCards.on('click', processFavCardClickEvent )
   delFav.on( "click", function() {

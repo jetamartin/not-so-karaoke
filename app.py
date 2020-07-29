@@ -254,7 +254,7 @@ def deleteFavorite(id):
        the delete fav checkbox on the modal form. 
        Favorites functionality will require user to be logged in but we still need to protect
        against someone simply typing in a URL with an id.  """
-
+  import pdb; pdb.set_trace()
   if 'user_id' not in session: 
     flash("This action is not allowed if you aren't logged in. Please login or signup to create an account")
     form = LoginForm()
@@ -262,7 +262,7 @@ def deleteFavorite(id):
   # return render ('/login', form=form)
   
   fav = Favorite.query.get(id)
-
+  import pdb; pdb.set_trace()
   db.session.delete(fav)
   db.session.commit()
 

@@ -1,392 +1,370 @@
-var vidNum = 0;
-const nextVideoBtn = document.getElementById("next-video-btn")
-const priorVideoBtn = document.getElementById("prior-video-btn")
-const pauseVideoBtn = document.getElementById("pause-video-btn")
-const playVideoBtn = document.getElementById("play-video-btn")
-const stopVideoBtn = document.getElementById("stop-video-btn")
-const playerDiv = document.getElementById("player")
-const lyricsSearch = document.getElementById("lyrics-search-form")
-const favorites = document.getElementById("favorites")
+// $(document).ready(function () {
 
+const playerDiv = $('#player')
 
-const vidDetailFavSubmit = document.getElementById("video-detail-fav-submit")
-const vidDetailDelFav = document.getElementById("video-detail-delete-fav")
+const altLyricsSearchForm = $('#lyrics-search-form')
+// const lyricsSearch = document.getElementById("lyrics-search-form")
+const lyricsSearchResults = $("#lyrics-search-results")
+const altLyricsContent = $("#lyrics-content")
+const altLyricsInputArtistName = $("#artist")
+const altLyricsInputSongTitle = $("#song")
+
+const favorites = $('#favorites')
+const favIcon = $('#favorites i')
+const vidDetails = $("#video-details")
+
+const vidDetailFavSubmit = $("#video-detail-fav-submit")
+const vidDetailDelFav = $("#video-detail-delete-fav")
 const favSaveModal = $("#fav-save-modal")
 const delFav = $('#del-fav')
 const delFavWarning = $('#del-fav-warning')
+const favDelCheckbox = $('#fav-del-checkbox')
+
+
+// Get the values from the video detail card to populate the 'Add to favorites' modal form.
+const videoDetailTitle = $("#video-detail-title")
+const videoDetailArtist = $("#video-detail-artist")
+const videoDetailSong =  $("#video-detail-song")
+const videoDetailNotes =  $("#video-detail-notes")
+const videoDetailNotesSection = $("#video-detail-notes-section")
+
+// Get handle for input fields on the favorite modal
+const inputVideoTitle = $('#input-video-title')
+const inputArtistName = $('#input-artist-name')
+const inputSongTitle = $('#input-song-title')
+const inputVideoNotes = $('#input-video-notes')
 
 
 
 // $(document).ready(function () {
       
-      console.log("I'm in viewVideo.js file")
-
-      // var vidNum = 0;
-      // const nextVideoBtn = document.getElementById("next-video-btn")
-      // const priorVideoBtn = document.getElementById("prior-video-btn")
-      // const pauseVideoBtn = document.getElementById("pause-video-btn")
-      // const playVideoBtn = document.getElementById("play-video-btn")
-      // const stopVideoBtn = document.getElementById("stop-video-btn")
-      // const playerDiv = document.getElementById("player")
-      // const lyricsSearch = document.getElementById("lyrics-search-form")
-      // const favorites = document.getElementById("favorites")
+    console.log("I'm in viewVideo.js file")
 
 
-      // const vidDetailFavSubmit = document.getElementById("video-detail-fav-submit")
-      // const vidDetailDelFav = document.getElementById("video-detail-delete-fav")
-      // const favSaveModal = $("#fav-save-modal")
-      // const delFav = $('#del-fav')
+    //This code loads the IFrame Player API code asynchronously.
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
 
+    // 3. This function creates an <iframe> (and YouTube player)
+    //    after the API code downloads.
+    var player;
 
-
-
-      // nextVideoBtn.addEventListener("click", playNextVideo1);
-      // priorVideoBtn.addEventListener("click", playPriorVideo);
-      // pauseVideoBtn.addEventListener("click",pauseVideo);
-      // playVideoBtn.addEventListener("click", playVideo);
-      // stopVideoBtn.addEventListener("click", stopVideo)
-
-
-      // 2. This code loads the IFrame Player API code asynchronously.
-      var tag = document.createElement('script');
-      tag.src = "https://www.youtube.com/iframe_api";
-      var firstScriptTag = document.getElementsByTagName('script')[0];
-      firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-      // 3. This function creates an <iframe> (and YouTube player)
-      //    after the API code downloads.
-      var player;
-
-      function onYouTubePlayerAPIReady() {
-        player = new YT.Player('player', {
-           // height: '390',
-          // width: '640',
-          // videoId: "dD-SpHH7qDA",
-         
-          // videoId: playerDiv.dataset.videoid,
-          playerVars: { 'autoplay': 0, 'controls': 1, 'fs': 0},
-          events: {
-            'onReady': onPlayerReady,
-            'onStateChange': onPlayerStateChange,
-            'onError': onError
-          }
-        });
-
-        console.log(playerDiv.dataset.videoid)
-      }
-
-      // 4. The API will call this function when the video player is ready.
-      function onPlayerReady(event) {
-    
-        console.log("*****OnPlayerReady Function")
-        // Play video that has been cued up above
-        // event.target.playVideo();
-
-
-        console.log('***** videoId', playerDiv.dataset.videoid)
-
-        // Autoplays video
-        // player.loadVideoById(playerDiv.dataset.videoid, 0)
-
-        // Cues up the video...user must press play to play video
-        player.cueVideoById(playerDiv.dataset.videoid)
-
-        // Que up a list of videos from a list and play them       
-        // player.loadPlaylist(videos)
-
-
-        
-        // let playerState = player.getPlayerState()
-        // console.log('PlayerState', playerState)
-        // if (playerState == 5) {
-
-
-        //   event.target.playVideo();
-
-
-        // }
-
-
-        // lyricElementResize()
-      }
-
-      // 5. The API calls this function when the player's state changes.
-      //    The function indicates that when playing a video (state=1),
-      //    the player should play for six seconds and then stop.
-      var done = false;
-      function onPlayerStateChange(event) {
-        // Allows me to retrive Title of video playing, id, etc. 
-       
-        // console.log(player.getVideoData()) 
-        // if (event.data == YT.PlayerState.PLAYING && !done) {
-        //   setTimeout(stopVideo, 6000);
-        //   done = true;
-        // } 
-
-      }
-
-      // function onPlayerStateChange(event) {        
-      //   if(event.data === 0) {   
-      //     alert("Video Finished"); 
-      //     vidNum += 1;
-      //     playNextVideo(vidNum)
-      //   }
-      // }
-
-      function onError(event) {
-        console.log("in onError function", event)
-        console.log('Error message: ', event)
-
-      }
-
-      function stopVideo() {
-        player.stopVideo();
-        done = false;
-        player.nextVideo();
-        
-        // vidNum += 1;
-        // if (vidNum < videos.length) {
-        //   done = false;
-        //   playNextVideo(vidNum)
-        // }
-      }
-   
-
-      function playNextVideo(vidNum) {
-        if (vidNum < videos.length ) {
-          console.log("Video Id: ", videos[vidNum])
-          console.log("Video Num", vidNum)
-          player.loadVideoById(videos[vidNum])
+    /***********************************************************************************************
+     * Function:  onYouTubePlayerAPIReady() - set key params for YT Player
+    * ---------------------------------------------------------------------------------------------
+    * Set key parameters for YT Player
+    * Create methods to handle various play states
+    */
+    function onYouTubePlayerAPIReady() {
+      player = new YT.Player('player', {
+        playerVars: { 'autoplay': 0, 'controls': 1, 'fs': 0},
+        events: {
+          'onReady': onPlayerReady,
+          'onStateChange': onPlayerStateChange,
+          'onError': onError
         }
-      }
+      });
+    }
 
-      function stopVideo() {
-        player.stopVideo()
-      }
+    /***********************************************************************************************
+     * Function:  onYouTubePlayerAPIReady() - queues up video for play when video playe is ready
+    * ---------------------------------------------------------------------------------------------
+    * YT API will call this function when the video player is ready
+    * Create methods to handle various play states
+    */
+    function onPlayerReady(event) {
   
-      function playVideo() {
-        player.playVideo()
-      }
+      console.log("*****OnPlayerReady Function")
 
-      function pauseVideo() {
-        player.pauseVideo()
-      }
+      // iFrame is generated dynamically via YT api
+      const videoId = $("iframe").data('videoid')
 
-      function playNextVideo1 () {
-        player.nextVideo()
-      }
+      // Cues up the video...user must press play to play video
+      player.cueVideoById(videoId)
 
-      function playPriorVideo () {
-        player.previousVideo()
-      }
+      // Limits the amount of space the lyrics will consume to match height of video
+      // ===> Note this func is not currently being used but is being kept for reference for future enhancements
+      // lyricElementResize()
+    }
 
-      function lyricElementResize() {
-        console.log("lyricElementResize() - Triggered ")
-        var videoFrame = document.getElementById("player");
-        var videoHeight = videoFrame.offsetHeight;
-        console.log("*********videoHeight", videoHeight);
-        var lyricFrame = document.getElementById("lyrics")
-        lyricFrame.style.maxHeight = videoHeight + "px";
-        
-      }
+    /***********************************************************************************************
+    * Function:  onPlayerStateChange() - called when the player state changes
+    * ---------------------------------------------------------------------------------------------
+    * Not currently being used but here as a placeholder for when new functionality is added
+    * 
+    */
+    function onPlayerStateChange(event) {
 
-      async function requestMoreLyrics(evt) {
-        console.log("Process the submit Lyrics request form")
-        evt.preventDefault()
-        // const lyricsSearch = $("#lyrics-search-form")
-        const inputArtistName = $("#artist").val()
-        const inputSongTitle = $("#song").val()
-        const lyricsSearchResults = $("#lyrics-search-results")
-        params = {artist: inputArtistName, song: inputSongTitle}
+    }
 
-        try {
-          const res = await axios.post('http://localHost:5000/lyrics', params)    
-          if (res.data) {
-            $("#lyrics-content").html(res.data) 
-          }
-        } catch(err) {
-          console.log("Error message")
+    /***********************************************************************************************
+    * Function:  onError() - called whenever an error is detected
+    * ---------------------------------------------------------------------------------------------
+    * Not currently being used but here as a placeholder for when new functionality is added
+    * 
+    */
+    function onError(event) {
+      console.log("in onError function", event)
+      console.log('Error message: ', event)
+    }
+
+    /***********************************************************************************************
+    * Function:  lyricElementResize() - restricts the height of lyrics to height of video
+    * ---------------------------------------------------------------------------------------------
+    * Not currently being used but here as a placeholder for when new functionality is added
+    * 
+    */
+    function lyricElementResize() {
+      console.log("lyricElementResize() - Triggered ")
+      var videoFrame = document.getElementById("player");
+      var videoHeight = videoFrame.offsetHeight;
+      console.log("*********videoHeight", videoHeight);
+      var lyricFrame = document.getElementById("lyrics")
+      lyricFrame.style.maxHeight = videoHeight + "px";
+    }
+
+    /***********************************************************************************************
+    * Function:  requestMoreLyrics() - allows user to request a different set of lyrics
+    * ---------------------------------------------------------------------------------------------
+    * Called when the user clicks the submit button on the lyrics input form from this view-video page
+    * - Gets the user input (artist & song title) from the lyrics search form
+    * - Sends lyrics request to Server via an AJAX
+    * - If request was successful display new lyrics in UI else log and error
+    */
+    async function requestMoreLyrics(evt) {
+      console.log("Process the submit Lyrics request form")
+      evt.preventDefault()
+      const inputArtistName = altLyricsInputArtistName.val()
+      const inputSongTitle = altLyricsInputSongTitle.val()
+
+      params = {artist: inputArtistName, song: inputSongTitle}
+
+      try {
+        const res = await axios.post('http://localHost:5000/lyrics', params)    
+        if (res.data) {
+          altLyricsContent.html(res.data) 
         }
+      } catch(err) {
+        console.log("Error message")
+        // TBD - beef up error handling
+      }
+    }
+
+  /***********************************************************************************************
+   * Function:  lauchFavoritesModal
+   * ---------------------------------------------------------------------------------------------
+   * Called anytime a user clicks on the fav icon on a video card in the view video screen
+   * - Reinitialize the Delete warning (hide it) if it was clicked on the prior save
+   * - Populate the modal form fields from the video card that was clicked
+   * - If the vide wasn't previously a fav then clear the notes and hide the delete checkbox
+   * - Otherwise (already a favorite) show the delete checkbox
+   * - Finally display the filled in modal window
+  */
+    function launchFavoritesModal (evt) {
+      // Launches the Modal window
+      
+      userId = vidDetails.data('user_id')
+
+      // Only show Fav modal if a user is logged in otherwise the modal will be disabled.
+      // if the fav modal is enabled it seems to automatically disable the tooltip which is the desired behavior 
+      if (userId) {
+        // Make sure the delete option is unchecked & the warning message is hidden when 
+        // the user opens the Favorite model. This is needed to address scenrio  where user 
+        // clicks the deletes checkbox, cancels the modal and then re-opens modal window 
+        // option
+        if ((delFav).is(":checked")) { 
+          // uncheck the checkbox and toggle the warning message
+          delFav.prop('checked', false);
+          delFavWarning.toggleClass('hide') 
+        }
+
+        // Get the values from the video detail card to populate the 'Add to favorites' modal form.
+        videoDetailTitleContent = videoDetailTitle.text()
+        videoDetailArtistContent = videoDetailArtist.text()
+        videoDetailSongContent =  videoDetailSong.text()
+        videoDetailNotesContent =  videoDetailNotes.text()
+
+        // Now populate the Add-to-Favorites modal with the data from the video detail card
+        inputVideoTitle.val(videoDetailTitleContent)
+        inputArtistName.val(videoDetailArtistContent)
+        inputSongTitle.val(videoDetailSongContent)
+        inputVideoNotes.val(videoDetailNotesContent) 
+
+        // Display the populated Add Favorite modal screen
+        favSaveModal.modal()
+
+        // Scenario 1:  Current video is not a favorite
+        if ( event.target.className == 'far fa-heart' ) { 
+          inputVideoNotes.val("") 
+          // Hide the delete check box because this video isn't a favorite yet 
+          favDelCheckbox.addClass('hide')
+        
+        } else {  // Current video is already a fav and user wants to remove it as a favorite video
+
+          // Display the Delete checkbox by removing 'hide' class
+          favDelCheckbox.removeClass('hide')
+        }
+
+      }
+    }
+
+    /***********************************************************************************************
+     * Function:  processFavModalSubmit() - determines user wants to remove or save/update fav video
+     * ---------------------------------------------------------------------------------------------
+     * Called when the user clicks "Save" button on the modal form
+     * - Checks to see if the user clicked the "delete" checkbox and if so calls function to delete fav
+     * - Otherwise it calls the function to create/save the user fav edits
+    */
+    async function processFavModalSubmit(evt) {
+      evt.preventDefault()
+
+      if ((delFav).is(":checked")) { 
+        delFavorites()
+      } else { 
+        saveOrEditFavorite(evt)
+      } 
+    }
+
+  /***********************************************************************************************
+   * Function:  saveOrEditFavorite() - Send ajax request to server to create/edit a favorite
+   * ---------------------------------------------------------------------------------------------
+   * Called when the user clicks "Save" button on the modal form but doesn't check the delete checkbox
+   * 
+   * - Retrieves fav data entered by user and/or from video card 
+   * - Once the data is collected an Ajax call is made to the server to save the data in the Fav DB table
+   * - If the fav is saved successfully then:
+   * --- the video card is updated 
+   * --- the fav-id is saved in the video cards html
+   * --- if a new fav has been created then the fav icon is changed to a solid red heart
+   * --- and the notes section is displayed
+   * --- finally hide the modal
+   * - TBD - Error handling if save fails for some reason
+   */
+    async function saveOrEditFavorite(evt) {
+
+      // Retrieve key data from HTLM 
+      const videoId = $("iframe").data('videoid')
+      const video_thumbnail = vidDetails.data('thumbnail')
+
+      // Get the fav-id (if present) from the video card otherwise set fav_id to ""
+      let fav_id = favorites.data('fav_id')
+      if (!fav_id) {
+        fav_id = ""
       }
 
-      lyricsSearch.addEventListener("submit", requestMoreLyrics);
-      favorites.addEventListener('click', launchFavoritesModal);
+      // Collect data on the Add-Fav-Modal form 
+      const inputVideoTitleVal = inputVideoTitle.val()
+      const inputArtistNameVal = inputArtistName.val()
+      const inputSongTitleVal =  inputSongTitle.val()
+      const inputVideoNotesVal =  inputVideoNotes.val()
 
+      params = {favId: fav_id,
+                id: videoId, 
+                thumbnail: video_thumbnail,
+                title: inputVideoTitleVal,
+                artist: inputArtistNameVal,  
+                song: inputSongTitleVal, 
+                notes: inputVideoNotesVal, }
+
+      try {
+        // Send fav data to the server   
+        const res = await axios.post('/favorites', params)    
+        if (res.data) {  // Server was able to save data 
+
+          // Save the DB id of the newly created favorite in the html
+          favorites.data('fav_id', res.data.fav_id) 
+
+          // Update all fields on the Add Modal Form to reflect actual data saved in DB. Note: this is prob not needed. 
+          videoDetailArtist.text(res.data.video_title)
+          videoDetailArtist.text(res.data.artist_name)
+          videoDetailSong.text(res.data.song_title)
+          videoDetailNotes.text(res.data.video_notes)
+
+          // If the video wasn't a favorite before then change icon to show it is a favorite 
+          if (favIcon.hasClass('far fa-heart')) {
+            // Toggle the favorites icon from the heart outlie to a solid red heart to indicate it's a favorite.
+            favIcon.toggleClass('far fa-heart fas fa-heart')
+            // Show the notes sections
+            videoDetailNotesSection.toggleClass('hide')
+            videoDetailNotes.toggleClass('hide')
+          }
+
+          favSaveModal.modal('hide')
+        }
+      } catch(err) {
+        console.log("Error message")
+      }
+    }
+
+  /***********************************************************************************************
+   * Function:  delFavorites() - Send ajax request to remove the video from the favorites list
+   * ---------------------------------------------------------------------------------------------
+   * Called when the user clicks "Save" button on the modal form AND has checked the delete checkbox
+   *
+   * - For the video that was originally clicked send a request to the server to remove this 
+   * video from the favorites list:
+   * --- remove the fav-id from the card and remove the fav-id from the modal's save button data attribute
+   * --- toggle the favIcon from a solid red heart icon  (favorite) to a heart outline
+   * --- clear out the notes section and hide the notes 
+   * --- clear out the modal form fields 
+   * --- make sure that the delete checkbox is reset
+   * --- finally hide the modal
+   * - TBD - Error handling if save fails for some reason
+   */
+    async function delFavorites(evt) {
+      // If user clicks on the delete button in "Remove Fav" modal it will send a delete request to the server 
+
+      // const favDelModal = $("#fav-delete-modal")
+      console.log("Function delFavorites")
+
+      // Get the videoId from the details page
+      videoId = $("iframe").data('videoid')
+      userId = $("iframe").data('user_id')
+      fav_id = favorites.data('fav_id')
+
+      try {
+        const res = await axios.delete(`/favorites/${fav_id}`) 
+        if (res.data) {
+          console.log("Favorite was deleted")
+          favIcon.toggleClass('far fa-heart fas fa-heart')
+          favorites.data("fav_id", "")
+          // Hide the notes section
+          videoDetailNotesSection.toggleClass('hide')
+          videoDetailNotes.toggleClass('hide')
+          // Hide the Delete warning message
+          delFavWarning.toggleClass('hide')
+
+          // Make sure delete checkbox is unchecked after a delete
+          delFav. prop("checked", false);
+          // Close the 
+          favSaveModal.modal('hide')
+          // favDelModal.modal('hide')
+        }
+      } catch(err) {
+        console.log("Error message")
+      }
+    }
+
+  /***************************************************************************************
+   * 
+   * Event listeners
+   * 
+   ***************************************************************************************/
+    delFav.on( "click", function() {
+      delFavWarning.toggleClass('hide')
+      });
+  
+      vidDetailFavSubmit.on('click', processFavModalSubmit)
+
+      altLyricsSearchForm.on('submit', requestMoreLyrics)
+    
+      favorites.on('click', launchFavoritesModal)
+  
       // Show tooltip if non-login user hovers over favorite icon.
       $('[data-toggle="tooltip"]').tooltip({
         title : "Login/Signup to mark video as a Favorite.",
         placement : 'top'
       });
-      
-      function launchFavoritesModal (evt) {
-        // Launches the Modal window
-        
-        vidDetails = $("#video-details")
-        userId = vidDetails.data('user_id')
-
-        // Only show Fav modal if a user is logged in otherwise the modal will be disabled.
-        // if the fav modal is enabled it seems to automatically disable the tooltip which is the desired behavior 
-        if (userId) {
-          // Make sure the delete option is unchecked & the warning message is hidden when 
-          // the user opens the Favorite model. This is needed to address scenrio  where user 
-          // clicks the deletes checkbox, cancels the modal and then re-opens modal window 
-          // option
-          if ((delFav).is(":checked")) { 
-            // uncheck the checkbox and toggle the warning message
-            delFav.prop('checked', false);
-            delFavWarning.toggleClass('hide') 
-          }
-
-          // Get the values from the video detail card to populate the 'Add to favorites' modal form.
-          videoDetailTitle = $("#video-detail-title").text()
-          videoDetailArtist = $("#video-detail-artist").text()
-          videoDetailSong =  $("#video-detail-song").text()
-          videoDetailNotes =  $("#video-detail-notes").text()
-
-          // Get handle for input fields on the favorite modal
-          inputVideoTitle = $('#input-video-title')
-          inputArtistName = $('#input-artist-name')
-          inputSongTitle = $('#input-song-title')
-          inputVideoNotes = $('#input-video-notes')
-
-          // Now populate the Add-to-Favorites modal with the data from the video detail card
-          inputVideoTitle.val(videoDetailTitle)
-          inputArtistName.val(videoDetailArtist)
-          inputSongTitle.val(videoDetailSong)
-          inputVideoNotes.val(videoDetailNotes) 
-
-          // Display the populated Add Favorite modal screen
-          $('#fav-save-modal').modal()
-
-          // Scenario 1:  Current video is not a favorite
-          if ( event.target.className == 'far fa-heart' ) { 
-            inputVideoNotes.val("") 
-            // Hide the delete check box because this video isn't a favorite yet 
-            $('#fav-del-checkbox').addClass('hide')
-          
-          } else {  // Current video is already a fav and user wants to remove it as a favorite video
-
-            // Display the Delete checkbox by removing 'hide' class
-            $('#fav-del-checkbox').removeClass('hide')
-          }
-
-        }
-      }
-
-
-     delFav.on( "click", function() {
-        $('#del-fav-warning').toggleClass('hide')
-      });
-
-      vidDetailFavSubmit.addEventListener('click', processFavModalSubmit)
-
-      async function processFavModalSubmit(evt) {
-        // Process the User's submission of the Favorites Modal Form. Submitting the form could result in 3 different outcomes.
-        // 1 - The video was not previously a Favorite and the User wishes add it to their favorites list 
-        // 2 - The video was previously a Favorite but they want to edit fields (e.g., notes) of this existing favorite
-        // 3 - The user wishes to remove this list from their favorites list. 
-        console.log("In processFavModalSubmit")
-        evt.preventDefault()
-
-        if ((delFav).is(":checked")) { 
-          delFavorites()
-        } else { 
-          saveOrEditFavorite(evt)
-        } 
-      }
-
-      async function saveOrEditFavorite(evt) {
-
-        // Retrieve key data from HTLM 
-        const videoId = $("iframe").data('videoid')
-        const video_thumbnail = $('#video-details').data('thumbnail')
-
-        let fav_id = $("#favorites").data('fav_id')
-        if (!fav_id) {
-          fav_id = ""
-        }
-
-        // Collect data on the Add-Fav-Modal form 
-        const inputVideoTitle = $("#input-video-title").val()
-        const inputArtistName = $("#input-artist-name").val()
-        const inputSongTitle =  $("#input-song-title").val()
-        const inputVideoNotes =  $("#input-video-notes").val()
-
-
-        params = {favId: fav_id,
-                  id: videoId, 
-                  thumbnail: video_thumbnail,
-                  title: inputVideoTitle,
-                  artist: inputArtistName,  
-                  song: inputSongTitle, 
-                  notes: inputVideoNotes, }
-
-        try {
-          // Send fav data to the server   
-          const res = await axios.post('/favorites', params)    
-          if (res.data) {  // Server was able to save data 
-
-            // Save the DB id of the newly created favorite in the html
-            $("#favorites").data('fav_id', res.data.fav_id) 
-
-            // Update all fields on the Add Modal Form to reflect actual data saved in DB. Note: this is prob not needed. 
-            $('#video-detail-title').text(res.data.video_title)
-            $("#video-detail-artist").text(res.data.artist_name)
-            $("#video-detail-song").text(res.data.song_title)
-            $("#video-detail-notes").text(res.data.video_notes)
-
-            // If the video wasn't a favorite before then change icon to show it is a favorite 
-            if ($('#favorites i').hasClass('far fa-heart')) {
-              // Toggle the favorites icon from the heart outlie to a solid red heart to indicate it's a favorite.
-              $('#favorites i').toggleClass('far fa-heart fas fa-heart')
-              // Show the notes sections
-              $("#video-detail-notes-section").toggleClass('hide')
-              $("#video-detail-notes").toggleClass('hide')
-            }
-
-            // Now that current video is a favorite show the notes field. 
-            // $("#video-detail-notes-section").toggleClass('hide')
-            // $("#video-detail-notes").toggleClass('hide')
-            favSaveModal.modal('hide')
-          }
-        } catch(err) {
-          console.log("Error message")
-        }
-      }
-
-      // vidDetailDelFav.addEventListener('click', delFavorites)      
-
-      async function delFavorites(evt) {
-        // If user clicks on the delete button in "Remove Fav" modal it will send a delete request to the server 
-
-        // const favDelModal = $("#fav-delete-modal")
-        console.log("Function delFavorites")
-
-        // Get the videoId from the details page
-        videoId = $("iframe").data('videoid')
-        userId = $("iframe").data('user_id')
-        fav_id = $("#favorites").data('fav_id')
-
-        try {
-          const res = await axios.delete(`/favorites/${fav_id}`) 
-          if (res.data) {
-            console.log("Favorite was deleted")
-            $('#favorites i').toggleClass('far fa-heart fas fa-heart')
-            $("#favorites").data("fav_id", "")
-            // Hide the notes section
-            $("#video-detail-notes-section").toggleClass('hide')
-            $("#video-detail-notes").toggleClass('hide')
-            // Hide the Delete warning message
-            $('#del-fav-warning').toggleClass('hide')
-
-            // Make sure delete checkbox is unchecked after a delete
-            delFav. prop("checked", false);
-            // Close the 
-            favSaveModal.modal('hide')
-            // favDelModal.modal('hide')
-          }
-        } catch(err) {
-          console.log("Error message")
-        }
-      }
 // }); 

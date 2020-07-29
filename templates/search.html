@@ -26,13 +26,6 @@
         {% else %}
           {{ field.label (class_="col-sm-3 col-form-label text-white")}}
         {% endif %}
-        <!-- {%if field.flags.required %} -->
-          <!-- {{ field.label(class="col-sm-3 col-form-label text-white", text='*' + field.label.text) }} -->
-        <!-- {% else %} -->
-          <!-- {{ field.label(class="col-sm-3 col-form-label text-white") }} -->
-        <!-- {% endif %} -->
- 
-        <!-- {{field.label(class_="col-sm-2 col-form-label text-white")}} -->
         <div>
           {{field(class_="col-sm-9 form-control")}}
         </div>
@@ -46,8 +39,6 @@
 </div>
 </section>
 
-
-
 <div  id="vid-cards" class="container" >
   {% if videos %}
   <div class="row">
@@ -56,7 +47,7 @@
       <div id={{video.id}} class="card w-100 video-card"  data-video.title ="{{video.title}}" data-videoid="{{video.id}}">
         <img src="{{ video.thumbnail }}" height="225" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
         <div class="card-body video-details" data-videoid={{video.id}}>
-          <p class="card-text video-detail-title">{{ video.title | safe }}</p>
+          <p class="card-text video-detail-title font-weight-bold">{{ video.title | safe }}</p>
           <p class="card-text">Artist:<span class="video-detail-artist ml-3">{{ video.artist }}</span></p> 
           <p class="card-text">Song:<span class="video-detail-song ml-3">{{ video.song }}</span></p>
           {% if video.fav_id %}
@@ -82,8 +73,8 @@
     {% endfor %}
   </div>
 </div>  
-
 {% endif %}
+
 <!-- -------------------------------------Form Modal -------------------------------------------------- -->
 <div class="modal fade" id="fav-save-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
@@ -129,7 +120,6 @@
     </div>
   </div>
 </div>
-
 
 <script type="text/javascript" src="{{ url_for('static', filename='searchFav.js') }}"></script>
 

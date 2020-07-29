@@ -10,9 +10,9 @@
         <div class="col border">
           <div class="row pt-4">
             <div class="col-10 pl-4">
-              <p> Video Title:<span id = "video-detail-title" class="font-weight-bold ml-2 mr-2">{{video_details.title}}</span></p>
-              <p>Artist:<span id = "video-detail-artist" class="font-weight-bold ml-2 mr-2">{{video_details.artist}}</span></p>
-              <p >Song:<span id = "video-detail-song" class="font-weight-bold ml-2 mr-2">{{video_details.song}}</span></p>
+              <p><span id = "video-detail-title" class="font-weight-bold">{{video_details.title}}</span></p>
+              <p>Artist:<span id = "video-detail-artist" class="ml-2 mr-2">{{video_details.artist}}</span></p>
+              <p >Song:<span id = "video-detail-song" class="ml-2 mr-2">{{video_details.song}}</span></p>
 
                 {% if video_details.fav_id %}
                   <p id="video-detail-notes-section" >Notes:
@@ -73,47 +73,20 @@
       </form>
 
       <div id='lyrics-content'>
+        <!-- <pre> -->
         {% if lyrics %}
-          {{lyrics | safe}} 
+          {{ lyrics | safe }} 
         {% else %}
           <div class="lyrics-search-results">
             No Lyrics found...Try refining your search criteria with lyrics search form above. 
           </div>
         {% endif %}
+        <!-- </pre> -->
       </div>
     </div>
   </div>
-      <!-- <button id="prior-video-btn">Back</button>
-      <button id="pause-video-btn">Pause</button>
-      <button id="stop-video-btn">Stop</button>
-      <button id="play-video-btn">Play</button>
-      <button id="next-video-btn">Forward</button> -->
-    <!-- </div> -->
-  <!-- </div> -->
+  
 
-<!-- ********************  MODAL WINDOW *************************************** -->
-<!-- Modal -->
-<div class="modal fade" id="fav-delete-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Delete from Favorites list</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p class="font-weight-bold text-center text-danger">Warning!</p>
-        <p >This will delete this video and associated notes you may have added from your favorites list. </p>
-        <p class="text-center">Do you want to proceed?</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary d-flex justify-content-start" data-dismiss="modal">Close</button>
-        <button id="video-detail-delete-fav" type="button" class="btn btn-danger">Delete</button>
-      </div>
-    </div>
-  </div>
-</div>
 <!-- -------------------------------------Form Modal -------------------------------------------------- -->
 <div class="modal fade" id="fav-save-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
