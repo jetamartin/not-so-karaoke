@@ -241,6 +241,14 @@ const inputVideoNotes = $('#input-video-notes')
           favDelCheckbox.removeClass('hide')
         }
 
+      } else { // no user is logged in
+        
+        // Show tooltip if non-login user hovers over favorite icon.
+        // $('[data-toggle="tooltip"]').tooltip({
+        //   title : "Login/Signup to mark video as a Favorite.",
+        //   placement : 'top'
+        // });
+
       }
     }
 

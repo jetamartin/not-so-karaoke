@@ -30,11 +30,11 @@
                 {% if video_details.fav_id %}
                   <p><i class="fas fa-heart"></i></p>
                 {% else %}
-                  <!-- <p><i class="far fa-heart"></i></p> -->
-                  <p><i class="far fa-heart" data-toggle="tooltip"></i></p>
-                  <!-- <p><a href="#" data-toggle="tooltip"><i class="far fa-heart"></i></a></p> -->
-
-                  <!-- <p><a href="#" data-toggle="tooltip" title="Login/Create account to favorite a video"><i class="far fa-heart"></i></a></p> -->
+                   {% if user_id %} 
+                    <p><i class="far fa-heart"></i></p>
+                   {% else %}
+                    <p><i class="far fa-heart" data-toggle="tooltip"></i></p>
+                   {% endif %}
                 {% endif %}
               </div>
               <!-- <div class="custom-control custom-checkbox custom-control-right">

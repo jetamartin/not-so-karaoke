@@ -57,14 +57,14 @@ def signup():
       user = User.signup(name, password, email) 
       db.session.add(user) 
       db.session.commit()
-    except exc.IntegrityError: 
+    except exc.IntegrityError:
       print("Failure to create user...perhaps a duplicate user name")
       form.username.errors = ["Bad name/password"]
-      flash("User account is already taken. If this is your account you'll need to login.")
+      flash("User account is already taken. If this is your account you'll need to login.", "error")
       return render_template("/signup.html", form=form)
     else: 
       session["user_id"] = user.id
-      flash("Welcome! Your new account has been created and you've been logged in!", "success")
+      flash(f"Welcome {user.username}! Your new account has been created and you've been logged in!", "success")
       return redirect("/search")
 
   else:
@@ -196,6 +196,7 @@ def getMoreLyrics():
 
 @app.route('/favorites', methods=['GET', 'POST'])
 def addUpdateFavorites():
+  import pdb; pdb.set_trace()
   if ('user_id' not in session ): 
     flash("This action is not allowed if you aren't logged in. Please login or signup to create an account", "error")
     return redirect ('/login')
@@ -203,8 +204,6 @@ def addUpdateFavorites():
   if request.method == 'GET':
  
     favorites = Favorite.query.filter_by(user_id = session['user_id']).all()
-
-    # import pdb; pdb.set_trace()
 
     return render_template("/favorites.html", favorites = favorites)
 
@@ -254,6 +253,7 @@ def deleteFavorite(id):
        the delete fav checkbox on the modal form. 
        Favorites functionality will require user to be logged in but we still need to protect
        against someone simply typing in a URL with an id.  """
+ 
   if 'user_id' not in session: 
     flash("This action is not allowed if you aren't logged in. Please login or signup to create an account", "error")
     form = LoginForm()
@@ -272,7 +272,7 @@ def deleteFavorite(id):
 @app.route('/logout')
 def logout_user():
   session.pop('user_id')
-  flash("So long for now..you've been logged out")
+  flash("So long for now..you've been logged out", "success")
   return redirect('/login')
 
 @app.route('/about')

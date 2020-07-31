@@ -56,49 +56,61 @@ $(document).ready(function () {
    // Fills in form fields based on which Fav video card was clicked
     const fav_id = $(evt.target).closest('.favorites').data('fav_id')
     const video_id = $(evt.target).closest('.card').data('videoid')
+    const userId = $(evt.target).closest('.card').data('user_id')
+
+    // Only show Fav modal if a user is logged in otherwise the modal will be disabled.
+    // if the fav modal is enabled it seems to automatically disable the tooltip which is the desired behavior 
+    if (userId) {
     
-    // Make sure the delete option is unchecked & the warning message is hidden when 
-    // the user opens the Favorite model. This is needed to address scenrio  where user 
-    // clicks the deletes checkbox, cancels the modal and then re-opens modal window 
-    // option
-    if ((delFav).is(":checked")) { 
-      // uncheck the checkbox and hide the warning message
-      delFav.prop('checked', false);
-      delFavWarning.toggleClass('hide') 
-    }
-  
-    // Get the values from the video detail card to populate the 'Add to favorites' modal form.
-    const title = $(evt.target).closest('.video-card').find('.video-detail-title').text()
-    const artist = $(evt.target).closest('.video-card').find('.video-detail-artist').text()
-    const song = $(evt.target).closest('.video-card').find('.video-detail-song').text()
-    const notes = $(evt.target).closest('.video-card').find('.video-detail-notes').text()
-  
-    // Now populate the Add-to-Favorites modal with the data from the video detail card
-    inputVideoTitle.val(title)
-    inputArtistName.val(artist)
-    inputSongTitle.val(song)
-    inputVideoNotes.val(notes) 
-  
-    // Saves a reference to video card (fav-id) as data attribute in the "Save" button 
-    // so that the modal can be linked back to the video card and any action needed will
-    // be peformed on that video card.  
-    favModalSubmitBtn.data('fav_id', fav_id) 
-    favModalSubmitBtn.data('videoid', video_id)
-
-    // Scenario 1:  Current video is not a favorite
-    if ( event.target.className == 'far fa-heart' ) { 
-      inputVideoNotes.val("") 
-      // Hide the delete check box because this video isn't a favorite yet 
-      favDelCheckbox.addClass('hide')
+      // Make sure the delete option is unchecked & the warning message is hidden when 
+      // the user opens the Favorite model. This is needed to address scenrio  where user 
+      // clicks the deletes checkbox, cancels the modal and then re-opens modal window 
+      // option
+      if ((delFav).is(":checked")) { 
+        // uncheck the checkbox and hide the warning message
+        delFav.prop('checked', false);
+        delFavWarning.toggleClass('hide') 
+      }
     
-    } else {  // Current video is already a fav and user wants to remove it as a favorite video
+      // Get the values from the video detail card to populate the 'Add to favorites' modal form.
+      const title = $(evt.target).closest('.video-card').find('.video-detail-title').text()
+      const artist = $(evt.target).closest('.video-card').find('.video-detail-artist').text()
+      const song = $(evt.target).closest('.video-card').find('.video-detail-song').text()
+      const notes = $(evt.target).closest('.video-card').find('.video-detail-notes').text()
+    
+      // Now populate the Add-to-Favorites modal with the data from the video detail card
+      inputVideoTitle.val(title)
+      inputArtistName.val(artist)
+      inputSongTitle.val(song)
+      inputVideoNotes.val(notes) 
+    
+      // Saves a reference to video card (fav-id) as data attribute in the "Save" button 
+      // so that the modal can be linked back to the video card and any action needed will
+      // be peformed on that video card.  
+      favModalSubmitBtn.data('fav_id', fav_id) 
+      favModalSubmitBtn.data('videoid', video_id)
 
-      // Display the Delete checkbox by removing 'hide' class
-      favDelCheckbox.removeClass('hide')
+      // Scenario 1:  Current video is not a favorite
+      if ( event.target.className == 'far fa-heart' ) { 
+        inputVideoNotes.val("") 
+        // Hide the delete check box because this video isn't a favorite yet 
+        favDelCheckbox.addClass('hide')
+      
+      } else {  // Current video is already a fav and user wants to remove it as a favorite video
+
+        // Display the Delete checkbox by removing 'hide' class
+        favDelCheckbox.removeClass('hide')
+      }
+
+      // Display the populated Add Favorite modal screen
+      favModal.modal()
+    } else { // User is not logged in 
+      // // Show tooltip if non-login user hovers over favorite icon.
+      // $('[data-toggle="tooltip"]').tooltip({
+      //   title : "Login/Signup to mark video as a Favorite.",
+      //   placement : 'top'
+      // });
     }
-
-    // Display the populated Add Favorite modal screen
-    favModal.modal()
   }
   
  /***********************************************************************************************
@@ -288,6 +300,11 @@ $(document).ready(function () {
   allVidCards.on('click', processFavCardClickEvent )
   delFav.on( "click", function() {
     $('#del-fav-warning').toggleClass('hide')
+  });
+  // Show tooltip if non-login user hovers over favorite icon.
+  $('[data-toggle="tooltip"]').tooltip({
+    title : "Login/Signup to mark video as a Favorite.",
+    placement : 'top'
   });
 
 }); 

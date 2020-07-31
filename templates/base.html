@@ -61,22 +61,23 @@ crossorigin="anonymous"></script>
     </form> -->
   </div>
 </nav>
-<body class="{% block body_class %}{% endblock %}">
 
+
+<body>
 <div class="container">
-  {% with message = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-    <p class="messages">
-      {% for category, message in messages %}
-       <span class="{{ category }}">{{ message }}</span>
-      {% endfor %}
-    </p>
-    {% endif %}
-  {% endwith %}
+  <section>
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+      <p class="messages">
+        {% for category, message in messages %}
+         <span class="{{ category }}">{{ message }}</span>
+        {% endfor %}
+      </p>
+      {% endif %}
+    {% endwith %}
+  </section>
 
-  {% block content %}
-
-  {% endblock %}
+  {% block content %}  {% endblock %}
 
 </div>
 <script type="text/javascript" src="static/clientMsgs.js"></script>
