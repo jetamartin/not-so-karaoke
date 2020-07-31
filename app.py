@@ -64,7 +64,7 @@ def signup():
       return render_template("/signup.html", form=form)
     else: 
       session["user_id"] = user.id
-      flash("Welcome! Your new account has been created and you've been logged in!")
+      flash("Welcome! Your new account has been created and you've been logged in!", "success")
       return redirect("/search")
 
   else:
@@ -83,7 +83,7 @@ def login():
       user = User.authenticate(name, password)
 
       if user:
-        flash(f"Welcome back {user.username}! You're now logged in!")
+        flash(f"Welcome back {user.username}! You're now logged in!", "success")
         session["user_id"] = user.id # keep logged in
         return redirect("/search")
       else:
@@ -95,6 +95,8 @@ def login():
 @app.route('/search', methods=['GET', 'POST'])
 def index():
   form = SearchForm()
+ 
+
   if form.validate_on_submit():
 
     # Get values entered on Video Search screen
@@ -121,7 +123,7 @@ def index():
       json_results = search_results['results']
       # if api request was successful but no videos found matching search criteria then notify user
       if len(json_results) == 0:
-        flash('Sorry no videos matching your search criteria were found...check your search criteria and try another search')
+        flash('Sorry no videos matching your search criteria were found...check your search criteria and try another search', "error")
         return redirect('/search')
 
 
@@ -158,7 +160,7 @@ def viewVideo(video_id):
     json_results = search_results['results']
     # if api request was successful but no videos found matching search criteria then notify user
     if len(json_results) == 0:
-      flash('Sorry no videos matching your search criteria were found...check your search criteria and try another search')
+      flash('Sorry no videos matching your search criteria were found...check your search criteria and try another search', "error")
       return redirect('/search')
 
   # ENHANCEMENT NEEDED:  Need to check if there are results and if not need to display an appropriate message and return.
@@ -195,7 +197,7 @@ def getMoreLyrics():
 @app.route('/favorites', methods=['GET', 'POST'])
 def addUpdateFavorites():
   if ('user_id' not in session ): 
-    flash("This action is not allowed if you aren't logged in. Please login or signup to create an account")
+    flash("This action is not allowed if you aren't logged in. Please login or signup to create an account", "error")
     return redirect ('/login')
 
   if request.method == 'GET':
@@ -216,8 +218,6 @@ def addUpdateFavorites():
     song = request.json['song']
     notes = request.json['notes']
     vid_thumbnail = request.json['thumbnail']
-
-    # import pdb; pdb.set_trace()
 
     # Favorite already exist so need to update record (vs create a new favorite)
     if (favId):
@@ -254,15 +254,13 @@ def deleteFavorite(id):
        the delete fav checkbox on the modal form. 
        Favorites functionality will require user to be logged in but we still need to protect
        against someone simply typing in a URL with an id.  """
-  import pdb; pdb.set_trace()
   if 'user_id' not in session: 
-    flash("This action is not allowed if you aren't logged in. Please login or signup to create an account")
+    flash("This action is not allowed if you aren't logged in. Please login or signup to create an account", "error")
     form = LoginForm()
     return redirect ('/login')
   # return render ('/login', form=form)
   
   fav = Favorite.query.get(id)
-  import pdb; pdb.set_trace()
   db.session.delete(fav)
   db.session.commit()
 

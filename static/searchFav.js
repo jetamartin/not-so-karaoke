@@ -1,5 +1,12 @@
 $(document).ready(function () {
 
+  // Client side messages for Favorite updates
+  const FAV_ADDED = "Added Favorite"
+  const FAV_UPDATED = "Updated Favorite"
+  const FAV_DELETED = "Deleted Favorite"
+  const FAV_ADD_UPDATE_FAILED = "Favorite Add/Update Failed"
+  const FAV_DELETE_FAILED = "Favorite Deletion Failed"
+
   // Key constants/references (e.g., html fields for modal form)
   const allVidCards = $("#vid-cards")
   const favModal = $('#fav-save-modal')
@@ -7,12 +14,16 @@ $(document).ready(function () {
   const vidDetailFavSubmit = $("#video-detail-fav-submit")
   const delFav = $('#del-fav')
   const delFavWarning = $('#del-fav-warning')
+  const favDelCheckbox = $('#fav-del-checkbox')
 
   // Get handle for input fields on the favorite modal
   const inputVideoTitle = $('#input-video-title')
   const inputArtistName = $('#input-artist-name')
   const inputSongTitle = $('#input-song-title')
   const inputVideoNotes = $('#input-video-notes')
+
+  const clientMsgs = $('#client-msgs')
+
 
 /***********************************************************************************************
  * Function:  processFavCardClicked
@@ -73,7 +84,19 @@ $(document).ready(function () {
     // be peformed on that video card.  
     favModalSubmitBtn.data('fav_id', fav_id) 
     favModalSubmitBtn.data('videoid', video_id)
-  
+
+    // Scenario 1:  Current video is not a favorite
+    if ( event.target.className == 'far fa-heart' ) { 
+      inputVideoNotes.val("") 
+      // Hide the delete check box because this video isn't a favorite yet 
+      favDelCheckbox.addClass('hide')
+    
+    } else {  // Current video is already a fav and user wants to remove it as a favorite video
+
+      // Display the Delete checkbox by removing 'hide' class
+      favDelCheckbox.removeClass('hide')
+    }
+
     // Display the populated Add Favorite modal screen
     favModal.modal()
   }
@@ -168,13 +191,24 @@ $(document).ready(function () {
 
           // Show the notes sections
           card.find('.video-detail-notes-section').toggleClass('hide')
-            
+
+          // Display message to client
+          displayClientMsg(FAV_ADDED, 'success', clientMsgs)
+
+
+        } else {  // User is updating an existing favorite
+        
+          // Display message to client
+          displayClientMsg(FAV_UPDATED, 'success', clientMsgs)
+
         }
         favModal.modal('hide')
       }
     
     } catch(err) {
-      console.log("Error message")
+        displayClientMsg(FAV_ADD_UPDATE_FAILED, 'error', clientMsgs)
+        favModal.modal('hide')
+        console.log("Error message")
     }
   }
   
@@ -203,6 +237,8 @@ $(document).ready(function () {
     try {
       const res = await axios.delete(`/favorites/${fav_id}`) 
       if (res.data) {
+
+
         console.log("Favorite was deleted")
         favIcon = $('#'+videoId).find('.favorites i')       
         favIcon.toggleClass('far fa-heart fas fa-heart')
@@ -229,13 +265,17 @@ $(document).ready(function () {
         inputVideoNotes.val("")
         // Make sure delete checkbox is unchecked after a delete
         delFav. prop("checked", false);
-  
+
+        displayClientMsg(FAV_DELETED, 'success', clientMsgs)
+
         // Close the 
         favModal.modal('hide')
-        // favDelModal.modal('hide')
       }
     } catch(err) {
       console.log("Error message")
+      favModal.modal('hide')
+      displayClientMsg(FAV_DELETE_FAILED, 'error', clientMsgs)
+
       // TBD improve error handline
     }
   }
@@ -251,3 +291,6 @@ $(document).ready(function () {
   });
 
 }); 
+
+
+

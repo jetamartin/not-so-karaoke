@@ -1,6 +1,17 @@
 // $(document).ready(function () {
 
+
+
 const playerDiv = $('#player')
+
+// Client side messages for Favorite updates
+const FAV_ADDED = "Added Favorite"
+const FAV_UPDATED = "Updated Favorite"
+const FAV_DELETED = "Deleted Favorite"
+const FAV_ADD_UPDATE_FAILED = "Favorite Add/Update Failed"
+const FAV_DELETE_FAILED = "Favorite Deletion Failed"
+const clientMsgs = $('#client-msgs')
+
 
 const altLyricsSearchForm = $('#lyrics-search-form')
 // const lyricsSearch = document.getElementById("lyrics-search-form")
@@ -37,6 +48,29 @@ const inputVideoNotes = $('#input-video-notes')
 
 
 // $(document).ready(function () {
+
+
+/***********************************************************************************************
+ * Function:  displayClientMsg(msg, status) - displays client pop up message on client
+ * ---------------------------------------------------------------------------------------------
+ * Called anytime a message needs to be displayed to client
+ * - 
+ *
+*/
+    // function displayClientMsg(msg, status, clientMsgs) {
+    //   const show = 'show '
+    //   // Add message to be displayed
+    //   clientMsgs.text(msg)
+
+    //   // Add the "show" class to DIV
+    //   clientMsgs.addClass( show + status );
+
+    //   // After 3 seconds, remove the show class from DIV
+    //   setTimeout(function(){ 
+    //     clientMsgs.removeClass()
+    //     clientMsgs.text("") 
+    //   }, 3000);
+    // }
       
     console.log("I'm in viewVideo.js file")
 
@@ -289,12 +323,19 @@ const inputVideoNotes = $('#input-video-notes')
             // Show the notes sections
             videoDetailNotesSection.toggleClass('hide')
             videoDetailNotes.toggleClass('hide')
+            // Display message to client
+            displayClientMsg(FAV_ADDED, 'success', clientMsgs)
+
+          } else {  // video already marked as a favorite and the user is updating favorite
+            displayClientMsg(FAV_UPDATED, 'success', clientMsgs)
           }
 
           favSaveModal.modal('hide')
         }
       } catch(err) {
         console.log("Error message")
+        displayClientMsg(FAV_ADD_UPDATE_FAILED, 'error', clientMsgs)
+
       }
     }
 
@@ -338,11 +379,17 @@ const inputVideoNotes = $('#input-video-notes')
 
           // Make sure delete checkbox is unchecked after a delete
           delFav. prop("checked", false);
-          // Close the 
+
+          displayClientMsg(FAV_DELETED, 'success', clientMsgs)
+
+          // Close the modal
           favSaveModal.modal('hide')
           // favDelModal.modal('hide')
         }
       } catch(err) {
+        displayClientMsg(FAV_DELETE_FAILED, 'error', clientMsgs)
+        // Close the modal
+        favSaveModal.modal('hide')
         console.log("Error message")
       }
     }

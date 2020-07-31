@@ -1,0 +1,5 @@
+const FAV_ADDED = "Added Favorite"
+const FAV_UPDATED = "Updated Favorite"
+const FAV_DELETED = "Deleted Favorite"
+const FAV_ADD_UPDATE_FAILED = "Favorite Add/Update Failed"
+const FAV_DELETE_FAILED = "Favorite Deletion Failed"

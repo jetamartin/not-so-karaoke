@@ -318,7 +318,6 @@ def build_list_of_video_objects(video_search_results):
   song_input = session.get('song', None)
 
   for video in video_search_results:
-    # import pdb; pdb.set_trace()
     # Use search inputs plus heuristics to derive artist and song title (remember song_title is not required search input)
     artist_and_song_title = get_artist_and_song(artist_input, song_input, video.title)
 

@@ -64,18 +64,21 @@ crossorigin="anonymous"></script>
 <body class="{% block body_class %}{% endblock %}">
 
 <div class="container">
-  {% for category, message in get_flashed_messages(with_categories=True) %}
-    <div class="alert alert-{{ category }}">{{ message }}</div>
-  {% endfor %}
+  {% with message = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+    <p class="messages">
+      {% for category, message in messages %}
+       <span class="{{ category }}">{{ message }}</span>
+      {% endfor %}
+    </p>
+    {% endif %}
+  {% endwith %}
 
   {% block content %}
 
   {% endblock %}
 
 </div>
-
-  <!-- <script src="static/viewVideo.js"></script> -->
-
-
+<script type="text/javascript" src="static/clientMsgs.js"></script>
 </body>
 </html>
