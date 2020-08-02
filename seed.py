@@ -7,7 +7,7 @@ from models import User
 db.drop_all()
 db.create_all()
 
-user1 = User.register(username = "user1", password = "password1", email="user1@mail.com")
+user1 = User.signup(username = "jet", password = "password", email="jet@mail.com")
 
 db.session.add(user1)
 db.session.commit()

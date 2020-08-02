@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
-<section class="jumbotron text-center">
+<section class="jumbotron-search text-center">
 <div class="container-fluid">
-  <img class="lg-logo mr-3" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/>
+  <!-- <img class="med-logo mr-3" src="{{url_for('static', filename='AK_logo_v2_48x48.png')}}"/> -->
   <h2 class="text-white xlg-letter-spacing mb-5 inline-block">Video Search</h2>
-  <img class="lg-logo mr-3" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/>
+  <!-- <img class="med-logo mr-3" src="{{url_for('static', filename='AK_logo_v2_48x48.png')}}"/> -->
 
   <div class="row justify-content-center">
     <form method="POST">
@@ -31,7 +31,7 @@
         </div>
        </div>
       {% endfor %}
-      <p class="text-white justify-content-end ml-5">( * ) = required </p>
+      <p class="text-white justify-content-end font-italic ml-5 med-letter-spacing">required(*)</p>
       <button class="btn btn-outline-secondary text-white border-white lg-letter-spacing mt-2">Search</button>
     </form>
   </div>
@@ -63,7 +63,7 @@
               {% if video.fav_id %}
                 <p class="pt-3"><i class="fas fa-heart"></i></p>
               {% else %}
-                {% if user_id %} 
+                {% if session['user_id'] %} 
                   <p><i class="far fa-heart"></i></p>
                 {% else %}
                   <p><i class="far fa-heart" data-toggle="tooltip"></i></p>
@@ -126,6 +126,7 @@
 </div>
 
 <div id="client-msgs"></div>
+<script type="text/javascript" src="{{ url_for('static', filename='clientMsgs.js') }}"></script>
 <script type="text/javascript" src="{{ url_for('static', filename='searchFav.js') }}"></script>
 
 {% endblock %}

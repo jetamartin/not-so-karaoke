@@ -24,39 +24,24 @@
                 {% endif %}
             </div>
 
-            <!--  -->
             <div class="col-2">
               <div id="favorites" class="d-flex justify-content-center pt-2" {% if video_details.fav_id %} data-fav_id={{video_details.fav_id}} {% endif %} >
                 {% if video_details.fav_id %}
                   <p><i class="fas fa-heart"></i></p>
                 {% else %}
-                   {% if user_id %} 
-                    <p><i class="far fa-heart"></i></p>
+                   {% if session['user_id'] %} 
+                     <p><i class="far fa-heart"></i></p>
                    {% else %}
-                    <p><i class="far fa-heart" data-toggle="tooltip"></i></p>
-                   {% endif %}
+                     <p><i class="far fa-heart" data-toggle="tooltip"></i></p>
+                  {% endif %}
                 {% endif %}
               </div>
-              <!-- <div class="custom-control custom-checkbox custom-control-right">
-                <input type="checkbox" class="custom-control-input" id="customCheck1" name='del-fav'>
-                <label class="custom-control-label" for="customCheck1">Delete</label>
-              </div> -->
             </div>
-            <!--   -->
           </div>
         </div>
       </div>
 
     </div>
-
-    <!-- <div>
-      <ul class="list-inline">
-        <li class="list-inline-item">
-            <a href="#" data-toggle="tooltip" title="Default tooltip">Tooltip</a>
-        </li>
-      </ul>
-    </div> -->
-
 
     <div class= "col-5" id="lyrics">
       <h1>Lyrics</h1>
@@ -73,21 +58,24 @@
       </form>
 
       <div id='lyrics-content'>
-        <!-- <pre> -->
-        {% if lyrics %}
-          {{ lyrics | safe }} 
+        {% if lyrics['status'] == 'success' %}
+          {{ lyrics['lyrics'] | safe }} 
         {% else %}
           <div class="lyrics-search-results">
-            No Lyrics found...Try refining your search criteria with lyrics search form above. 
+            <span class="no-lyrics font-weight-bold">
+              <span class="font-weight-bold">No Lyrics for this song found in the lyrics database.</span>
+              <br> <br> 
+              <span class="font-weight-normal">Check the Artist name and Song Title on the video card.
+                If they aren't as you expect you can initiate a new lyrics search above. 
+              </span>
+            </span>
           </div>
         {% endif %}
-        <!-- </pre> -->
       </div>
     </div>
   </div>
   
-
-<!-- -------------------------------------Form Modal -------------------------------------------------- -->
+<!-- ********************************** MODAL WINDOW *************************************** -->
 <div class="modal fade" id="fav-save-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -134,17 +122,8 @@
   </div>
 </div>
 <div id="client-msgs"></div>
-
-
 <!-- --------------------------------------------------------------------------------------- -->
-
-<!-- ********************  MODAL WINDOW *************************************** -->
-
-
-  <script type="text/javascript" src="{{ url_for('static', filename='clientMsgs.js') }}"></script>
-
-
-  <script type="text/javascript" src="{{ url_for('static', filename='viewVideo.js') }}"></script>
+<script type="text/javascript" src="{{ url_for('static', filename='viewVideo.js') }}"></script>
 
 {% endblock %}
 

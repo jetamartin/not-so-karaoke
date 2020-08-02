@@ -28,7 +28,7 @@ class User(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     username = db.Column(db.Text, nullable=False, unique=True)
-    email = db.Column(db.Text, nullable=False, unique=True)
+    email = db.Column(db.Text, nullable=False, unique=False)
     password = db.Column(db.Text, nullable=False)
     image_url = db.Column( db.Text, default="/static/images/default-pic.png")
     favorites = db.relationship('Favorite')

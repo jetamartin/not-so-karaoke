@@ -7,6 +7,8 @@ from flask import session
 from flask_sqlalchemy import SQLAlchemy
 from models import db, connect_db, User, Favorite
 
+import json
+
 # For parsing coverting characters in video titles (e.g. &39 to ')
 import html.parser as htmlparser
 
@@ -37,9 +39,11 @@ def get_lyrics(artist,song_title):
       lyrics = lyrics.split(down_partition)[0]
       lyrics = lyrics.replace('<br>','').replace('</br>','').replace('</div>','').strip().replace('\\r', '').strip().replace('\\n', '').strip().replace('\\', '')
       # import pdb; pdb.set_trace()
-      return lyrics
+      # return lyrics
+      return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
   except Exception as e:
-      return "Exception occurred \n" +str(e)
+    print(f"Exception occurred in retrieving lyrics: {str(e)}")
+    return {'status': 'error', 'msg': 'Exception occurred \n' +str(e), 'lyrics': None}
 
 
 def split(word): 

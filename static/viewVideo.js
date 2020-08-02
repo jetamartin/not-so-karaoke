@@ -10,6 +10,7 @@ const FAV_UPDATED = "Updated Favorite"
 const FAV_DELETED = "Deleted Favorite"
 const FAV_ADD_UPDATE_FAILED = "Favorite Add/Update Failed"
 const FAV_DELETE_FAILED = "Favorite Deletion Failed"
+const NO_MATCHING_LYRICS_FOUND = "No matching lyrics found in the Lyrics Database"
 const clientMsgs = $('#client-msgs')
 
 
@@ -172,15 +173,20 @@ const inputVideoNotes = $('#input-video-notes')
       evt.preventDefault()
       const inputArtistName = altLyricsInputArtistName.val()
       const inputSongTitle = altLyricsInputSongTitle.val()
+      altLyricsContent.text("")
 
       params = {artist: inputArtistName, song: inputSongTitle}
 
       try {
         const res = await axios.post('http://localHost:5000/lyrics', params)    
-        if (res.data) {
-          altLyricsContent.html(res.data) 
+        if (res.data['status'] == 'success') {
+          altLyricsContent.html(res.data['lyrics']) 
+        } else {  // No matching lyrics found
+          displayClientMsg(NO_MATCHING_LYRICS_FOUND, 'error', clientMsgs)
         }
+
       } catch(err) {
+        displayClientMsg(NO_MATCHING_LYRICS_FOUND, 'error', clientMsgs)
         console.log("Error message")
         // TBD - beef up error handling
       }
@@ -243,11 +249,7 @@ const inputVideoNotes = $('#input-video-notes')
 
       } else { // no user is logged in
         
-        // Show tooltip if non-login user hovers over favorite icon.
-        // $('[data-toggle="tooltip"]').tooltip({
-        //   title : "Login/Signup to mark video as a Favorite.",
-        //   placement : 'top'
-        // });
+
 
       }
     }

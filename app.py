@@ -113,11 +113,12 @@ def index():
     # Each time a new search is initiated remove prior search results from session
     # if 'videos' in session: 
     #   session.pop('videos')
-
     search_results = search_for_matching_videos(artist, song)
-
+    
      # Check to see if error encountered while making API call
     if search_results['status'] == 'error':
+      session['artist'] = ""
+      session['song'] = ""
       return redirect('/search')
     else: # YT API returned success status code
       json_results = search_results['results']
@@ -176,6 +177,7 @@ def viewVideo(video_id):
 
   # Retrieve the lyrics
   lyrics = get_lyrics(artist_and_song_title['artist'], artist_and_song_title['song'] )
+  # import pdb; pdb.set_trace()
 
   # Build a detail video object to simplify passing data into view
   video_details = create_detail_video_object(video, artist_and_song_title)
@@ -196,7 +198,6 @@ def getMoreLyrics():
 
 @app.route('/favorites', methods=['GET', 'POST'])
 def addUpdateFavorites():
-  import pdb; pdb.set_trace()
   if ('user_id' not in session ): 
     flash("This action is not allowed if you aren't logged in. Please login or signup to create an account", "error")
     return redirect ('/login')
@@ -242,9 +243,7 @@ def addUpdateFavorites():
     # Convert Database Ojbect to Python Object so it can be serialized 
     videoObj = Video_Detail(fav.video_id, fav.thumbnail, fav.video_title,  fav.artist_name, fav.song_title, fav.notes, fav.id, fav.user_id)
 
-    # import pdb; pdb.set_trace()
-    # return jsonify({status: 'success', message: "Favorite successfully added to favorites list"})
-    # return jsonify(video = [vid.serialize() for vid in videoObj])
+ 
     return jsonify(videoObj.serialize())
 
 @app.route('/favorites/<int:id>', methods=['DELETE'])
@@ -269,7 +268,7 @@ def deleteFavorite(id):
 
 # NOTE: This should be implemented as a POST route rather than GET route
 # In navigation bar either include a blank form to send post or implement with JS
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 def logout_user():
   session.pop('user_id')
   flash("So long for now..you've been logged out", "success")

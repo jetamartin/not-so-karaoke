@@ -1,25 +1,40 @@
 {% extends 'base.html' %}
 {% block content %}
-<section class="jumbotron text-center">
+<section class="jumbotron-home text-center">
   <div class="container-fluid text-white">
     <div>
-      <img class="lg-logo mr-5" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/>
-      <h1 class="inline-block text-white med-letter-spacing">Welcome to Almost Karaoke!</h1>
-      <img class="lg-logo ml-5" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/>
+      <!-- <img class="lg-logo mr-5" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/> -->
+      <h1 class="inline-block text-white med-letter-spacing">Welcome to Almost-Karaoke!</h1>
+      <!-- <img class="lg-logo ml-5" src="{{url_for('static', filename='AK_logo_v2_200X200.png')}}"/> -->
 
-      <h5 id="welcome-subtext" class="mb-5 font-weight-lighter smaller">( YouTube Videos + Lyrics = F U N <sup>2</sup>  )</h5>
-
-      
-      <div class="welcome-border p-2 mb-5 mx-auto w-75 opaque-blk-bg">
-        <h4 class="mb-3 med-letter-spacing font-weight-bolder">Whether you want to:</h4>
-        <p class="med-letter-spacing font-italic"><i class="fas fa-headphones-alt mr-3"></i>Finally understand the lyrics to 'that' song<i class="fas fa-headphones-alt ml-3"></i></p>
-        <p class="med-letter-spacing font-italic"><i class="fas fa-beer mr-3""></i>Host an Almost-Karaoke Party with your friends<i class="fas fa-cocktail ml-3"></i></p>
-        <p class="med-letter-spacing font-italic"><i class="fas fa-microphone-alt mr-3""></i>Or simply enjoy singing along with your favorite videos<i class="fas fa-microphone-alt  ml-3"></i></p>
+      <h5 id="welcome-subtext" class="mb-5 mt-2 font-weight-lighter smaller"> YouTube Videos + Lyrics = F U N <sup>2</sup>  </h5>
+      <div class="wrapper hide" id="app-stuff">
+         <div class="row">
+          <div class="app-description welcome-border p-2 mb-5 col-md-9 offset-md-3 text-left">
+            <h4 class="reason-header mb-3 med-letter-spacing font-weight-bolder">Whether you want to:</h4>
+            <p class="reason-1 med-letter-spacing font-italic"><i class="fas fa-headphones-alt mr-3"></i>Finally understand the lyrics to 'that' song</p>
+            <p class="reason-2 med-letter-spacing font-italic"><i class="fas fa-beer mr-3""></i>Host an Almost-Karaoke Party with your friends</p>
+            <p class="reason-3 med-letter-spacing font-italic"><i class="fas fa-microphone-alt mr-3""></i>Or simply enjoy singing along with your favorite videos</p>
+          </div>
+        </div>
       </div>
-
-      <h4 class="inline-block">Click<a href="/search" class='ml-3 mr-3 pl-2 btn btn-outline-secondary text-white border-white lg-letter-spacing '>FUN<sup>2</sup></a>and let the fun begin!</h4>
-      <p class="med-letter-spacing font-weight-lighter">(PS. <a class="btn btn-outline-secondary text-white border-white" href="/signup">Sign Up</a> for a free account and get bonus features (e.g., favorites, playlists, etc.))</p>
- 
+        <div class="call-to-actions">
+          <div class="wrapper">
+            <h4 class="call-to-action-1 inline-block mt-3 med-letter-spacing">Click<a href="/search" class='ml-3 mr-3 pl-4 btn btn-outline-secondary text-white border-white lg-letter-spacing '>FUN<sup>2</sup></a>and let the singing begin!</h4>
+            <p class="call-to-action-2 med-letter-spacing font-weight-lighter mt-4">(PS. <a class="btn btn-outline-secondary btn-sm text-white border-white" href="/signup">Sign Up</a> for a free account and get bonus features (e.g., favorites, playlists, etc.))</p>  
+          </div>
+        </div>
     </div>
   </section >
+  <script>
+    $(document).ready(function(){
+ 
+      $( ".reason-header").slideUp( 300 ).delay( 500 ).fadeIn( 2000 );
+      $( ".reason-1").slideUp( 300 ).delay( 1500 ).fadeIn( 2000 );
+      $( ".reason-2").slideUp( 300 ).delay( 2500 ).fadeIn( 2000 );
+      $( ".reason-3").slideUp( 300 ).delay( 3500 ).fadeIn( 2000 );
+      $("#app-stuff").toggle('hide')
+      });
+  </script>
+
 {% endblock %}

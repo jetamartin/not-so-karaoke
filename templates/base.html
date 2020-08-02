@@ -44,7 +44,8 @@ crossorigin="anonymous"></script>
       </li>
       {% if session['user_id'] %}
         <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a>
+          <!-- <a class="nav-link" href="/logout">Logout</a> -->
+          <form action="/logout" method="post"><button type="submit" class="btn btn-link navbar-btn nav-link">Log off</button></form>
         </li>
       {% else %}
         <li class="nav-item">
@@ -80,6 +81,6 @@ crossorigin="anonymous"></script>
   {% block content %}  {% endblock %}
 
 </div>
-<script type="text/javascript" src="static/clientMsgs.js"></script>
+<script type="text/javascript" src="/static/clientMsgs.js"></script>
 </body>
 </html>
