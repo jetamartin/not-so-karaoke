@@ -20,7 +20,7 @@
   right: 0;
 
   /* Apply animation to this element */	
-  animation: call-to-actions 8s linear;
+  animation: call-to-actions 12s ease-out;
 }
 
 @keyframes call-to-actions {
@@ -267,6 +267,10 @@
 
 .larger-font-size {
   font-size: 1.5rem;
+}
+
+.small-font-size {
+  font-size: .75rem
 }
 
 .thin-lettering {
