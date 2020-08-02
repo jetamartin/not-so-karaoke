@@ -20,7 +20,7 @@
   right: 0;
 
   /* Apply animation to this element */	
-  animation: call-to-actions 12s ease-out;
+  animation: call-to-actions 8s ease-in;
 }
 
 @keyframes call-to-actions {

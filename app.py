@@ -4,16 +4,18 @@ from isodate import parse_duration
 # For parsing coverting characters in video titles (e.g. &39 to ')
 import html.parser as htmlparser
 from utilities import *
-import pickle
-from sqlalchemy import exc
+from constants import *
+from messages import *
 
+# import pickle
+from sqlalchemy import exc
 
 import os
 import requests
 from flask import Flask, render_template, request, flash, redirect, session, jsonify
 from flask_debugtoolbar import DebugToolbarExtension
 from forms import SearchForm, SignupForm, LoginForm
-from constants import *
+
 from models import db, connect_db, User, Favorite
 from secrets import API_SECRET_KEY
 
@@ -35,21 +37,22 @@ app.config.update(SESSION_COOKIE_SAMESITE='Lax')
 toolbar = DebugToolbarExtension(app)
 
 connect_db(app)
-print("*********** H E L L O *****************")
-# videos = []
 
 @app.errorhandler(404)
 def page_not_found(e):
-    return render_template('404.html')
+  """ Present App 404 page if user manually enters invalid route """
+  return render_template('404.html')
 
 @app.route('/')
 def home():
+  """ Displays the app's home/index page """
   return render_template("/index.html")
 
 
 @app.route('/signup', methods=['GET', 'POST'])
 def signup():
   """ Signup user: produce form and handle submission"""
+
   form = SignupForm()
 
   if form.validate_on_submit():
@@ -64,15 +67,16 @@ def signup():
     except exc.IntegrityError:
       print("Failure to create user...perhaps a duplicate user name")
       form.username.errors = ["Bad name/password"]
-      flash("User account is already taken. If this is your account you'll need to login.", "error")
+      flash(USERNAME_TAKEN, "error")
       return render_template("/signup.html", form=form)
     else: 
       session["user_id"] = user.id
       session["username"] = user.username
-      flash(f"Welcome {user.username}! Your new account has been created and you've been logged in!", "success")
+      flash(f"{user.username.capitalize()}, {ACCOUNT_CREATED}", "success")
       return redirect("/search")
 
-  else:
+  else: # There was an error on the form
+
     return render_template("/signup.html", form=form)
 
 @app.route("/login", methods=["GET", "POST"])
@@ -88,7 +92,8 @@ def login():
       user = User.authenticate(name, password)
 
       if user:
-        flash(f"Welcome back {user.username}! You're now logged in!", "success")
+        flash(f"{user.username.capitalize()}, {LOGIN_SUCCESSFUL}", "success")
+
         session["user_id"] = user.id # keep logged in
         session["username"] = user.username
         return redirect("/search")
@@ -100,9 +105,10 @@ def login():
 
 @app.route('/search', methods=['GET', 'POST'])
 def index():
+  """ Displays video search form and subsequent search results """
+
   form = SearchForm()
  
-
   if form.validate_on_submit():
 
     # Get values entered on Video Search screen
@@ -115,33 +121,34 @@ def index():
     # if (song.strip()):
     session['song'] = song
 
-    # **** No need to store or manipulate videos returned from search in a sessin variable
-    # Each time a new search is initiated remove prior search results from session
-    # if 'videos' in session: 
-    #   session.pop('videos')
+    # Calls the YT API to retrieve videos matching  search criteria
     search_results = search_for_matching_videos(artist, song)
     
      # Check to see if error encountered while making API call
     if search_results['status'] == 'error':
+
       session['artist'] = ""
       session['song'] = ""
       return redirect('/search')
+
     else: # YT API returned success status code
+
       json_results = search_results['results']
+
       # if api request was successful but no videos found matching search criteria then notify user
       if len(json_results) == 0:
-        flash('Sorry no videos matching your search criteria were found...check your search criteria and try another search', "error")
+
+        flash(NO_MATCHING_VIDEOS, "error")
         return redirect('/search')
 
-
-      # Save the YT video search results (video_id, title, thumbnail) and check to see if video is a current favor
+      # Save the YT video search results (video_id, title, thumbnail) and check to see if video is a current favorite
       video_search_results = process_video_search_results (json_results, 'video_search')
 
       # Get artist and Song entered on search form
       artist_input = session.get('artist', None)
       song_input = session.get('song', None)
 
-      # For each video in video_search_results build a list of video_detail_objects 
+      # For each video in video_search_results build a list of video_detail_objects so results can be displayed
       video_detail_objects_list = build_list_of_video_objects(video_search_results)
 
       return render_template('/search.html', form=form, videos = video_detail_objects_list)
@@ -153,24 +160,24 @@ def index():
 
 @app.route('/video/<video_id>')
 def viewVideo(video_id):
+  """ Allows the user to view the selected video  """
 
-    # ***** No need store search results in session variable if I make another call to YT API below
-  # Pickle 'loads' method is used to 'un-serialize' video search results saved in session variable.
-  # videos = pickle.loads(session['videos'])
-  
-  # Call YT Video Detail API to retrieve JSON Data
+   
+  # Call YT Video Detail API to get video details 
   search_results = get_detailed_video_data(video_id)
  
   if (search_results['status'] == 'error'):
     return redirect('/search')
+
   else: # YT API returned success status code
+
     json_results = search_results['results']
+
     # if api request was successful but no videos found matching search criteria then notify user
     if len(json_results) == 0:
-      flash('Sorry no videos matching your search criteria were found...check your search criteria and try another search', "error")
+      flash(NO_MATCHING_VIDEOS, "error")
       return redirect('/search')
 
-  # ENHANCEMENT NEEDED:  Need to check if there are results and if not need to display an appropriate message and return.
   # Extract the detailed video information from the JSON Data returned from the YT API call 
   video = build_video_object(search_results['results'], 'video_detail')
 
@@ -188,14 +195,15 @@ def viewVideo(video_id):
   # Build a detail video object to simplify passing data into view
   video_details = create_detail_video_object(video, artist_and_song_title)
 
-  # Don't think I need to save this in session variable
-  session['videoDetails'] = pickle.dumps(video_details)
+  # Don't think I need to save this in session variable - re-test afer commenting out line below and then delete
+  # session['videoDetails'] = pickle.dumps(video_details)
 
   return render_template('/view-video.html', video_details = video_details, lyrics = lyrics)
 
 
 @app.route('/lyrics', methods=['POST'])
 def getMoreLyrics():
+  """ Allows user to manually search for lyrics (from the view-video screen) if no matching lyrics found the original search  """
   artist = request.json['artist']
   song = request.json['song']
   lyrics = get_lyrics(artist, song)
@@ -204,14 +212,16 @@ def getMoreLyrics():
 
 @app.route('/favorites', methods=['GET', 'POST'])
 def addUpdateFavorites():
-  if ('user_id' not in session ): 
-    flash("This action is not allowed if you aren't logged in. Please login or signup to create an account", "error")
+  """ Adds/updates the client's favorites request to the favorites table """
+
+  if ('user_id' not in session ):
+
+    flash(MUST_BE_LOGGED_IN, "error")
     return redirect ('/login')
 
   if request.method == 'GET':
  
     favorites = Favorite.query.filter_by(user_id = session['user_id']).all()
-
     return render_template("/favorites.html", favorites = favorites)
 
   else: # A user is adding or editing a Favorite
@@ -260,10 +270,9 @@ def deleteFavorite(id):
        against someone simply typing in a URL with an id.  """
  
   if 'user_id' not in session: 
-    flash("This action is not allowed if you aren't logged in. Please login or signup to create an account", "error")
+    flash(MUST_BE_LOGGED_IN, "error")
     form = LoginForm()
     return redirect ('/login')
-  # return render ('/login', form=form)
   
   fav = Favorite.query.get(id)
   db.session.delete(fav)
@@ -272,15 +281,13 @@ def deleteFavorite(id):
   return jsonify("Favorite Deleted")
 
 
-# NOTE: This should be implemented as a POST route rather than GET route
-# In navigation bar either include a blank form to send post or implement with JS
 @app.route('/logout', methods=['POST'])
 def logout_user():
+  """ Logs the user out of app"""
+  
+  flash(f"{session['username'].capitalize()}, {LOGOUT_SUCCESSFUL}", "success")
+
   session.pop('user_id')
   session.pop('username')
-  flash("So long for now..you've been logged out", "success")
-  return redirect('/login')
 
-@app.route('/about')
-def about_page():
-  return render_template("/about.html")
+  return redirect('/login')

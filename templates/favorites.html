@@ -4,6 +4,7 @@
 <div class="container page-top-margin" id="vid-cards">
   <h1 class="mb-5 text-center">Favorites List</h1>
   <div class="row">
+  {% if favorites %}
     {% for fav in favorites %}
     <div class='fav-video-card card mb-3' id={{fav.id}} style="width: 100vw;">
       <div class="row no-gutters">
@@ -31,6 +32,16 @@
       </div>
     </div>
     {% endfor %}
+  {% else %}
+    <div class="">
+      <p>
+        <h3>No favorites currently in your list. </h3>
+        <p>
+          Favorites can be added by clicking on the <span><i class="far fa-heart"></i></span> icon on any video card and selecting the Save option. Try adding a favorite. 
+        </p>   
+      </p>
+    </div>
+  {% endif %}
   </div>
 </div>  
 

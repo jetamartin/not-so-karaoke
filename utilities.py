@@ -46,10 +46,6 @@ def get_lyrics(artist,song_title):
     return {'status': 'error', 'msg': 'Exception occurred \n' +str(e), 'lyrics': None}
 
 
-def split(word): 
-  """ Takes a string and breaks it into array containing each of the letters of the string """
-  return [char for char in word] 
-
 class Video: 
   """ Creates an object with core video content """
   # def __init__(self, id, title, thumbnail, artist, song):
@@ -86,7 +82,9 @@ class Video_Detail:
       'user_id': self.user_id
     }
 
-
+def split(word): 
+  """ Takes a string and breaks it into array containing each of the letters of the string """
+  return [char for char in word] 
  
 # Use heuristics to extract artist and song title from video title
 def extract_artist_song_from_video_title(title, artist_input, song_input):
