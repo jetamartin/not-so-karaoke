@@ -64,6 +64,7 @@ def signup():
       return render_template("/signup.html", form=form)
     else: 
       session["user_id"] = user.id
+      session["username"] = user.username
       flash(f"Welcome {user.username}! Your new account has been created and you've been logged in!", "success")
       return redirect("/search")
 
@@ -85,6 +86,7 @@ def login():
       if user:
         flash(f"Welcome back {user.username}! You're now logged in!", "success")
         session["user_id"] = user.id # keep logged in
+        session["username"] = user.username
         return redirect("/search")
       else:
         form.username.errors = ["Bad name/password"]
@@ -271,6 +273,7 @@ def deleteFavorite(id):
 @app.route('/logout', methods=['POST'])
 def logout_user():
   session.pop('user_id')
+  session.pop('username')
   flash("So long for now..you've been logged out", "success")
   return redirect('/login')
 
