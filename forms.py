@@ -11,14 +11,14 @@ class SearchForm(FlaskForm):
 
 class SignupForm(FlaskForm):
   """ Signup form """
-  username = StringField('Username', validators=[InputRequired(), Length(min=2, max=20)] )
-  password = PasswordField('New Password', validators=[InputRequired(), Length(min=2, max=30),
+  username = StringField('Username', validators=[InputRequired(), Length(min=2, max=15)] )
+  password = PasswordField('New Password', validators=[InputRequired(), Length(min=3, max=30),
                                           EqualTo('confirm', message='Passwords must match')])
-  confirm = PasswordField('Repeat Password', validators=[InputRequired(), Length(min=2, max=30)])
+  confirm = PasswordField('Repeat Password', validators=[InputRequired(), Length(min=3, max=30)])
   email = StringField('Email Address', validators=[InputRequired(), Email()])
  
 class LoginForm(FlaskForm):
   """ Login form """
-  username = StringField('Username', validators=[InputRequired(), Length(min=2, max=20)] )
-  password = PasswordField('Password', validators=[InputRequired(), Length(min=2, max=30) ])
+  username = StringField('Username', validators=[InputRequired(), Length(min=2, max=15)] )
+  password = PasswordField('Password', validators=[InputRequired(), Length(min=3, max=30) ])
   # submit = SubmitField('Login')
