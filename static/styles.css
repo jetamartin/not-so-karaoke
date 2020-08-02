@@ -20,7 +20,7 @@
   right: 0;
 
   /* Apply animation to this element */	
-  animation: call-to-actions 8s ease-in;
+  animation: call-to-actions 8s linear;
 }
 
 @keyframes call-to-actions {
@@ -271,6 +271,10 @@
 
 .thin-lettering {
   font-size: lighter;
+}
+
+.dim-grey {
+  color: dimgray;
 }
 
 /* Adding red asterick after field label for required input  fields */
