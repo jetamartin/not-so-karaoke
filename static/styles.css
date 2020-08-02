@@ -52,15 +52,11 @@
 }
 
 .messages .success {
-  /* padding: 1rem; */
-  
   background-color: rgba(0, 255, 0, .2)
 }
 
 .no-lyrics, 
 .messages .error {
-  /* padding: 1rem; */
-
   background-color: rgba(255, 0, 0, .2)
 }
 
@@ -120,7 +116,6 @@
   from {bottom: 30px; opacity: 1;}
   to {bottom: 0; opacity: 0;}
 }
-
 
 
 /* .opaque-blk-bg {
