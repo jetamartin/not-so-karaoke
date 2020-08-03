@@ -17,7 +17,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from forms import SearchForm, SignupForm, LoginForm
 
 from models import db, connect_db, User, Favorite
-from secrets import API_SECRET_KEY
+# from secrets import API_SECRET_KEY
 
 
 app = Flask(__name__)
@@ -32,7 +32,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
-app.config['API_SECRET_KEY'] = os.environ.get('API_SECRET_KEY', API_SECRET_KEY)
+app.config['API_SECRET_KEY'] = os.environ.get('API_SECRET_KEY', "API_SECRET_KEY")
 
 app.config.update(SESSION_COOKIE_SAMESITE='Lax')
 toolbar = DebugToolbarExtension(app)
