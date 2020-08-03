@@ -178,7 +178,7 @@ const inputVideoNotes = $('#input-video-notes')
       params = {artist: inputArtistName, song: inputSongTitle}
 
       try {
-        const res = await axios.post('http://localHost:5000/lyrics', params)    
+        const res = await axios.post('/lyrics', params)    
         if (res.data['status'] == 'success') {
           altLyricsContent.html(res.data['lyrics']) 
         } else {  // No matching lyrics found
