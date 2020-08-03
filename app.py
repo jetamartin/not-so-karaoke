@@ -32,6 +32,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True
 app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
+app.config['API_SECRET_KEY'] = os.environ.get('API_SECRET_KEY', API_SECRET_KEY)
 
 app.config.update(SESSION_COOKIE_SAMESITE='Lax')
 toolbar = DebugToolbarExtension(app)
@@ -284,7 +285,7 @@ def deleteFavorite(id):
 @app.route('/logout', methods=['POST'])
 def logout_user():
   """ Logs the user out of app"""
-  
+
   flash(f"{session['username'].capitalize()}, {LOGOUT_SUCCESSFUL}", "success")
 
   session.pop('user_id')
