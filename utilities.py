@@ -38,6 +38,7 @@ def get_lyrics(artist,song_title):
       lyrics = lyrics.split(up_partition)[1]
       lyrics = lyrics.split(down_partition)[0]
       lyrics = lyrics.replace('<br>','').replace('</br>','').replace('</div>','').strip().replace('\\r', '').strip().replace('\\n', '').strip().replace('\\', '')
+      print(lyrics)
       # import pdb; pdb.set_trace()
       # return lyrics
       return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
