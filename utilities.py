@@ -29,7 +29,6 @@ def get_lyrics(artist,song_title):
   print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
   print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')  
   print(artist, song_title)
-  print(lyrics)  
   url = LYRICS_URL + artist+"/"+ song_title+".html"
   
   try:
