@@ -38,7 +38,9 @@ def get_lyrics(artist,song_title):
       #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
       # see stackoverflow: https://stackoverflow.com/questions/16627227/http-error-403-in-python-3-web-scraping 
       req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-      content = urllib.request.urlopen(url).read()
+      content = urlopen(req).read()
+
+      # content = urllib.request.urlopen(url).read()
       soup = BeautifulSoup(content, 'html.parser')
       lyrics = str(soup.encode("utf-8"))
       # lyrics lies between up_partition and down_partition
