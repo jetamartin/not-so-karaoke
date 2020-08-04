@@ -39,10 +39,20 @@ def get_lyrics(artist,song_title):
   print(url)
   
   try:
-
+    # headers = {
+    #   "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
+    #   "Accept-Encoding":"gzip, deflate, sdch",
+    #   "Accept-Language":"en-US,en;q=0.8",
+    #   "Connection":"keep-alive",
+    #   "DNT":"1",
+    #   "Host":"www.dmdiocese.org",
+    #   "Upgrade-Insecure-Requests":"1",
+    #   "User-Agent":"Mozilla/5.0"
+    # }
+    
     #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
     # see stackoverflow: https://stackoverflow.com/questions/16627227/http-error-403-in-python-3-web-scraping 
-    req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    req = Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'})
     content = urlopen(req, timeout=10).read()
 
     # content = urllib.request.urlopen(url).read()
