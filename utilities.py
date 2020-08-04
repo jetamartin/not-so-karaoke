@@ -26,14 +26,22 @@ def get_lyrics(artist,song_title):
   song_title = re.sub('[^A-Za-z0-9]+', "", song_title)
   if artist.startswith("the"):    # remove starting 'the' from artist e.g. the who -> who
       artist = artist[3:]
+
+  url = LYRICS_URL+artist+"/"+song_title+".html"
   print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
   print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')  
   print(artist, song_title)
-  url = LYRICS_URL + artist+"/"+ song_title+".html"
+  print(url)
   
   try:
       content = urllib.request.urlopen(url).read()
+      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONTENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+      print(content)
       soup = BeautifulSoup(content, 'html.parser')
+      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOUP %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+      print(soup)
+
+
       lyrics = str(soup.encode("utf-8"))
       print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
       print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
