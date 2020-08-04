@@ -26,6 +26,10 @@ def get_lyrics(artist,song_title):
   song_title = re.sub('[^A-Za-z0-9]+', "", song_title)
   if artist.startswith("the"):    # remove starting 'the' from artist e.g. the who -> who
       artist = artist[3:]
+  print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
+  print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')  
+  print(artist, song_title)
+  print(lyrics)  
   url = LYRICS_URL + artist+"/"+ song_title+".html"
   
   try:
@@ -35,7 +39,6 @@ def get_lyrics(artist,song_title):
       print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
       print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
       print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-      print(artist, song_title)
       print(lyrics)
 
 
