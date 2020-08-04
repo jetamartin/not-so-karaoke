@@ -40,8 +40,8 @@ def get_lyrics(artist,song_title):
   
   try:
     opener = AppURLopener()
-    # content = opener.open(url).read()
-    content = opener.open(url)
+    # content = opener.open(url)
+    content = opener.open(url).read()
 
     
     #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
