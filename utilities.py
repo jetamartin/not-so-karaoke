@@ -38,9 +38,12 @@ def get_lyrics(artist,song_title):
   print(artist, song_title)
   print(url)
   
-  try:
+  
     opener = AppURLopener()
-    content = opener.open(url).read()
+    # content = opener.open(url).read()
+    content = opener.open(url)
+
+    
     #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
     # see stackoverflow: https://stackoverflow.com/questions/16627227/http-error-403-in-python-3-web-scraping 
     # req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
