@@ -18,6 +18,10 @@ import requests
 from requests.exceptions import HTTPError
 from flask import flash
 
+class AppURLopener(urllib.request.FancyURLopener):
+  version = "Mozilla/5.0"
+
+
 def get_lyrics(artist,song_title):
   """ Scrapes the lyric data from azlyrics website """
   artist = artist.lower()
@@ -35,21 +39,23 @@ def get_lyrics(artist,song_title):
   print(url)
   
   try:
-      #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
-      # see stackoverflow: https://stackoverflow.com/questions/16627227/http-error-403-in-python-3-web-scraping 
-      req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
-      content = urlopen(req, timeout=10).read()
+    opener = AppURLopener()
+    content = opener.open(url).read()
+    #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
+    # see stackoverflow: https://stackoverflow.com/questions/16627227/http-error-403-in-python-3-web-scraping 
+    # req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+    # content = urlopen(req, timeout=10).read()
 
-      # content = urllib.request.urlopen(url).read()
-      soup = BeautifulSoup(content, 'html.parser')
-      lyrics = str(soup.encode("utf-8"))
-      # lyrics lies between up_partition and down_partition
-      up_partition = '<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->'
-      down_partition = '<!-- MxM banner -->'
-      lyrics = lyrics.split(up_partition)[1]
-      lyrics = lyrics.split(down_partition)[0]
-      lyrics = lyrics.replace('<br>','').replace('</br>','').replace('</div>','').strip().replace('\\r', '').strip().replace('\\n', '').strip().replace('\\', '')
-      return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
+    # content = urllib.request.urlopen(url).read()
+    soup = BeautifulSoup(content, 'html.parser')
+    lyrics = str(soup.encode("utf-8"))
+    # lyrics lies between up_partition and down_partition
+    up_partition = '<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->'
+    down_partition = '<!-- MxM banner -->'
+    lyrics = lyrics.split(up_partition)[1]
+    lyrics = lyrics.split(down_partition)[0]
+    lyrics = lyrics.replace('<br>','').replace('</br>','').replace('</div>','').strip().replace('\\r', '').strip().replace('\\n', '').strip().replace('\\', '')
+    return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
   except Exception as e:
     print(f"Exception occurred in retrieving lyrics: {str(e)}")
     return {'status': 'error', 'msg': 'Exception occurred \n' +str(e), 'lyrics': None}
