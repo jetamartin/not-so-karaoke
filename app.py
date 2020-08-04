@@ -196,9 +196,6 @@ def viewVideo(video_id):
   # Build a detail video object to simplify passing data into view
   video_details = create_detail_video_object(video, artist_and_song_title)
 
-  # Don't think I need to save this in session variable - re-test afer commenting out line below and then delete
-  # session['videoDetails'] = pickle.dumps(video_details)
-
   return render_template('/view-video.html', video_details = video_details, lyrics = lyrics)
 
 

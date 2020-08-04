@@ -1,6 +1,7 @@
 # Imports for Lyrics Scraping solution 
 import re
 import urllib.request  
+from urllib.request import Request, urlopen
 from bs4 import BeautifulSoup
 
 from flask import session
@@ -34,21 +35,12 @@ def get_lyrics(artist,song_title):
   print(url)
   
   try:
+      #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
+      # see stackoverflow: https://stackoverflow.com/questions/16627227/http-error-403-in-python-3-web-scraping 
+      req = Request(url, headers={'User-Agent': 'Mozilla/5.0'})
       content = urllib.request.urlopen(url).read()
-      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% CONTENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-      print(content)
       soup = BeautifulSoup(content, 'html.parser')
-      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% SOUP %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-      print(soup)
-
-
       lyrics = str(soup.encode("utf-8"))
-      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-      print(lyrics)
-
-
       # lyrics lies between up_partition and down_partition
       up_partition = '<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->'
       down_partition = '<!-- MxM banner -->'
