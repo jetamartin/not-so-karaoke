@@ -38,7 +38,7 @@ def get_lyrics(artist,song_title):
   print(artist, song_title)
   print(url)
   
-  
+  try:
     opener = AppURLopener()
     # content = opener.open(url).read()
     content = opener.open(url)
