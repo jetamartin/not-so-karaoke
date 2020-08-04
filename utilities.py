@@ -56,7 +56,8 @@ def get_lyrics(artist,song_title):
     # content = urlopen(req, timeout=10).read()
 
     content = requests.get(url).text
-
+    print('%%%%%%%%%%%%%%%%%%%%%%%%%%%% content %%%%%%%%%%%%%%%%%%%%')
+    print(content)
     # content = urllib.request.urlopen(url).read()
     soup = BeautifulSoup(content, 'html.parser')
     lyrics = str(soup.encode("utf-8"))
