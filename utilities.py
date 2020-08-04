@@ -32,20 +32,12 @@ def get_lyrics(artist,song_title):
       content = urllib.request.urlopen(url).read()
       soup = BeautifulSoup(content, 'html.parser')
       lyrics = str(soup.encode("utf-8"))
-      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-      print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-      print(lyrics)
-
       # lyrics lies between up_partition and down_partition
       up_partition = '<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->'
       down_partition = '<!-- MxM banner -->'
       lyrics = lyrics.split(up_partition)[1]
       lyrics = lyrics.split(down_partition)[0]
       lyrics = lyrics.replace('<br>','').replace('</br>','').replace('</div>','').strip().replace('\\r', '').strip().replace('\\n', '').strip().replace('\\', '')
-      print(lyrics)
-      # import pdb; pdb.set_trace()
-      # return lyrics
       return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
   except Exception as e:
     print(f"Exception occurred in retrieving lyrics: {str(e)}")

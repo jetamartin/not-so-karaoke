@@ -192,18 +192,6 @@ def viewVideo(video_id):
 
   # Retrieve the lyrics
   lyrics = get_lyrics(artist_and_song_title['artist'], artist_and_song_title['song'] )
-  print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-  print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-  print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-  print(artist_and_song_title['artist'])
-  print(artist_and_song_title['song'])
-
-  print(lyrics['status']) 
-  print(lyrics['msg'])
-  print(lyrics['lyrics'])
-
-
-  # import pdb; pdb.set_trace()
 
   # Build a detail video object to simplify passing data into view
   video_details = create_detail_video_object(video, artist_and_song_title)
