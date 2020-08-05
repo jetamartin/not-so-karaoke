@@ -29,36 +29,38 @@ def get_lyrics(artist,song_title):
   # remove all except alphanumeric characters from artist and song_title
   artist = re.sub('[^A-Za-z0-9]+', "", artist)
   song_title = re.sub('[^A-Za-z0-9]+', "", song_title)
+  # import pdb; pdb.set_trace()
   if artist.startswith("the"):    # remove starting 'the' from artist e.g. the who -> who
       artist = artist[3:]
 
   url = LYRICS_URL+artist+"/"+song_title+".html"
   print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-  print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')  
   print(artist, song_title)
   print(url)
-  
+  print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')  
+
   try:
-    # headers = {
-    #   "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8",
-    #   "Accept-Encoding":"gzip, deflate, sdch",
-    #   "Accept-Language":"en-US,en;q=0.8",
-    #   "Connection":"keep-alive",
-    #   "DNT":"1",
-    #   "Host":"www.dmdiocese.org",
-    #   "Upgrade-Insecure-Requests":"1",
-    #   "User-Agent":"Mozilla/5.0"
-    # }
+    # It appears the azLyricss is blocking attempts to scrape lyrics made by my app when running on Heroku server.
+    # as the app works perfectly when the server is running on local host. 
+    # I tried three different methods to get the lyrics from the AZlyrics website using my server app running on Heroku
+    # but all of them apparently appear to have been blocked by the AZLyrics
+    # website...returning a HTTP Status of 403 forbidden.
+
+    # (1) Original method to read content from AZLyrics website
+    # content = urllib.request.urlopen(url).read()
     
+    # (2) Second experiment reading content from AZLyrics
     #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
     # see stackoverflow: https://stackoverflow.com/questions/16627227/http-error-403-in-python-3-web-scraping 
     # req = Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'})
     # content = urlopen(req, timeout=10).read()
 
+    # (3) Final option tried was reading content from URL using "request"
+    # This last approach resulted in an "Exception occurred in retrieving lyrics: list index out of range" rather than a 403 status
     content = requests.get(url).text
+
     print('%%%%%%%%%%%%%%%%%%%%%%%%%%%% content %%%%%%%%%%%%%%%%%%%%')
-    print(content)
-    # content = urllib.request.urlopen(url).read()
+    
     soup = BeautifulSoup(content, 'html.parser')
     lyrics = str(soup.encode("utf-8"))
     # lyrics lies between up_partition and down_partition
@@ -167,6 +169,8 @@ def pick_final_artist_and_song_title(artist_song_title, artist_input, song_input
 
 def extract_cleanse_song_title(artist_song):
   """ Extract clean song title name and return it. """
+  print(artist_song)
+  # import pdb; pdb.set_trace()
 
   # Song title raw is possible title from video plus other non-related title info (e.g., '(official video)')
   song_title_raw = artist_song[1].strip()
@@ -175,16 +179,15 @@ def extract_cleanse_song_title(artist_song):
   song_title = ""
 
   # Remove extra/not song title related info text from Video Title (e.g. '(Official Video)')
-
-  for song_word in song_words:
-    song_letters = split(song_word)
-
-  # Extraneous info is typically appended after the 'true' video title so when this extraneous info
-  #  is detected all subsequent text in title is removed
-    if song_letters[0].isalpha() or song_letters[0].isnumeric():
-      song_title = song_title + f"{song_word} " 
-    else:
-      break  # ignore all text once extraneous/non-alpha text is first encountered in title
+  if song_title_raw != "":
+    for song_word in song_words:
+      song_letters = split(song_word)
+    # Extraneous info is typically appended after the 'true' video title so when this extraneous info
+    #  is detected all subsequent text in title is removed
+      if song_letters[0].isalpha() or song_letters[0].isnumeric():
+        song_title = song_title + f"{song_word} " 
+      else:
+        break  # ignore all text once extraneous/non-alpha text is first encountered in title
 
   song_title = song_title.strip()
   return song_title
@@ -347,6 +350,8 @@ def build_list_of_video_objects(video_search_results):
   song_input = session.get('song', None)
 
   for video in video_search_results:
+
+    # import pdb; pdb.set_trace()
     # Use search inputs plus heuristics to derive artist and song title (remember song_title is not required search input)
     artist_and_song_title = get_artist_and_song(artist_input, song_input, video.title)
 

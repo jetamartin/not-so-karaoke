@@ -135,6 +135,8 @@ def index():
 
     else: # YT API returned success status code
 
+      # import pdb; pdb.set_trace()
+
       json_results = search_results['results']
 
       # if api request was successful but no videos found matching search criteria then notify user
@@ -164,7 +166,7 @@ def index():
 def viewVideo(video_id):
   """ Allows the user to view the selected video  """
 
-   
+  # import pdb; pdb.set_trace()
   # Call YT Video Detail API to get video details 
   search_results = get_detailed_video_data(video_id)
  
