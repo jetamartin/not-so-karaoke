@@ -47,7 +47,7 @@ def get_lyrics(artist,song_title):
     # website...returning a HTTP Status of 403 forbidden.
 
     # (1) Original method to read content from AZLyrics website
-    # content = urllib.request.urlopen(url).read()
+    content = urllib.request.urlopen(url).read()
     
     # (2) Second experiment reading content from AZLyrics
     #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
@@ -57,7 +57,7 @@ def get_lyrics(artist,song_title):
 
     # (3) Final option tried was reading content from URL using "request"
     # This last approach resulted in an "Exception occurred in retrieving lyrics: list index out of range" rather than a 403 status
-    content = requests.get(url).text
+    # content = requests.get(url).text
 
     print('%%%%%%%%%%%%%%%%%%%%%%%%%%%% content %%%%%%%%%%%%%%%%%%%%')
     
