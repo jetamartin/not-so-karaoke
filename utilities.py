@@ -52,12 +52,13 @@ def get_lyrics(artist,song_title):
     # (2) Second experiment reading content from AZLyrics
     #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
     # see stackoverflow: https://stackoverflow.com/questions/16627227/http-error-403-in-python-3-web-scraping 
-    # req = Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'})
+    headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
+    # req = Request(url, headers=headers)
     # content = urlopen(req, timeout=10).read()
 
     # (3) Final option tried was reading content from URL using "request"
     # This last approach resulted in an "Exception occurred in retrieving lyrics: list index out of range" rather than a 403 status
-    content = requests.get(url).text
+    content = requests.get(url, headers=headers).text
 
     
     
