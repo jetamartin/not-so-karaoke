@@ -93,12 +93,15 @@ def get_lyrics(artist,song_title):
 
     # (4) Fourth option 
     class AppURLopener(urllib.request.FancyURLopener):
-      version = "Mozilla/5.0"
+      version = 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/59.0.3071.115 Safari/537.36'
     opener = AppURLopener()
     content = opener.open(url).read()
     
+
+     
     soup = BeautifulSoup(content, 'html.parser')
     lyrics = str(soup.encode("utf-8"))
+
 
     # lyrics lies between up_partition and down_partition
     up_partition = '<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->'
