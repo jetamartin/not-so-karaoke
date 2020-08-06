@@ -69,7 +69,6 @@ def get_lyrics(artist,song_title):
 
     content = requests.get(url, headers=headers)
     print(content.request.headers)
-    import pdb; pdb.set_tra
     content = content.text
     
     soup = BeautifulSoup(content, 'html.parser')
