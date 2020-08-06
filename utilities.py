@@ -86,7 +86,7 @@ def get_lyrics(artist,song_title):
     content = requests.get(url, headers=headers).text
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
     content = requests.get(url, headers=headers)
-    print(content.request.headers)
+    # print(content.request.headers)
     content = content.text
     
     soup = BeautifulSoup(content, 'html.parser')
