@@ -66,12 +66,14 @@ def get_lyrics(artist,song_title):
 
     # (1) Original method to read content from AZLyrics website
     # content = urllib.request.urlopen(url).read()
-    headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
-    headers={'user-agent': 'Mozilla/5.0'}
-    # headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
 
-    # request = urllib.request.Request(url, headers=headers)
-    # content = urllib.request.urlopen(request).read()
+    
+    # headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
+    # headers={'user-agent': 'Mozilla/5.0'}
+    # headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'}
+    request = urllib.request.Request(url, headers=headers)
+    content = urllib.request.urlopen(request).read()
     
     # (2) Second experiment reading content from AZLyrics
     #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
@@ -83,11 +85,11 @@ def get_lyrics(artist,song_title):
     # (3) Final option tried was reading content from URL using "request"
     # This last approach resulted in an "Exception occurred in retrieving lyrics: list index out of range" rather than a 403 status
 
-    content = requests.get(url, headers=headers).text
-    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
-    content = requests.get(url, headers=headers)
+    # content = requests.get(url, headers=headers).text
+    # headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'}
+    # content = requests.get(url, headers=headers)
     # print(content.request.headers)
-    content = content.text
+    # content = content.text
     
     soup = BeautifulSoup(content, 'html.parser')
     lyrics = str(soup.encode("utf-8"))
@@ -103,7 +105,18 @@ def get_lyrics(artist,song_title):
     return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
   except Exception as e:
     print(f"Exception occurred in retrieving lyrics: {str(e)}")
-    return {'status': 'error', 'msg': 'Exception occurred \n' +str(e), 'lyrics': None}
+    status = 'error'
+    lyrics = None
+    if e.status == 404:
+      msg = f"No lyrics found that match your search criteria. Try again ({e.status})"
+    elif e.status == 403:
+      msg = f"Lyrics service is not responsive...please try again later ({e.status}) "
+    elif e.status == 500:
+      msg = f"Server error occurred ({e.status})"
+    else: 
+      msg = f"An error occured. Please contact admin at almost-karaoke@gmail.com ({e.status})"
+    # import pdb; pdb.set_trace()
+    return {'status': status, 'msg': msg, 'lyrics': lyrics}
 
 
 class Video: 

@@ -11,6 +11,7 @@ const FAV_DELETED = "Deleted Favorite"
 const FAV_ADD_UPDATE_FAILED = "Favorite Add/Update Failed"
 const FAV_DELETE_FAILED = "Favorite Deletion Failed"
 const NO_MATCHING_LYRICS_FOUND = "No matching lyrics found in the Lyrics Database"
+const OTHER_ERROR_MAKING_LYRICS_REQUEST = "An error occurred making Lyrics request. Contact your almost-karaoke support at almost-karaoke@gmail.com"
 const clientMsgs = $('#client-msgs')
 
 
@@ -181,12 +182,12 @@ const inputVideoNotes = $('#input-video-notes')
         const res = await axios.post('/lyrics', params)    
         if (res.data['status'] == 'success') {
           altLyricsContent.html(res.data['lyrics']) 
-        } else {  // No matching lyrics found
-          displayClientMsg(NO_MATCHING_LYRICS_FOUND, 'error', clientMsgs)
+        } else {  // Something went wrong
+          displayClientMsg(res.data['msg'], 'error', clientMsgs)
         }
 
       } catch(err) {
-        displayClientMsg(NO_MATCHING_LYRICS_FOUND, 'error', clientMsgs)
+        displayClientMsg(OTHER_ERROR_MAKING_LYRICS_REQUEST, 'error', clientMsgs)
         console.log("Error message")
         // TBD - beef up error handling
       }

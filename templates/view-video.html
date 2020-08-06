@@ -62,12 +62,12 @@
           {{ lyrics['lyrics'] | safe }} 
         {% else %}
           <div class="lyrics-search-results">
-            <span class="no-lyrics font-weight-bold">
-              <span class="font-weight-bold">No Lyrics for this song found in the lyrics database.</span>
-              <br> <br> 
+            <span class="no-lyrics font-weight-bold">{{lyrics['msg']}}
+              <!-- <span class="font-weight-bold">{{lyrics['msg']}}.</span> -->
+              <!-- <br> <br> 
               <span class="font-weight-normal">Check the Artist name and Song Title on the video card.
                 If they aren't as you expect you can initiate a new lyrics search above. 
-              </span>
+              </span> -->
             </span>
           </div>
         {% endif %}
