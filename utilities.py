@@ -19,7 +19,8 @@ from requests.exceptions import HTTPError
 from flask import flash
 
 class AppURLopener(urllib.request.FancyURLopener):
-  version = "Mozilla/5.0"
+  # version = "Mozilla/5.0"
+  version = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'
 
 
 def get_lyrics(artist,song_title):
@@ -29,7 +30,7 @@ def get_lyrics(artist,song_title):
   # remove all except alphanumeric characters from artist and song_title
   artist = re.sub('[^A-Za-z0-9]+', "", artist)
   song_title = re.sub('[^A-Za-z0-9]+', "", song_title)
-  # import pdb; pdb.set_trace()
+  import pdb; pdb.set_trace()
   if artist.startswith("the"):    # remove starting 'the' from artist e.g. the who -> who
       artist = artist[3:]
 
@@ -48,19 +49,21 @@ def get_lyrics(artist,song_title):
 
     # (1) Original method to read content from AZLyrics website
     # content = urllib.request.urlopen(url).read()
+    headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
+    request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'})
+    content = urllib.request.urlopen(request).read()
     
     # (2) Second experiment reading content from AZLyrics
     #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
     # see stackoverflow: https://stackoverflow.com/questions/16627227/http-error-403-in-python-3-web-scraping 
-    headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
+    # headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
     # req = Request(url, headers=headers)
     # content = urlopen(req, timeout=10).read()
 
     # (3) Final option tried was reading content from URL using "request"
     # This last approach resulted in an "Exception occurred in retrieving lyrics: list index out of range" rather than a 403 status
-    content = requests.get(url, headers=headers).text
-
-    
+    # content = requests.get(url, headers=headers).text
+   
     
     soup = BeautifulSoup(content, 'html.parser')
     lyrics = str(soup.encode("utf-8"))
@@ -72,9 +75,9 @@ def get_lyrics(artist,song_title):
     up_partition = '<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->'
     down_partition = '<!-- MxM banner -->'
     lyrics = lyrics.split(up_partition)[1]
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     lyrics = lyrics.split(down_partition)[0]
-    import pdb; pdb.set_trace()
+    # import pdb; pdb.set_trace()
     lyrics = lyrics.replace('<br>','').replace('</br>','').replace('</div>','').strip().replace('\\r', '').strip().replace('\\n', '').strip().replace('\\', '')
     return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
   except Exception as e:
