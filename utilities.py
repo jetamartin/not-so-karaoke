@@ -49,9 +49,9 @@ def get_lyrics(artist,song_title):
 
     # (1) Original method to read content from AZLyrics website
     # content = urllib.request.urlopen(url).read()
-    # headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
-    request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'})
-    content = urllib.request.urlopen(request).read()
+    headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
+    # request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'})
+    # content = urllib.request.urlopen(request).read()
     
     # (2) Second experiment reading content from AZLyrics
     #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
@@ -62,8 +62,15 @@ def get_lyrics(artist,song_title):
 
     # (3) Final option tried was reading content from URL using "request"
     # This last approach resulted in an "Exception occurred in retrieving lyrics: list index out of range" rather than a 403 status
+
     # content = requests.get(url, headers=headers).text
-   
+    headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
+
+
+    content = requests.get(url, headers=headers)
+    print(content.request.headers)
+    import pdb; pdb.set_tra
+    content = content.text
     
     soup = BeautifulSoup(content, 'html.parser')
     lyrics = str(soup.encode("utf-8"))
