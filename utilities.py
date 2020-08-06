@@ -30,7 +30,7 @@ def get_lyrics(artist,song_title):
   # remove all except alphanumeric characters from artist and song_title
   artist = re.sub('[^A-Za-z0-9]+', "", artist)
   song_title = re.sub('[^A-Za-z0-9]+', "", song_title)
-  import pdb; pdb.set_trace()
+  # import pdb; pdb.set_trace()
   if artist.startswith("the"):    # remove starting 'the' from artist e.g. the who -> who
       artist = artist[3:]
 
@@ -49,7 +49,7 @@ def get_lyrics(artist,song_title):
 
     # (1) Original method to read content from AZLyrics website
     # content = urllib.request.urlopen(url).read()
-    headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
+    # headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
     request = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'})
     content = urllib.request.urlopen(request).read()
     
