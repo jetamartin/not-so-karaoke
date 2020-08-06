@@ -71,9 +71,9 @@ def get_lyrics(artist,song_title):
     # headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
     # headers={'user-agent': 'Mozilla/5.0'}
     # headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
-    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'}
-    request = urllib.request.Request(url, headers=headers)
-    content = urllib.request.urlopen(request).read()
+    # headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'}
+    # request = urllib.request.Request(url, headers=headers)
+    # content = urllib.request.urlopen(request).read()
     
     # (2) Second experiment reading content from AZLyrics
     #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
@@ -82,7 +82,7 @@ def get_lyrics(artist,song_title):
     # req = Request(url, headers=headers)
     # content = urlopen(req, timeout=10).read()
 
-    # (3) Final option tried was reading content from URL using "request"
+    # (3) Third option tried was reading content from URL using "request"
     # This last approach resulted in an "Exception occurred in retrieving lyrics: list index out of range" rather than a 403 status
 
     # content = requests.get(url, headers=headers).text
@@ -90,6 +90,12 @@ def get_lyrics(artist,song_title):
     # content = requests.get(url, headers=headers)
     # print(content.request.headers)
     # content = content.text
+
+    # (4) Fourth option 
+    class AppURLopener(urllib.request.FancyURLopener):
+      version = "Mozilla/5.0"
+    opener = AppURLopener()
+    content = opener.open(url).read()
     
     soup = BeautifulSoup(content, 'html.parser')
     lyrics = str(soup.encode("utf-8"))
