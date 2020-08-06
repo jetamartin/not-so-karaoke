@@ -1,6 +1,7 @@
 Things to do:
 * Replace lyrics "source" (scraped from azlrics) to another source or use a 3rd party api (e.g., Genius lyrics). Currently AZLyrics
 is blocking my ability to scrape lyrics (i.e., I get 403 forbidden http response)
+* Make the code responsive
 * Refactor viewVideo.js and searchFav.js as there is a lot of shared if not duplicated logic between the two
 * Refine error messaging when lyrics not found (today there is only one message regardless of http response e.g., 404, 403, etc)
 * Eval all forms and ensure there is appropriate form validation and error handling 
