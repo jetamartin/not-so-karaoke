@@ -15,6 +15,7 @@ import html.parser as htmlparser
 
 from constants import * 
 import requests
+import logging
 from requests.exceptions import HTTPError
 from flask import flash
 
@@ -22,6 +23,22 @@ class AppURLopener(urllib.request.FancyURLopener):
   # version = "Mozilla/5.0"
   version = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'
 
+# Enabling debugging at http.client level (requests->urllib3->http.client)
+# you will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
+# the only thing missing will be the response.body which is not logged.
+try: # for Python 3
+    from http.client import HTTPConnection
+except ImportError:
+    from httplib import HTTPConnection
+HTTPConnection.debuglevel = 1
+
+logging.basicConfig() # you need to initialize logging, otherwise you will not see anything from requests
+logging.getLogger().setLevel(logging.DEBUG)
+requests_log = logging.getLogger("urllib3")
+requests_log.setLevel(logging.DEBUG)
+requests_log.propagate = True
+
+requests.get('https://httpbin.org/headers')
 
 def get_lyrics(artist,song_title):
   """ Scrapes the lyric data from azlyrics website """
