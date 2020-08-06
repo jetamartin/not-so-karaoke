@@ -108,13 +108,13 @@ def get_lyrics(artist,song_title):
     status = 'error'
     lyrics = None
     if e.status == 404:
-      msg = f"No lyrics found that match your search criteria. Try again ({e.status})"
+      msg = f"No lyrics found that match your search criteria. Try again (error={e.status})"
     elif e.status == 403:
-      msg = f"Lyrics service is not responsive...please try again later ({e.status}) "
+      msg = f"Lyrics service is not responsive...please try again later (error={e.status}) "
     elif e.status == 500:
-      msg = f"Server error occurred ({e.status})"
+      msg = f"Server error occurred (error={e.status})"
     else: 
-      msg = f"An error occured. Please contact admin at almost-karaoke@gmail.com ({e.status})"
+      msg = f"An error occured. Please contact admin at almost-karaoke@gmail.com (error={e.status})"
     # import pdb; pdb.set_trace()
     return {'status': status, 'msg': msg, 'lyrics': lyrics}
 
