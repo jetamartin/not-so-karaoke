@@ -1,4 +1,3 @@
-import lyricsgenius
 # For parsing duration of videos 
 from isodate import parse_duration
 
@@ -206,6 +205,7 @@ def getMoreLyrics():
   artist = request.json['artist']
   song = request.json['song']
   lyrics = get_lyrics(artist, song)
+  import pdb; pdb.set_trace()
   return jsonify(lyrics)
 
 
