@@ -54,9 +54,6 @@ def get_lyrics(artist,song_title):
   genius = lyricsgenius.Genius(LYRICS_SECRET_KEY)
   song = genius.search_song(song_title, artist)
 
-  import pdb; pdb.set_trace()
-  
-
   # remove all except alphanumeric characters from artist and song_title
   # artist = re.sub('[^A-Za-z0-9]+', "", artist)
   # song_title = re.sub('[^A-Za-z0-9]+', "", song_title)
@@ -118,7 +115,6 @@ def get_lyrics(artist,song_title):
     # lyrics = lyrics.replace('<br>','').replace('</br>','').replace('</div>','').strip().replace('\\r', '').strip().replace('\\n', '').strip().replace('\\', '')
     # return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
     lyrics = song.lyrics.replace('\n', '<br>')
-    import pdb; pdb.set_trace()
     return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
 
   except Exception as e:
