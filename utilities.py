@@ -21,7 +21,7 @@ import logging
 from requests.exceptions import HTTPError
 from flask import flash
 
-from secrets import API_SECRET_KEY, LYRICS_SECRET_KEY
+# from secrets import API_SECRET_KEY, LYRICS_SECRET_KEY
 
 
 class AppURLopener(urllib.request.FancyURLopener):
