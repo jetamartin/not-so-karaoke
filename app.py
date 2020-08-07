@@ -1,3 +1,4 @@
+import lyricsgenius
 # For parsing duration of videos 
 from isodate import parse_duration
 
@@ -17,7 +18,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from forms import SearchForm, SignupForm, LoginForm
 
 from models import db, connect_db, User, Favorite
-# from secrets import API_SECRET_KEY
+from secrets import API_SECRET_KEY, LYRICS_SECRET_KEY
 
 
 app = Flask(__name__)
@@ -34,6 +35,7 @@ app.config['DEBUG_TB_INTERCEPT_REDIRECTS'] = False
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', "it's a secret")
 app.config['API_SECRET_KEY'] = os.environ.get('API_SECRET_KEY', YOUTUBE_API_KEY)
 app.config['YOUTUBE_API_KEY'] = os.environ.get('YOUTUBE_API_KEY', YOUTUBE_API_KEY)
+app.config['LYRICS_SECRET_KEY'] = os.environ.get('LYRICS_SECRET_KEY', LYRICS_SECRET_KEY)
 
 app.config.update(SESSION_COOKIE_SAMESITE='Lax')
 toolbar = DebugToolbarExtension(app)

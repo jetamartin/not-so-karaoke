@@ -1,3 +1,4 @@
+import lyricsgenius
 # Imports for Lyrics Scraping solution 
 import re
 import urllib.request  
@@ -18,6 +19,9 @@ import requests
 import logging
 from requests.exceptions import HTTPError
 from flask import flash
+
+from secrets import API_SECRET_KEY, LYRICS_SECRET_KEY
+
 
 class AppURLopener(urllib.request.FancyURLopener):
   # version = "Mozilla/5.0"
@@ -41,9 +45,15 @@ requests_log.propagate = True
 requests.get('https://httpbin.org/headers')
 
 def get_lyrics(artist,song_title):
+  
   """ Scrapes the lyric data from azlyrics website """
   artist = artist.lower()
   song_title = song_title.lower()
+
+  genius = lyricsgenius.Genius(LYRICS_SECRET_KEY)
+  song = genius.search_song(song_title, artist)
+  
+
   # remove all except alphanumeric characters from artist and song_title
   artist = re.sub('[^A-Za-z0-9]+', "", artist)
   song_title = re.sub('[^A-Za-z0-9]+', "", song_title)
@@ -92,20 +102,20 @@ def get_lyrics(artist,song_title):
     # print(content.request.headers)
     # content = content.text
 
-      
-    soup = BeautifulSoup(content, 'html.parser')
-    lyrics = str(soup.encode("utf-8"))
+##############################################################################################################  # 
+    # soup = BeautifulSoup(content, 'html.parser')
+    # lyrics = str(soup.encode("utf-8"))
 
 
     # lyrics lies between up_partition and down_partition
-    up_partition = '<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->'
-    down_partition = '<!-- MxM banner -->'
-    lyrics = lyrics.split(up_partition)[1]
-    # import pdb; pdb.set_trace()
-    lyrics = lyrics.split(down_partition)[0]
-    # import pdb; pdb.set_trace()
-    lyrics = lyrics.replace('<br>','').replace('</br>','').replace('</div>','').strip().replace('\\r', '').strip().replace('\\n', '').strip().replace('\\', '')
-    return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
+    # up_partition = '<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->'
+    # down_partition = '<!-- MxM banner -->'
+    # lyrics = lyrics.split(up_partition)[1]
+    # lyrics = lyrics.split(down_partition)[0]
+    # lyrics = lyrics.replace('<br>','').replace('</br>','').replace('</div>','').strip().replace('\\r', '').strip().replace('\\n', '').strip().replace('\\', '')
+    # return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
+    return {'status':'success', 'msg': 'ok', 'lyrics': song.lyrics }
+
   except Exception as e:
     print(f"Exception occurred in retrieving lyrics: {str(e)}")
     status = 'error'
