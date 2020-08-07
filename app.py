@@ -17,7 +17,7 @@ from flask_debugtoolbar import DebugToolbarExtension
 from forms import SearchForm, SignupForm, LoginForm
 
 from models import db, connect_db, User, Favorite
-from secrets import API_SECRET_KEY, LYRICS_SECRET_KEY
+# from secrets import API_SECRET_KEY, LYRICS_SECRET_KEY
 
 
 app = Flask(__name__)
