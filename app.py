@@ -17,11 +17,8 @@ from flask_debugtoolbar import DebugToolbarExtension
 from forms import SearchForm, SignupForm, LoginForm
 
 from models import db, connect_db, User, Favorite
-# from secrets import API_SECRET_KEY, LYRICS_SECRET_KEY
-
 
 app = Flask(__name__)
-
 
 # Get DB_URI from environ variable (useful for production/testing) or,
 # if not set there, use development local db.
@@ -43,7 +40,7 @@ connect_db(app)
 
 @app.errorhandler(404)
 def page_not_found(e):
-  """ Present App 404 page if user manually enters invalid route """
+  """ Present App 'branded' 404 page if user manually enters invalid route """
   return render_template('404.html')
 
 @app.route('/')
@@ -205,7 +202,6 @@ def getMoreLyrics():
   artist = request.json['artist']
   song = request.json['song']
   lyrics = get_lyrics(artist, song)
-  import pdb; pdb.set_trace()
   return jsonify(lyrics)
 
 

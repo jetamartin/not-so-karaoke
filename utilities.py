@@ -14,36 +14,14 @@ import json
 
 # For parsing coverting characters in video titles (e.g. &39 to ')
 import html.parser as htmlparser
-
+from messages import *
 from constants import * 
 import requests
 import logging
 from requests.exceptions import HTTPError
 from flask import flash
 
-# from secrets import API_SECRET_KEY, LYRICS_SECRET_KEY
 
-
-class AppURLopener(urllib.request.FancyURLopener):
-  # version = "Mozilla/5.0"
-  version = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'
-
-# Enabling debugging at http.client level (requests->urllib3->http.client)
-# you will see the REQUEST, including HEADERS and DATA, and RESPONSE with HEADERS but without DATA.
-# the only thing missing will be the response.body which is not logged.
-try: # for Python 3
-    from http.client import HTTPConnection
-except ImportError:
-    from httplib import HTTPConnection
-HTTPConnection.debuglevel = 1
-
-logging.basicConfig() # you need to initialize logging, otherwise you will not see anything from requests
-logging.getLogger().setLevel(logging.DEBUG)
-requests_log = logging.getLogger("urllib3")
-requests_log.setLevel(logging.DEBUG)
-requests_log.propagate = True
-
-requests.get('https://httpbin.org/headers')
 
 def get_lyrics(artist,song_title):
   
@@ -52,83 +30,34 @@ def get_lyrics(artist,song_title):
   song_title = song_title.lower()
 
   genius = lyricsgenius.Genius(LYRICS_SECRET_KEY)
-  song = genius.search_song(song_title, artist)
-
-  # remove all except alphanumeric characters from artist and song_title
-  # artist = re.sub('[^A-Za-z0-9]+', "", artist)
-  # song_title = re.sub('[^A-Za-z0-9]+', "", song_title)
-  # import pdb; pdb.set_trace()
-  # if artist.startswith("the"):    # remove starting 'the' from artist e.g. the who -> who
-  #     artist = artist[3:]
-
-  url = LYRICS_URL+artist+"/"+song_title+".html"
-  print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')
-  print(artist, song_title)
-  # print(url)
-  print('%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%')  
-
+ 
   try:
-    # It appears the azLyricss is blocking attempts to scrape lyrics made by my app when running on Heroku server.
-    # as the app works perfectly when the server is running on local host. 
-    # I tried three different methods to get the lyrics from the AZlyrics website using my server app running on Heroku
-    # but all of them apparently appear to have been blocked by the AZLyrics
-    # website...returning a HTTP Status of 403 forbidden.
+    # import pdb; pdb.set_trace()
+    song = genius.search_song(song_title, artist)
+    if (song):
 
-    # (1) Original method to read content from AZLyrics website
-    # content = urllib.request.urlopen(url).read()
+      lyrics = song.lyrics.replace('\n', '<br>')
+      return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
 
-    
-    # headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
-    # headers={'user-agent': 'Mozilla/5.0'}
-    # headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36', 'Accept-Encoding': 'gzip, deflate', 'Accept': '*/*', 'Connection': 'keep-alive'}
-    # headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'}
-    # request = urllib.request.Request(url, headers=headers)
-    # content = urllib.request.urlopen(request).read()
-    
-    # (2) Second experiment reading content from AZLyrics
-    #  Manually set a user agent to avoid server's web security (e.g., mod_security) that may be preventing scraping
-    # see stackoverflow: https://stackoverflow.com/questions/16627227/http-error-403-in-python-3-web-scraping 
-    # headers={'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36'}
-    # headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'}
-    # req = Request(url, headers=headers)
-    # content = urlopen(req, timeout=10).read()
+    else: # No matching lyrics were found
+      status = 'error'
+      msg = NO_MATCHING_LYRICS
+      lyrics = None
+      return {'status': status, 'msg': msg, 'lyrics': lyrics }
 
-    # (3) Third option tried was reading content from URL using "request"
-    # This last approach resulted in an "Exception occurred in retrieving lyrics: list index out of range" rather than a 403 status
-
-    # content = requests.get(url, headers=headers).text
-    # headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36'}
-    # content = requests.get(url, headers=headers)
-    # print(content.request.headers)
-    # content = content.text
-
-##############################################################################################################  # 
-    # soup = BeautifulSoup(content, 'html.parser')
-    # lyrics = str(soup.encode("utf-8"))
-
-
-    # lyrics lies between up_partition and down_partition
-    # up_partition = '<!-- Usage of azlyrics.com content by any third-party lyrics provider is prohibited by our licensing agreement. Sorry about that. -->'
-    # down_partition = '<!-- MxM banner -->'
-    # lyrics = lyrics.split(up_partition)[1]
-    # lyrics = lyrics.split(down_partition)[0]
-    # lyrics = lyrics.replace('<br>','').replace('</br>','').replace('</div>','').strip().replace('\\r', '').strip().replace('\\n', '').strip().replace('\\', '')
-    # return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
-    lyrics = song.lyrics.replace('\n', '<br>')
-    return {'status':'success', 'msg': 'ok', 'lyrics': lyrics }
-
-  except Exception as e:
+  except Exception as e:  
     print(f"Exception occurred in retrieving lyrics: {str(e)}")
     status = 'error'
     lyrics = None
     if e.status == 404:
-      msg = f"No lyrics found that match your search criteria. Try again (error={e.status})"
+      msg = f"{NO_MATCHING_LYRICS} (error-code ={e.status})"
     elif e.status == 403:
-      msg = f"Lyrics service is not responsive...please try again later (error={e.status}) "
+      msg = f"{LYRICS_SERVICE_NOT_RESPONDiNG} (error code={e.status}) "
     elif e.status == 500:
-      msg = f"Server error occurred (error={e.status})"
-    else: 
-      msg = f"An error occured. Please contact admin at almost-karaoke@gmail.com (error={e.status})"
+      msg = f"Server error occurred (error-code={e.status})"
+    else: # Catch all for all other errors
+      msg = f"{MISC_SERVER_ERROR} (error-code={e.status})"
+      
     # import pdb; pdb.set_trace()
     return {'status': status, 'msg': msg, 'lyrics': lyrics}
 

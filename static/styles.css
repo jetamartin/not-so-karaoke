@@ -200,7 +200,9 @@
 
 #lyrics-content {
   height: 75vh;
-  overflow : scroll
+  padding-bottom: 2rem;
+  padding-top: 1rem;
+  overflow : scroll;
 }
 
 #player {
