@@ -25,7 +25,7 @@ from flask import flash
 
 def get_lyrics(artist,song_title):
   
-  """ Scrapes the lyric data from azlyrics website """
+  """ Retrieves lyrics from Genius.com using a python """
   artist = artist.lower()
   song_title = song_title.lower()
 
