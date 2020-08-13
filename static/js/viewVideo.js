@@ -48,31 +48,8 @@ const inputSongTitle = $('#input-song-title')
 const inputVideoNotes = $('#input-video-notes')
 
 
-
 // $(document).ready(function () {
 
-
-/***********************************************************************************************
- * Function:  displayClientMsg(msg, status) - displays client pop up message on client
- * ---------------------------------------------------------------------------------------------
- * Called anytime a message needs to be displayed to client
- * - 
- *
-*/
-    // function displayClientMsg(msg, status, clientMsgs) {
-    //   const show = 'show '
-    //   // Add message to be displayed
-    //   clientMsgs.text(msg)
-
-    //   // Add the "show" class to DIV
-    //   clientMsgs.addClass( show + status );
-
-    //   // After 3 seconds, remove the show class from DIV
-    //   setTimeout(function(){ 
-    //     clientMsgs.removeClass()
-    //     clientMsgs.text("") 
-    //   }, 3000);
-    // }
       
     console.log("I'm in viewVideo.js file")
 

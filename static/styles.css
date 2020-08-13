@@ -132,10 +132,10 @@
 
 .jumbotron-home {
   min-height:100%;
-  background:linear-gradient(180deg, rgba(136,5, 5, 0.8), rgba(29, 13, 13, 0.99)), url("/static/karaoke-bg.jpg");
+  background:linear-gradient(180deg, rgba(136,5, 5, 0.8), rgba(29, 13, 13, 0.99)), url("/static/images/karaoke-bg.jpg");
   background-size: cover;
   background-position: center;
-  margin-top: 4.64rem;
+  margin-top: 3.8rem;
   margin-left: -5.1rem;
   margin-right: -5.1rem;
   height: 90vh;
@@ -143,10 +143,10 @@
 
 .jumbotron-search {
   min-height:100%;
-  background:linear-gradient(180deg, rgba(136,5, 5, 0.8), rgba(29, 13, 13, 0.99)), url("/static/karaoke-bg.jpg");
+  background:linear-gradient(180deg, rgba(136,5, 5, 0.8), rgba(29, 13, 13, 0.99)), url("/static/images/karaoke-bg.jpg");
   background-size:cover;
   background-position: right;
-  margin-top: 4.64rem;
+  margin-top: 3.8rem;
   margin-left: -5.1rem;
   margin-right: -5.1rem;
   height: 70vh;

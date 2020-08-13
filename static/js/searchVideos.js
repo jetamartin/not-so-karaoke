@@ -42,7 +42,7 @@ $(document).ready(function () {
   }
 
   /***********************************************************************************************
- * Function:  lauchFavoritesModal
+ * Function:  launchFavoritesModal
  * ---------------------------------------------------------------------------------------------
  * Called anytime a user clicks on the fav icon on a video card in the search results
  * - Reinitialize the Delete warning (hide it) if it was clicked on the prior save
