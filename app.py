@@ -3,9 +3,12 @@ from isodate import parse_duration
 
 # For parsing coverting characters in video titles (e.g. &39 to ')
 import html.parser as htmlparser
+
 from utilities import *
 from constants import *
 from messages import *
+
+from api_helpers import get_lyrics
 
 # import pickle
 from sqlalchemy import exc

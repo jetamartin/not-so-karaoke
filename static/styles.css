@@ -1,10 +1,9 @@
-
 .container-fluid {
   padding: 0;
   margin: 0;
 }
-.alert{ 
-  margin-top: 5rem
+.alert {
+  margin-top: 5rem;
 }
 
 .wrapper {
@@ -12,6 +11,9 @@
   position: relative;
 }
 
+.align-items-left {
+  text-align: left !important;
+}
 
 .call-to-actions {
   position: absolute;
@@ -19,21 +21,21 @@
   left: 0;
   right: 0;
 
-  /* Apply animation to this element */	
+  /* Apply animation to this element */
   animation: call-to-actions 8s ease-in;
 }
 
 @keyframes call-to-actions {
-  0%   { 
-  transform: translateY(200%); 		
+  0% {
+    transform: translateY(200%);
   }
-  100% { 
-  transform: translateY(0%); 
+  100% {
+    transform: translateY(0%);
   }
- }
+}
 
 /* Flash Messages */
-.no-lyrics, 
+.no-lyrics,
 .messages span {
   display: block;
   padding: 1rem;
@@ -47,17 +49,17 @@
 .user-pic {
   border: 1px solid grey;
   border-radius: 50%;
-  padding: .25rem .5rem;
+  padding: 0.25rem 0.5rem;
   color: red;
 }
 
 .messages .success {
-  background-color: rgba(0, 255, 0, .2)
+  background-color: rgba(0, 255, 0, 0.2);
 }
 
-.no-lyrics, 
+.no-lyrics,
 .messages .error {
-  background-color: rgba(255, 0, 0, .2)
+  background-color: rgba(255, 0, 0, 0.2);
 }
 
 /* Client side messages  */
@@ -69,7 +71,7 @@
   font-size: 1.25rem;
   font-weight: bold;
   color: white;
-  letter-spacing: .25rem;
+  letter-spacing: 0.25rem;
   text-align: center; /* Centered text */
   border-radius: 1rem; /* Rounded borders */
   padding: 1rem; /* Padding */
@@ -89,34 +91,57 @@
 }
 
 #client-msgs.success {
-  background-color: rgb(2, 117, 216, .9)
+  background-color: rgb(2, 117, 216, 0.9);
 }
 
 #client-msgs.error {
-  background-color: rgba(255, 0, 0, .9)
+  background-color: rgba(255, 0, 0, 0.9);
 }
 
 /* Animations to fade the toast messages in and out */
 @-webkit-keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 50%; opacity: 1;}
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 50%;
+    opacity: 1;
+  }
 }
 
 @keyframes fadein {
-  from {bottom: 0; opacity: 0;}
-  to {bottom: 50%; opacity: 1;}
+  from {
+    bottom: 0;
+    opacity: 0;
+  }
+  to {
+    bottom: 50%;
+    opacity: 1;
+  }
 }
 
 @-webkit-keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }
 
 @keyframes fadeout {
-  from {bottom: 30px; opacity: 1;}
-  to {bottom: 0; opacity: 0;}
+  from {
+    bottom: 30px;
+    opacity: 1;
+  }
+  to {
+    bottom: 0;
+    opacity: 0;
+  }
 }
-
 
 /* .opaque-blk-bg {
   background-color: black;
@@ -127,12 +152,16 @@
   border: 1px solid transparent !important;
   border-radius: 3rem;
 }
-  /* background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTYhIqE1MVKzoICKO_JRms9B3BW-wc8aXsd_Q&usqp=CAU'); */
-
+/* background-image: url('https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcTYhIqE1MVKzoICKO_JRms9B3BW-wc8aXsd_Q&usqp=CAU'); */
 
 .jumbotron-home {
-  min-height:100%;
-  background:linear-gradient(180deg, rgba(136,5, 5, 0.8), rgba(29, 13, 13, 0.99)), url("/static/images/karaoke-bg.jpg");
+  min-height: 100%;
+  background: linear-gradient(
+      180deg,
+      rgba(136, 5, 5, 0.8),
+      rgba(29, 13, 13, 0.99)
+    ),
+    url("/static/images/karaoke-bg.jpg");
   background-size: cover;
   background-position: center;
   margin-top: 3.8rem;
@@ -142,16 +171,20 @@
 }
 
 .jumbotron-search {
-  min-height:100%;
-  background:linear-gradient(180deg, rgba(136,5, 5, 0.8), rgba(29, 13, 13, 0.99)), url("/static/images/karaoke-bg.jpg");
-  background-size:cover;
+  min-height: 100%;
+  background: linear-gradient(
+      180deg,
+      rgba(136, 5, 5, 0.8),
+      rgba(29, 13, 13, 0.99)
+    ),
+    url("/static/images/karaoke-bg.jpg");
+  background-size: cover;
   background-position: right;
   margin-top: 3.8rem;
   margin-left: -5.1rem;
   margin-right: -5.1rem;
   height: 70vh;
 }
-
 
 /* Alternative to regular jumbotron to experiment with */
 /* .jumbotron1 {
@@ -160,7 +193,6 @@
   background-size:cover;
   background-blend-mode: multiply;
 } */
-
 
 .inline-block {
   display: inline-block;
@@ -178,7 +210,7 @@
 
 .btn-outline-secondary:hover {
   background-color: #493636;
-  border-color: white
+  border-color: white;
 }
 
 .main-content {
@@ -195,14 +227,14 @@
 
 #welcome-subtext {
   margin-top: -2rem;
-  letter-spacing: .25rem;
+  letter-spacing: 0.25rem;
 }
 
 #lyrics-content {
   height: 75vh;
   padding-bottom: 2rem;
   padding-top: 1rem;
-  overflow : scroll;
+  overflow: scroll;
 }
 
 #player {
@@ -211,39 +243,37 @@
 }
 
 #iframe-container {
-  padding-left : 0;
-  padding-right : 0;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 #video-details {
   margin-left: 0;
-  margin-right: 0; 
+  margin-right: 0;
 }
-
 
 .fas.fa-heart {
   color: red;
 }
 
 .far.fa-heart,
-.fas.fa-heart
- {
+.fas.fa-heart {
   font-size: x-large;
 }
 
 .hide {
-  display: none
+  display: none;
 }
 
 #del-fav-warning {
-  color: red
+  color: red;
 }
 
 .form-container {
   margin: 1rem;
   padding: 1.5rem;
-  border: solid .5px lightgrey;
-  border-radius: .5rem;
+  border: solid 0.5px lightgrey;
+  border-radius: 0.5rem;
   background-color: #f2f2f2;
 }
 
@@ -252,19 +282,19 @@
 }
 
 .form-padding {
-  padding: 0 3rem 3rem
+  padding: 0 3rem 3rem;
 }
 
 .xlg-letter-spacing {
-  letter-spacing: .75rem;
+  letter-spacing: 0.75rem;
 }
 
 .lg-letter-spacing {
-  letter-spacing: .5rem;
+  letter-spacing: 0.5rem;
 }
 
 .med-letter-spacing {
-  letter-spacing: .25rem;
+  letter-spacing: 0.25rem;
 }
 
 .larger-font-size {
@@ -272,7 +302,7 @@
 }
 
 .small-font-size {
-  font-size: .75rem
+  font-size: 0.75rem;
 }
 
 .thin-lettering {
@@ -284,13 +314,13 @@
 }
 
 /* Adding red asterick after field label for required input  fields */
-label.required::after { 
+label.required::after {
   content: "*";
   color: red;
 }
 
 /* Adding white asterick after field label for required input fields */
-label.required-white::after { 
+label.required-white::after {
   content: "*";
   color: white;
 }

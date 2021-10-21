@@ -19,7 +19,7 @@ idna==2.9
 isodate==0.6.0
 itsdangerous==1.1.0
 Jinja2==2.11.2
-lyricsgenius==1.8.6
+lyricsgenius==3.0.0
 MarkupSafe==1.1.1
 psycopg2==2.8.5
 pycparser==2.19

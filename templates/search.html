@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 <section class="jumbotron-search text-center">
-<div class="container-fluid">
+<div class="container-fluid center-search-form-inputs">
   <h2 class="text-white xlg-letter-spacing mb-5 mt-3 inline-block">Video Search</h2>
   <div class="row justify-content-center">
+    <div class="col-sm-offset-3 col-sm-6">
     <form method="POST">
       {{form.hidden_tag()}}
       {% for field in form.errors %}
@@ -16,14 +17,14 @@
       </div>
       {% endfor %}
       {% for field in form if field.widget.input_type != 'hidden' %}
-      <div class="form-group row ">
+      <div class="form-group row text-start">
         <!-- {{ '*' if field.flags.required }} -->
         {% if field.flags.required %}
           {{ field.label (class_="col-sm-3 col-form-label text-white required-white")}}
         {% else %}
           {{ field.label (class_="col-sm-3 col-form-label text-white")}}
         {% endif %}
-        <div>
+        <div >
           {{field(class_="col-sm-9 form-control")}}
         </div>
        </div>
@@ -31,6 +32,7 @@
       <p class="text-white justify-content-end font-weight-lighter font-italic small-font-size med-letter-spacing ml-5 ">required(*)</p>
       <button class="btn btn-outline-secondary text-white border-white lg-letter-spacing  mt-2">Search</button>
     </form>
+  </div>
   </div>
   
 </div>
