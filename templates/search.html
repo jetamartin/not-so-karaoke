@@ -1,90 +1,164 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <section class="jumbotron-search text-center">
-<div class="container-fluid center-search-form-inputs">
-  <h2 class="text-white xlg-letter-spacing mb-5 mt-3 inline-block">Video Search</h2>
-  <div class="row justify-content-center">
-    <div class="col-sm-offset-3 col-sm-6">
-    <form method="POST">
-      {{form.hidden_tag()}}
-      {% for field in form.errors %}
-      <div class="alert alert-danger">{{ field }}:
-        <ul>
-          {% for error in form.errors[field] %}
-          <li>{{ error }}</li>
+  <div class="container-fluid center-search-form-inputs">
+    <h2 class="text-white xlg-letter-spacing mb-5 mt-3 inline-block">
+      Video Search
+    </h2>
+    <div class="row justify-content-center">
+      <div class="col-sm-offset-3 col-sm-6">
+        <form method="POST">
+          {{form.hidden_tag()}} {% for field in form.errors %}
+          <div class="alert alert-danger">
+            {{ field }}:
+            <ul>
+              {% for error in form.errors[field] %}
+              <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endfor %} {% for field in form if field.widget.input_type !=
+          'hidden' %}
+          <div class="form-group row text-start">
+            <!-- {{ '*' if field.flags.required }} -->
+            {% if field.flags.required %} {{ field.label (class_="col-sm-3
+            col-form-label text-white required-white")}} {% else %} {{
+            field.label (class_="col-sm-3 col-form-label text-white")}} {% endif
+            %}
+            <div>{{field(class_="col-sm-9 form-control")}}</div>
+          </div>
           {% endfor %}
-        </ul>
+          <p
+            class="
+              text-white
+              justify-content-end
+              font-weight-lighter font-italic
+              small-font-size
+              med-letter-spacing
+              ml-5
+            "
+          >
+            required(*)
+          </p>
+          <button
+            class="
+              btn btn-outline-secondary
+              text-white
+              border-white
+              lg-letter-spacing
+              mt-2
+            "
+          >
+            Search
+          </button>
+        </form>
       </div>
-      {% endfor %}
-      {% for field in form if field.widget.input_type != 'hidden' %}
-      <div class="form-group row text-start">
-        <!-- {{ '*' if field.flags.required }} -->
-        {% if field.flags.required %}
-          {{ field.label (class_="col-sm-3 col-form-label text-white required-white")}}
-        {% else %}
-          {{ field.label (class_="col-sm-3 col-form-label text-white")}}
-        {% endif %}
-        <div >
-          {{field(class_="col-sm-9 form-control")}}
-        </div>
-       </div>
-      {% endfor %}
-      <p class="text-white justify-content-end font-weight-lighter font-italic small-font-size med-letter-spacing ml-5 ">required(*)</p>
-      <button class="btn btn-outline-secondary text-white border-white lg-letter-spacing  mt-2">Search</button>
-    </form>
+    </div>
   </div>
-  </div>
-  
-</div>
 </section>
 
-<div  id="vid-cards" class="container" >
+<div id="vid-cards" class="container">
   {% if videos %}
   <div class="row">
     {% for video in videos %}
     <div class="col-md-4">
-      <div id={{ video.id }} class="card w-100 video-card"  data-video.title ="{{ video.title }}" data-videoid="{{ video.id }}" data-user_id= "{{ session['user_id'] }}">
-        <img src="{{ video.thumbnail }}" height="225" preserveAspectRatio="xMidYMid slice" focusable="false" role="img" aria-label="Placeholder: Thumbnail">
-        <div class="card-body video-details" data-videoid={{video.id}}>
-          <p class="card-text video-detail-title font-weight-bold">{{ video.title | safe }}</p>
-          <p class="card-text">Artist:<span class="video-detail-artist ml-3">{{ video.artist }}</span></p> 
-          <p class="card-text">Song:<span class="video-detail-song ml-3">{{ video.song }}</span></p>
+      <div
+        id="{{
+        video.id
+        }}"
+        class="card w-100 video-card"
+        data-video.title="{{ video.title }}"
+        data-videoid="{{ video.id }}"
+        data-user_id="{{ session['user_id'] }}"
+      >
+        <img
+          src="{{ video.thumbnail }}"
+          height="225"
+          preserveAspectRatio="xMidYMid slice"
+          focusable="false"
+          role="img"
+          aria-label="Placeholder: Thumbnail"
+        />
+        <div class="card-body video-details" data-videoid="{{video.id}}">
+          <p class="card-text video-detail-title font-weight-bold">
+            {{ video.title | safe }}
+          </p>
+          <p class="card-text">
+            <span class="fw-bold">Artist:</span>
+            <span class="video-detail-artist ms-2">{{ video.artist }}</span>
+          </p>
+          <p class="card-text">
+            <span class="fw-bold">Song:</span>
+            <span class="video-detail-song ms-2">{{ video.song }}</span>
+          </p>
           {% if video.fav_id %}
-            <p class="card-text video-detail-notes-section">Notes:<span class="video-detail-notes ml-3">{{ video.notes }}</span> </p>
+          <p class="card-text video-detail-notes-section">
+            <span class="fw-bold">Notes:</span>
+            <span class="video-detail-notes ms-2">{{ video.notes }}</span>
+          </p>
           {% else %}
-            <p class="card-text video-detail-notes-section hide">Notes:<span class="video-detail-notes ml-3">{{ video.notes }}</span> </p>
+          <p class="card-text video-detail-notes-section hide">
+            <span class="fw-bold">Notes:</span>
+            <span class="video-detail-notes ms-2">{{ video.notes }}</span>
+          </p>
           {% endif %}
           <div class="d-flex justify-content-between align-items-center">
             <div class="btn-group">
-              <a href="/video/{{ video.id }}" class="btn btn-sm btn-outline-secondary">View</a>
+              <a
+                href="/video/{{ video.id }}"
+                class="btn btn-sm btn-outline-secondary"
+                >View</a
+              >
             </div>
-            <div class="favorites" class="col-2 d-flex justify-content-center" {% if video.fav_id %} data-fav_id={{video.fav_id}} {% endif %} >
+            <div
+              class="favorites"
+              class="col-2 d-flex justify-content-center"
+              {%
+              if
+              video.fav_id
+              %}
+              data-fav_id="{{video.fav_id}}"
+              {%
+              endif
+              %}
+            >
               {% if video.fav_id %}
-                <p class="pt-3"><i class="fas fa-heart"></i></p>
+              <p class="pt-3"><i class="fas fa-heart"></i></p>
+              {% else %} {% if session['user_id'] %}
+              <p><i class="far fa-heart"></i></p>
               {% else %}
-                {% if session['user_id'] %} 
-                  <p><i class="far fa-heart"></i></p>
-                {% else %}
-                  <p><i class="far fa-heart" data-toggle="tooltip"></i></p>
-                {% endif %}
-              {% endif %}
+              <p><i class="far fa-heart" data-toggle="tooltip"></i></p>
+              {% endif %} {% endif %}
             </div>
           </div>
         </div>
-      </div> 
+      </div>
     </div>
     {% endfor %}
   </div>
-</div>  
+</div>
 {% endif %}
 
 <!-- -------------------------------------Form Modal -------------------------------------------------- -->
-<div class="modal fade" id="fav-save-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="fav-save-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit/Save to Favorites</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Edit/Save to Favorites
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -92,40 +166,87 @@
         <form id="video-detail-fav-form">
           <div class="form-group">
             <label for="video-title" class="col-form-label">Video Title:</label>
-            <input name="video-title" type="text" class="form-control" id="input-video-title">
+            <input
+              name="video-title"
+              type="text"
+              class="form-control"
+              id="input-video-title"
+            />
           </div>
           <div class="form-group">
             <label for="artist-name" class="col-form-label">Artist:</label>
-            <input name="artist-name" type="text" class="form-control" id="input-artist-name">
+            <input
+              name="artist-name"
+              type="text"
+              class="form-control"
+              id="input-artist-name"
+            />
           </div>
           <div class="form-group">
             <label for="song-title" class="col-form-label">Song:</label>
-            <input name="song-title" type="text" class="form-control" id="input-song-title">
+            <input
+              name="song-title"
+              type="text"
+              class="form-control"
+              id="input-song-title"
+            />
           </div>
           <div class="form-group">
             <label for="note-area" class="col-form-label">Notes:</label>
-            <textarea name="note-area" class="form-control" id="input-video-notes"></textarea>
+            <textarea
+              name="note-area"
+              class="form-control"
+              id="input-video-notes"
+            ></textarea>
           </div>
 
-          <div id="fav-del-checkbox" class="custom-control custom-checkbox custom-control-right">          
-            <input type="checkbox" class="custom-control-input" id="del-fav" name='del-fav'>
+          <div
+            id="fav-del-checkbox"
+            class="custom-control custom-checkbox custom-control-right"
+          >
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="del-fav"
+              name="del-fav"
+            />
             <label class="custom-control-label" for="del-fav">Delete</label>
             <div id="del-fav-warning" class="hide">
-              <span>WARNING! This will delete this video from your favorites list along with any associated comments. <br> Click 'Save' to proceed or 'Cancel' to exit.</span>
+              <span
+                >WARNING! This will delete this video from your favorites list
+                along with any associated comments. <br />
+                Click 'Save' to proceed or 'Cancel' to exit.</span
+              >
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button id="video-detail-fav-submit" type="submit" class="btn btn-primary" data-fav_id="" data-videoid="">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          id="video-detail-fav-submit"
+          type="submit"
+          class="btn btn-primary"
+          data-fav_id=""
+          data-videoid=""
+        >
+          Save
+        </button>
       </div>
     </div>
   </div>
 </div>
 
 <div id="client-msgs"></div>
-<script type="text/javascript" src="{{ url_for('static', filename='js/clientMsgs.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/searchVideos.js') }}"></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='js/clientMsgs.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='js/searchVideos.js') }}"
+></script>
 
 {% endblock %}
