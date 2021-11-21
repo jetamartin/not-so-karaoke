@@ -1,87 +1,155 @@
-{% extends 'base.html' %}
-
-{% block content %}
-  <div class="row page-top-margin">
-    <div class="col-7" id="iframe-container">
-      <div class ="col-12" id="player" data-videoId = '{{video_details.id}}' data-user_id= "{{ session['user_id'] }}">
-        <!-- video player will be inserted here by YT iframe API -->
-      </div>
-      <div class="row" id="video-details" data-video = '{{video_details.id}}' data-user_id= "{{ session['user_id'] }}" data-thumbnail = "{{video_details.thumbnail}}" >
-        <div class="col border">
-          <div class="row pt-4">
-            <div class="col-10 pl-4">
-              <p><span id = "video-detail-title" class="font-weight-bold">{{video_details.title}}</span></p>
-              <p>Artist:<span id = "video-detail-artist" class="ml-2 mr-2">{{video_details.artist}}</span></p>
-              <p >Song:<span id = "video-detail-song" class="ml-2 mr-2">{{video_details.song}}</span></p>
-
-                {% if video_details.fav_id %}
-                  <p id="video-detail-notes-section" >Notes:
-                    <span id = "video-detail-notes" class="ml-2 mr-2">{{video_details.notes}}</span>
-                  </p>
-                {% else %}
-                  <p id="video-detail-notes-section" class="hide" >Notes:
-                  <span id = "video-detail-notes" class="font-weight-bold ml-2 mr-2 hide">{{video_details.notes}}</span>
-                {% endif %}
-            </div>
-
-            <div class="col-2">
-              <div id="favorites" class="d-flex justify-content-center pt-2" {% if video_details.fav_id %} data-fav_id={{video_details.fav_id}} {% endif %} >
-                {% if video_details.fav_id %}
-                  <p><i class="fas fa-heart"></i></p>
-                {% else %}
-                   {% if session['user_id'] %} 
-                     <p><i class="far fa-heart"></i></p>
-                   {% else %}
-                     <p><i class="far fa-heart" data-toggle="tooltip"></i></p>
-                  {% endif %}
-                {% endif %}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
+{% extends 'base.html' %} {% block content %}
+<div class="row page-top-margin">
+  <div class="col-7" id="iframe-container">
+    <div
+      class="col-12"
+      id="player"
+      data-videoId="{{video_details.id}}"
+      data-user_id="{{ session['user_id'] }}"
+    >
+      <!-- video player will be inserted here by YT iframe API -->
     </div>
+    <div
+      class="row"
+      id="video-details"
+      data-video="{{video_details.id}}"
+      data-user_id="{{ session['user_id'] }}"
+      data-thumbnail="{{video_details.thumbnail}}"
+    >
+      <div class="col border">
+        <div class="row pt-4">
+          <div class="col-10 pl-4">
+            <p>
+              <span id="video-detail-title" class="font-weight-bold"
+                >{{video_details.title}}</span
+              >
+            </p>
+            <p>
+              <span class="fw-bold">Artist:</span
+              ><span id="video-detail-artist" class="ml-2 mr-2"
+                >{{video_details.artist}}</span
+              >
+            </p>
+            <p>
+              <span class="fw-bold">Song:</span
+              ><span id="video-detail-song" class="ms-2 mr-2"
+                >{{video_details.song}}</span
+              >
+            </p>
 
-    <div class= "col-5" id="lyrics">
-      <h1>Lyrics</h1>
-      <form class="form-inline" id="lyrics-search-form">
-        <div class="input-group input-group-sm">
-          <label class="sr-only" for="artist">Artist</label>
-          <input type="text" class="form-control mb-2 mr-sm-2" id="artist" placeholder="Artist Name" name="artist">
-        </div>
-        <label class="sr-only" for="song">Song Title</label>
-        <div class="input-group input-group-sm mb-2 mr-sm-2">
-          <input type="text" class="form-control" id="song" placeholder="Song Title" name="song">
-        </div>
-        <button type="submit" class="btn btn-primary btn-sm mb-2"><i class="fas fa-search"></i></button>
-      </form>
-
-      <div id='lyrics-content'>
-        {% if lyrics['status'] == 'success' %}
-          {{ lyrics['lyrics'] | safe }} 
-        {% else %}
-          <div class="lyrics-search-results">
-            <span class="no-lyrics font-weight-bold">{{lyrics['msg']}}
-              <!-- <span class="font-weight-bold">{{lyrics['msg']}}.</span> -->
-              <!-- <br> <br> 
-              <span class="font-weight-normal">Check the Artist name and Song Title on the video card.
-                If they aren't as you expect you can initiate a new lyrics search above. 
-              </span> -->
-            </span>
+            {% if video_details.fav_id %}
+            <p id="video-detail-notes-section">
+              <span class="fw-bold">Notes:</span>
+              <span id="video-detail-notes" class="ms-2 mr-2"
+                >{{video_details.notes}}</span
+              >
+            </p>
+            {% else %}
+            <p id="video-detail-notes-section" class="hide">
+              <span class="fw-bold">Notes:</span>
+              <span
+                id="video-detail-notes"
+                class="font-weight-bold ms-2 mr-2 hide"
+                >{{video_details.notes}}</span
+              >
+              {% endif %}
+            </p>
           </div>
-        {% endif %}
+
+          <div class="col-2">
+            <div
+              id="favorites"
+              class="d-flex justify-content-center pt-2"
+              {%
+              if
+              video_details.fav_id
+              %}
+              data-fav_id="{{video_details.fav_id}}"
+              {%
+              endif
+              %}
+            >
+              {% if video_details.fav_id %}
+              <p><i class="fas fa-heart"></i></p>
+              {% else %} {% if session['user_id'] %}
+              <p><i class="far fa-heart"></i></p>
+              {% else %}
+              <p><i class="far fa-heart" data-toggle="tooltip"></i></p>
+              {% endif %} {% endif %}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
-  
+
+  <div class="col-5" id="lyrics">
+    <h1>Lyrics</h1>
+    <form class="form-inline" id="lyrics-search-form">
+      <div class="input-group input-group-sm">
+        <label class="sr-only" for="artist">Artist</label>
+        <input
+          type="text"
+          class="form-control mb-2 mr-sm-2"
+          id="artist"
+          placeholder="Artist Name"
+          name="artist"
+        />
+      </div>
+      <label class="sr-only" for="song">Song Title</label>
+      <div class="input-group input-group-sm mb-2 mr-sm-2">
+        <input
+          type="text"
+          class="form-control"
+          id="song"
+          placeholder="Song Title"
+          name="song"
+        />
+      </div>
+      <button type="submit" class="btn btn-primary btn-sm mb-2">
+        <i class="fas fa-search"></i>
+      </button>
+    </form>
+
+    <div id="lyrics-content">
+      {% if lyrics['status'] == 'success' %} {{ lyrics['lyrics'] | safe }} {%
+      else %}
+      <div class="lyrics-search-results">
+        <span class="no-lyrics font-weight-bold"
+          >{{lyrics['msg']}}
+          <!-- <span class="font-weight-bold">{{lyrics['msg']}}.</span> -->
+          <!-- <br> <br> 
+              <span class="font-weight-normal">Check the Artist name and Song Title on the video card.
+                If they aren't as you expect you can initiate a new lyrics search above. 
+              </span> -->
+        </span>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
 <!-- ********************************** MODAL WINDOW *************************************** -->
-<div class="modal fade" id="fav-save-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="fav-save-modal"
+  tabindex="-1"
+  role="dialog"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Edit/Save to Favorites</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <h5 class="modal-title" id="exampleModalLabel">
+          Edit/Save to Favorites
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -89,42 +157,85 @@
         <form id="video-detail-fav-form">
           <div class="form-group">
             <label for="video-title" class="col-form-label">Video Title:</label>
-            <input name="video-title" type="text" class="form-control" id="input-video-title">
+            <input
+              name="video-title"
+              type="text"
+              class="form-control"
+              id="input-video-title"
+            />
           </div>
           <div class="form-group">
             <label for="artist-name" class="col-form-label">Artist:</label>
-            <input name="artist-name" type="text" class="form-control" id="input-artist-name">
+            <input
+              name="artist-name"
+              type="text"
+              class="form-control"
+              id="input-artist-name"
+            />
           </div>
           <div class="form-group">
             <label for="song-title" class="col-form-label">Song:</label>
-            <input name="song-title" type="text" class="form-control" id="input-song-title">
+            <input
+              name="song-title"
+              type="text"
+              class="form-control"
+              id="input-song-title"
+            />
           </div>
           <div class="form-group">
             <label for="note-area" class="col-form-label">Notes:</label>
-            <textarea name="note-area" class="form-control" id="input-video-notes"></textarea>
+            <textarea
+              name="note-area"
+              class="form-control"
+              id="input-video-notes"
+            ></textarea>
           </div>
 
-          <div id="fav-del-checkbox" class="custom-control custom-checkbox custom-control-right">          
-            <input type="checkbox" class="custom-control-input" id="del-fav" name='del-fav'>
+          <div
+            id="fav-del-checkbox"
+            class="custom-control custom-checkbox custom-control-right"
+          >
+            <input
+              type="checkbox"
+              class="custom-control-input"
+              id="del-fav"
+              name="del-fav"
+            />
             <label class="custom-control-label" for="del-fav">Delete</label>
             <div id="del-fav-warning" class="hide">
-              <span>WARNING! This will delete this video from your favorites list along with any associated comments. <br> Click 'Save' to proceed or 'Cancel' to exit.</span>
+              <span
+                >WARNING! This will delete this video from your favorites list
+                along with any associated comments. <br />
+                Click 'Save' to proceed or 'Cancel' to exit.</span
+              >
             </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
-
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button id="video-detail-fav-submit" type="submit" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">
+          Cancel
+        </button>
+        <button
+          id="video-detail-fav-submit"
+          type="submit"
+          class="btn btn-primary"
+        >
+          Save
+        </button>
       </div>
     </div>
   </div>
 </div>
 <div id="client-msgs"></div>
 <!-- --------------------------------------------------------------------------------------- -->
-<script type="text/javascript" src="{{ url_for('static', filename='js/clientMsgs.js') }}"></script>
-<script type="text/javascript" src="{{ url_for('static', filename='js/viewVideo.js') }}"></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='js/clientMsgs.js') }}"
+></script>
+<script
+  type="text/javascript"
+  src="{{ url_for('static', filename='js/viewVideo.js') }}"
+></script>
 
 {% endblock %}
-
