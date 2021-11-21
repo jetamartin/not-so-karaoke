@@ -1,26 +1,56 @@
 {% extends 'base.html' %}
 {% block content %}
 <section class="jumbotron-home text-center">
-  <div class="container-fluid text-white">
+  <div class="container-fluid  text-white">
     <div>
       <h1 class="inline-block text-white med-letter-spacing">Welcome to Almost-Karaoke!</h1>
       <h5 id="welcome-subtext" class="mb-5 mt-2 font-weight-lighter smaller"> YouTube Videos + Lyrics = F U N <sup>2</sup>  </h5>
       <div class="wrapper hide" id="app-stuff">
          <div class="row">
-          <div class="app-description welcome-border p-2 mb-5 col-md-9 offset-md-3 text-left">
+          <div >
             <h4 class="reason-header mb-3 med-letter-spacing font-weight-bolder">Whether you want to:</h4>
-            <p class="reason-1 med-letter-spacing font-italic"><i class="fas fa-headphones-alt mr-3"></i>Finally understand the lyrics to 'that' song</p>
-            <p class="reason-2 med-letter-spacing font-italic"><i class="fas fa-beer mr-3""></i>Host an Almost-Karaoke Party with your friends</p>
-            <p class="reason-3 med-letter-spacing font-italic"><i class="fas fa-microphone-alt mr-3""></i>Or simply enjoy singing along with your favorite videos</p>
+            <div class="row">
+              <div class="col-md-12 d-flex justify-content-around mb-5 mb-lg-0" >
+                <div class="icon-box col-md-3">
+                  <div class="icon ">
+                    <i class="fas fa-headphones-alt"></i>
+                  </div>
+                  <p class="reason-1 font-italic"><span class='p-2'>Finally understand the lyrics to 'that' song</span></p>
+                </div>
+
+
+              <div class="icon-box col-md-3">
+                <div class="icon">
+                  <i class="fas fa-beer mr-3""></i>
+                </div>
+                <p class="reason-2 font-italic">
+                  <span class='p-2'>Host an Almost-Karaoke Party with your friends</span>
+                </p>
+              </div>
+
+              <div class="icon-box col-md-3">
+                <div class="icon">
+                  <i class="fas fa-microphone-alt mr-3"></i>
+                </div>
+                <p class="reason-3 font-italic">
+                  <span class='p-2'>Or simply enjoy singing along with your favorite videos</span>
+                </p>
+              </div>
+              </div>
+            </div>
           </div>
+        </div>
+    </div>
+      <div class="call-to-actions">
+        <div class="wrapper">
+          <h4 class="call-to-action-1 inline-block mt-3 med-letter-spacing">
+            <span>Click</span>
+            <a href="/search" class='ml-3 mr-3 pl-4 btn btn-outline-secondary text-white border-white lg-letter-spacing'><span>FUN<sup>2</sup></span></a>
+            <span>&nbsp;and let the singing begin!</span>
+          </h4>
+          <p class="call-to-action-2 med-letter-spacing font-weight-lighter mt-4">(PS. <a class="btn btn-outline-secondary btn-sm text-white border-white" href="/signup">Sign Up</a> and get bonus features (e.g., favorites, playlists, etc.))</p>  
         </div>
       </div>
-        <div class="call-to-actions">
-          <div class="wrapper">
-            <h4 class="call-to-action-1 inline-block mt-3 med-letter-spacing">Click<a href="/search" class='ml-3 mr-3 pl-4 btn btn-outline-secondary text-white border-white lg-letter-spacing '>FUN<sup>2</sup></a>and let the singing begin!</h4>
-            <p class="call-to-action-2 med-letter-spacing font-weight-lighter mt-4">(PS. <a class="btn btn-outline-secondary btn-sm text-white border-white" href="/signup">Sign Up</a> for a free account and get bonus features (e.g., favorites, playlists, etc.))</p>  
-          </div>
-        </div>
     </div>
   </section >
   <script>

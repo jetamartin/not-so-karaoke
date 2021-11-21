@@ -15,6 +15,18 @@
   text-align: left !important;
 }
 
+.icon-box {
+  background: rgb(69, 1, 1);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  opacity: .7;
+}
+
+.icon {
+  font-size: 1.5rem;
+  padding-bottom: 1rem;
+}
+
 .call-to-actions {
   position: absolute;
   bottom: 20px;

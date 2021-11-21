@@ -15,6 +15,7 @@ def get_lyrics(artist,song_title):
   try:
     # import pdb; pdb.set_trace()
     song = genius.search_song(song_title, artist)
+    # song = genius.song(song_title, artist)
     if (song):
 
       lyrics = song.lyrics.replace('\n', '<br>')
