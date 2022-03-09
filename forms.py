@@ -7,7 +7,7 @@ from flask_wtf import FlaskForm
 class SearchForm(FlaskForm):
   """ Video Search form. """
   artist = StringField("Artist", validators=[InputRequired(), Length(min=2, max=20)])
-  song = StringField("Song", validators=[Optional(), Length(min=6, max=30)]  )
+  song = StringField("Song", validators=[Optional(), Length(min=2, max=30)]  )
 
 class SignupForm(FlaskForm):
   """ Signup form """
